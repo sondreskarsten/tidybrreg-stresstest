@@ -41,8 +41,11 @@ test_validate <- function(n_random = 20000L, seed = 1L) {
   check("V-12", "result is unnamed",
         is.null(names(brreg_validate(c("923609016", "984851006")))))
 
-  check("V-13", "check digit 10 case rejected",
-        isFALSE(brreg_validate("999999999")))
+  check("V-13", "check digit 10 case rejected for every possible last digit", {
+    cand8 <- "90770209"
+    all(vapply(0:9, function(d9) isFALSE(brreg_validate(paste0(cand8, d9))),
+               logical(1)))
+  })
 
   check("V-14", "leading whitespace rejected",
         isFALSE(brreg_validate(" 923609016")))

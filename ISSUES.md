@@ -59,3 +59,15 @@ failures surface, distinguishing three outcomes explicitly in this log:
    register addendum below with a new `D-9x` id.
 
 ---
+### [23:08] RIG BUG — `10-validate.R` V-13 used an invalid fixture
+`isFALSE(brreg_validate("999999999"))` was asserted as the "check digit computes to 10"
+case. Verified by hand and independently in R: `999999999` has mod-11 remainder 2, check
+digit 9, which **matches** its own last digit — it is a valid number
+(`brreg_validate("999999999")` returns `TRUE`). This was carried over from the earlier
+static evaluation without verifying the arithmetic. Fixed by generating a genuine
+check-digit-10 fixture (`90770209` + any final digit, confirmed programmatically to be
+unmatchable for all ten possible check digits) and asserting rejection across all ten.
+Cross-checked the other two org-number fixtures used in `12-entity.R`
+(`923609017` invalid, `889640782` valid-but-nonexistent) — both correct, no further
+action. `10-validate.R` now: 19 pass, 1 confirmed defect (D-02).
+
