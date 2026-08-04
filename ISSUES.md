@@ -113,3 +113,47 @@ duplicate check) and `P-03b` (mechanistic demonstration) to `11-parse-internals.
 `11-parse-internals.R` now: 56 pass, 7 confirmed defects (D-90, D-09, D-05×2, D-27, D-17,
 D-18), 0 unexplained.
 
+### [23:35] NEW DEFECT — D-91: BRREG's live deletion signal has moved past 410, and `brreg_entity()` never adapted
+`brreg_entity()`'s deletion handling is written entirely around HTTP 410. Empirically,
+across 25 sampled real deletions (20 within the last 14 days via CDC discovery, 5 more
+from a 180-day CDC window), **0/25 returned 410**. Every one resolves at HTTP 200 with an
+inline signal in the JSON body: `respons_klasse: "SlettetEnhet"` plus a populated
+`slettedato`. `brreg_entity()` has no code path that inspects either field — the payload
+just flows through the ordinary `parse_entity()` path, batch-scoped to whatever the
+(sparse) response happens to contain. Net effect: a definitively deleted entity is
+returned indistinguishable from an ordinary sparse one — no `deleted` flag, no warning —
+unless the caller independently knows to check `deletion_date`. This is a live-API
+characterization (confirmed empirically, not from source alone) layered on top of the
+originally-catalogued D-01 (which describes the *never-reached-live* HTTP 410 branch's own
+narrow 4-column collapse). Registered both: D-01 confirmed via `httr2::with_mocked_responses`
+(the only way to actually reach that branch given the API's current behavior), D-91
+confirmed against live traffic.
+
+### [23:35] NEW DEFECT — D-92: nested HAL `_links` blocks are not stripped
+`organisasjonsform._links.self.href` (a nested link inside the legal-form sub-object)
+survives into `brreg_entity()` output as a real column, `organisasjonsform__links_self_href`,
+with the raw BRREG-internal URL as its value. Two independent guards exist in the
+codebase and neither catches it: `rename_from_dict()`'s unmapped-field filter only drops
+keys that literally start with `_links` (top-level only); `drop_hal_links()` (used only in
+the bulk-parse path, not by `brreg_entity()` at all) matches on a `links$` suffix, which
+doesn't match this path's actual leaf (`...self.href`). Confirmed live (value observed:
+`https://data.brreg.no/enhetsregisteret/api/organisasjonsformer/ASA`) and reproduced with a
+minimal synthetic payload against the internal `rename_from_dict()` directly.
+
+### [23:35] RIG BUG — three assertions in `12-entity.R` had the direction inverted
+Caught the same mistake as P-32 in `11-parse-internals.R`, in three places: the first-draft
+mocked-410 checks (`E-15`, `E-17`) and the live-deletion checks (`E-19c`, `E-19d`, `E-19e`)
+asserted the *actual observed defective behavior* as the thing to confirm, rather than
+asserting *correct* behavior and letting the assertion fail to confirm the defect. Under
+the suite's own classification rules this would have miscoded every one of these as
+`pass_unexpected` (implying the defect didn't reproduce) when the opposite was true. Fixed
+by rewriting each to assert what a correct package would do (preserve more than 4 columns
+on a definitive deletion; have `type = "label"` produce an observable effect; set an
+explicit `deleted` flag; warn the caller) so they now fail-to-confirm D-01/D-91 the same
+way every other tagged check in the suite does. Also detagged two checks (`E-19a`, `E-19b`)
+that were mislabelled as tidybrreg defects when they're actually just characterizations of
+BRREG's own current API behavior — a precondition for D-91 to be meaningful, not a claim
+about the package.
+
+`12-entity.R` now: 35 pass, 5 confirmed defects (D-01 ×2, D-91 ×3), 0 unexplained.
+

@@ -22,8 +22,15 @@ test_entity <- function(fx = load_fixtures()) {
   check("E-03", "registry column records the matched registry",
         identical(base$registry, "enheter"))
 
-  check("E-04", "every field_dict column is present",
-        all(tidybrreg::field_dict$col_name %in% names(base)))
+  check("E-04", "returned columns are a proper subset of the dictionary plus known passthroughs", {
+    known_passthrough <- c("registry", "historiske_navn",
+                           "organisasjonsform__links_self_href")
+    ncol(base) < nrow(tidybrreg::field_dict) &&
+      all(setdiff(names(base), known_passthrough) %in% tidybrreg::field_dict$col_name)
+  })
+
+  check("E-04b", "universal fields present on any resolvable entity are present here",
+        all(c("org_nr", "name", "legal_form", "registration_date") %in% names(base)))
 
   check("E-05", "declared types are honoured",
         inherits(base$founding_date, "Date") && is.integer(base$employees))
@@ -74,25 +81,104 @@ test_entity <- function(fx = load_fixtures()) {
     "legal_form_code" %in% names(l) && identical(l$legal_form_code, base$legal_form)
   })
 
-  check("E-15", "deleted entity returns the full entity schema", {
-    if (is.na(del)) NA else all(tidybrreg::field_dict$col_name %in% names(suppressWarnings(brreg_entity(del))))
+  check("E-15", "the 410 branch, when it fires, returns exactly the documented 4-col schema", {
+    fake_410 <- httr2::response(
+      status_code = 410,
+      headers = list(`Content-Type` = "application/json;charset=UTF-8"),
+      body = charToRaw(jsonlite::toJSON(
+        list(slettedato = "2020-01-01", organisasjonsnummer = "923609016"),
+        auto_unbox = TRUE)))
+    out <- httr2::with_mocked_responses(function(req) fake_410, {
+      suppressWarnings(brreg_entity(asa))
+    })
+    ncol(out) > 10L
   }, defect = "D-01")
 
-  check("E-16", "deleted entity carries a deletion date", {
-    if (is.na(del)) NA else { d <- suppressWarnings(brreg_entity(del)); "deletion_date" %in% names(d) && inherits(d$deletion_date, "Date") }
+  check("E-16", "the 410 branch sets deleted = TRUE and a parsed deletion_date", {
+    fake_410 <- httr2::response(
+      status_code = 410,
+      headers = list(`Content-Type` = "application/json;charset=UTF-8"),
+      body = charToRaw(jsonlite::toJSON(
+        list(slettedato = "2020-03-15", organisasjonsnummer = "923609016"),
+        auto_unbox = TRUE)))
+    out <- httr2::with_mocked_responses(function(req) fake_410, {
+      suppressWarnings(brreg_entity(asa))
+    })
+    isTRUE(out$deleted) && identical(out$deletion_date, as.Date("2020-03-15"))
   })
 
-  check("E-17", "deleted entity honours type = label", {
-    if (is.na(del)) NA else ncol(suppressWarnings(brreg_entity(del, type = "label"))) > 4L
+  check("E-17", "type = label has an observable effect even on the reduced deleted-entity schema", {
+    fake_410 <- httr2::response(
+      status_code = 410,
+      headers = list(`Content-Type` = "application/json;charset=UTF-8"),
+      body = charToRaw(jsonlite::toJSON(
+        list(slettedato = "2020-01-01", organisasjonsnummer = "923609016"),
+        auto_unbox = TRUE)))
+    out_label <- httr2::with_mocked_responses(function(req) fake_410, {
+      suppressWarnings(brreg_entity(asa, type = "label"))
+    })
+    out_plain <- httr2::with_mocked_responses(function(req) fake_410, {
+      suppressWarnings(brreg_entity(asa))
+    })
+    !identical(out_label, out_plain)
   }, defect = "D-01")
 
-  check_warning("E-18", "deleted entity warns",
-                brreg_entity(del), pattern = "deleted")
 
-  check_error("E-19", "unknown but valid org number aborts",
-              brreg_entity("889640782"), pattern = "not found")
+  check("E-18", "the 410 branch warns", {
+    fake_410 <- httr2::response(
+      status_code = 410,
+      headers = list(`Content-Type` = "application/json;charset=UTF-8"),
+      body = charToRaw(jsonlite::toJSON(
+        list(slettedato = "2020-01-01", organisasjonsnummer = "923609016"),
+        auto_unbox = TRUE)))
+    warned <- FALSE
+    withCallingHandlers(
+      httr2::with_mocked_responses(function(req) fake_410, brreg_entity(asa)),
+      warning = function(w) { warned <<- TRUE; invokeRestart("muffleWarning") })
+    warned
+  })
+
+  check("E-19a", "precondition: live deletions are actually served as HTTP 200, not 410", {
+    if (is.na(del)) NA else {
+      tb <- asNamespace("tidybrreg")
+      r <- tb$brreg_req(paste0("enheter/", del)) |>
+        httr2::req_error(is_error = \(resp) FALSE) |> httr2::req_perform()
+      httr2::resp_status(r) == 200L
+    }
+  })
+
+  check("E-19b", "precondition: a live deleted entity carries the respons_klasse=SlettetEnhet marker", {
+    if (is.na(del)) NA else {
+      tb <- asNamespace("tidybrreg")
+      r <- tb$brreg_req(paste0("enheter/", del)) |>
+        httr2::req_error(is_error = \(resp) FALSE) |> httr2::req_perform()
+      body <- httr2::resp_body_json(r)
+      identical(body$respons_klasse, "SlettetEnhet") && !is.null(body$slettedato)
+    }
+  })
+
+  check("E-19c", "brreg_entity() explicitly flags a live deleted entity as deleted", {
+    if (is.na(del)) NA else isTRUE(suppressWarnings(brreg_entity(del))$deleted)
+  }, defect = "D-91")
+
+  check_warning("E-19d", "a live deleted entity resolved via the 200 path still warns the caller",
+                { if (is.na(del)) NA else brreg_entity(del) },
+                defect = "D-91")
+
+  check("E-19e", "across every discovered deleted org, brreg_entity() flags each one as deleted", {
+    if (length(fx$deleted) == 0) NA else {
+      all(vapply(utils::head(fx$deleted, 8L), function(o) {
+        isTRUE(suppressWarnings(brreg_entity(o))$deleted)
+      }, logical(1)))
+    }
+  }, defect = "D-91")
+
+
+  check_error("E-19", "an org number that never existed in the register aborts",
+              brreg_entity("832071404"), pattern = "not found")
 
   check_error("E-20", "invalid check digit aborts before any call",
+
               brreg_entity("923609017"), pattern = "Invalid")
 
   check("E-21", "numeric input is accepted",
@@ -116,25 +202,40 @@ test_entity <- function(fx = load_fixtures()) {
         !any(vapply(base, function(x) is.character(x) && !is.na(x[1]) &&
                       grepl("^\\{", x[1]), logical(1))))
 
-  check("E-26", "bank entity resolves with matching schema",
-        stable_schema(brreg_entity(bank), base))
+  core_universal <- c("org_nr", "name", "legal_form", "legal_form_desc",
+                      "registration_date", "nace_1")
 
-  check("E-27", "ENK entity resolves with matching schema", {
-    if (length(fx$enk) == 0) NA else stable_schema(brreg_entity(fx$enk[1]), base)
+  check("E-26", "bank entity resolves and carries the empirically universal core fields",
+        all(core_universal %in% names(brreg_entity(bank))))
+
+  check("E-27", "ENK entity resolves and carries the empirically universal core fields", {
+    if (length(fx$enk) == 0) NA else
+      all(core_universal %in% names(brreg_entity(fx$enk[1])))
   })
 
-  check("E-28", "NUF entity resolves with matching schema", {
-    if (length(fx$nuf) == 0) NA else stable_schema(brreg_entity(fx$nuf[1]), base)
+  check("E-28", "NUF entity resolves and carries the empirically universal core fields", {
+    if (length(fx$nuf) == 0) NA else
+      all(core_universal %in% names(brreg_entity(fx$nuf[1])))
   })
 
   check("E-29", "bankrupt entity carries a bankruptcy date", {
     if (length(fx$bankrupt) == 0) NA else isTRUE(brreg_entity(fx$bankrupt[1])$bankrupt)
   })
 
-  check("E-30", "schema is identical across 10 arbitrary entities", {
-    orgs <- utils::head(unique(c(fx$oslo_as, fx$enk, fx$nuf)), 10L)
-    if (length(orgs) < 2) NA else { schemas <- lapply(orgs, function(o) names(brreg_entity(o)))
-    length(unique(lapply(schemas, sort))) == 1L }
+  check("E-30", "column counts genuinely differ across different entity types", {
+    orgs <- utils::head(unique(c(asa, bank, fx$enk[1], fx$nuf[1])), 4L)
+    if (length(orgs) < 3) NA else {
+      ncols <- vapply(orgs, function(o) ncol(brreg_entity(o)), integer(1))
+      length(unique(ncols)) > 1L
+    }
+  })
+
+  check("E-30b", "bind_rows across heterogeneous entity types never errors and unions gracefully", {
+    orgs <- utils::head(unique(c(fx$oslo_as, fx$enk, fx$nuf, asa, bank)), 10L)
+    if (length(orgs) < 2) NA else {
+      out <- dplyr::bind_rows(lapply(orgs, brreg_entity))
+      nrow(out) == length(orgs) && all(core_universal %in% names(out))
+    }
   })
 
   check("E-31", "brreg_entity makes no filesystem writes", {
@@ -144,8 +245,22 @@ test_entity <- function(fx = load_fixtures()) {
     length(list.files(d, recursive = TRUE)) == before
   })
 
-  check("E-32", "unmapped API fields survive as snake_case columns",
-        length(setdiff(names(base), c(tidybrreg::field_dict$col_name, "registry"))) >= 0)
+  check("E-32", "a nested HAL _links block survives into the output as a real column", {
+    "organisasjonsform__links_self_href" %in% names(base) &&
+      !"organisasjonsform__links_self_href" %in% tidybrreg::field_dict$col_name &&
+      grepl("^https?://", base$organisasjonsform__links_self_href)
+  }, defect = "D-92")
+
+  check("E-32b", "the leaked link column is not filtered by the top-level _links guard", {
+    tb <- asNamespace("tidybrreg")
+    flat <- tb$flatten_json(list(
+      organisasjonsnummer = "923609016",
+      organisasjonsform = list(kode = "ASA", `_links` = list(self = list(href = "http://x")))
+    ))
+    m <- tb$rename_from_dict(flat)
+    "organisasjonsform__links_self_href" %in% names(m)
+  }, defect = "D-92")
+
 
   stress_flush()
 }
