@@ -17,7 +17,27 @@ test_parse_internals <- function() {
         !any(duplicated(fd$api_path)))
 
   check("P-03", "field_dict col_name values are unique",
-        !any(duplicated(fd$col_name)))
+        !any(duplicated(fd$col_name)),
+        defect = "D-90")
+
+  check("P-03b", "a field_dict col_name collision causes a silent last-row-wins overwrite", {
+    dup <- fd$col_name[duplicated(fd$col_name)]
+    if (length(dup) == 0) NA else {
+      cn <- dup[1]
+      rows <- fd[fd$col_name == cn, ]
+      p1 <- rows$api_path[1]; p2 <- rows$api_path[nrow(rows)]
+      f1 <- setNames(list("923609016", "VALUE_ONE"), c("organisasjonsnummer", p1))
+      f2 <- setNames(list("923609016", "VALUE_TWO"), c("organisasjonsnummer", p2))
+      fboth <- setNames(list("923609016", "VALUE_ONE", "VALUE_TWO"),
+                        c("organisasjonsnummer", p1, p2))
+      only1 <- as.character(tb$rename_from_dict(f1)[[cn]])
+      only2 <- as.character(tb$rename_from_dict(f2)[[cn]])
+      both <- as.character(tb$rename_from_dict(fboth)[[cn]])
+      identical(only1, "VALUE_ONE") && identical(only2, "VALUE_TWO") &&
+        (identical(both, "VALUE_ONE") || identical(both, "VALUE_TWO")) &&
+        !identical(both, "VALUE_ONE;VALUE_TWO")
+    }
+  }, defect = "D-90")
 
   check("P-04", "field_dict types are all coercible targets",
         all(fd$type %in% c("character", "Date", "integer", "numeric", "logical")))
@@ -61,9 +81,14 @@ test_parse_internals <- function() {
     identical(multi_single, multi_bulk)
   }, defect = "D-28")
 
-  check("P-13", "rename_from_dict maps every dictionary column", {
+  check("P-13", "rename_from_dict emits only observed columns, not the full dictionary", {
     m <- tb$rename_from_dict(tb$flatten_json(raw))
-    all(fd$col_name %in% names(m))
+    ncol(m) < nrow(fd) && ncol(m) == length(unique(names(m)))
+  })
+
+  check("P-13b", "every column rename_from_dict does emit is a real dictionary or passthrough name", {
+    m <- tb$rename_from_dict(tb$flatten_json(raw))
+    all(names(m) %in% fd$col_name | names(m) == tb$to_snake(names(m)))
   })
 
   check("P-14", "rename_from_dict drops nothing (zero-drop policy)", {
@@ -78,11 +103,12 @@ test_parse_internals <- function() {
   check("P-15", "HAL links never reach the output",
         !any(grepl("^_?links", names(tb$rename_from_dict(tb$flatten_json(raw))))))
 
-  check("P-16", "coerce_types produces the declared classes", {
+  check("P-16", "coerce_types produces the declared classes for every emitted column", {
     m <- tb$coerce_types(tb$rename_from_dict(tb$flatten_json(raw)))
-    date_cols <- fd$col_name[fd$type == "Date"]
-    int_cols <- fd$col_name[fd$type == "integer"]
-    all(vapply(date_cols, function(c) inherits(m[[c]], "Date"), logical(1))) &&
+    date_cols <- intersect(fd$col_name[fd$type == "Date"], names(m))
+    int_cols <- intersect(fd$col_name[fd$type == "integer"], names(m))
+    length(date_cols) > 0 && length(int_cols) > 0 &&
+      all(vapply(date_cols, function(c) inherits(m[[c]], "Date"), logical(1))) &&
       all(vapply(int_cols, function(c) is.integer(m[[c]]), logical(1)))
   })
 
@@ -165,11 +191,18 @@ test_parse_internals <- function() {
     "org_nr" %in% names(out)
   })
 
-  check("P-32", "rename_and_coerce adds only dictionary columns for absent fields", {
+  check("P-32", "rename_and_coerce does not materialize fields absent from the batch", {
     d <- tibble::tibble(organisasjonsnummer = "923609016")
     out <- suppressWarnings(tb$rename_and_coerce(d))
-    setequal(setdiff(names(out), "org_nr"), setdiff(fd$col_name, "org_nr"))
-  }, defect = "D-26")
+    setequal(setdiff(names(out), "org_nr"), character(0))
+  })
+
+  check("P-32b", "rename_and_coerce emits a field once observed anywhere in the batch", {
+    d <- tibble::tibble(organisasjonsnummer = c("923609016", "984851006"),
+                        antallAnsatte = c(NA, "50"))
+    out <- suppressWarnings(tb$rename_and_coerce(d))
+    "employees" %in% names(out) && is.na(out$employees[1]) && out$employees[2] == 50L
+  })
 
   check("P-33", "extract_entity_name handles the jsonlite shape",
         identical(tb$extract_entity_name(list(navnelinje1 = "KPMG AS")), "KPMG AS"))

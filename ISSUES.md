@@ -71,3 +71,45 @@ Cross-checked the other two org-number fixtures used in `12-entity.R`
 (`923609017` invalid, `889640782` valid-but-nonexistent) — both correct, no further
 action. `10-validate.R` now: 19 pass, 1 confirmed defect (D-02).
 
+### [23:15] NEW DEFECT — D-90: `field_dict` maps two distinct api_paths to one `col_name`
+`field_dict$col_name` has two duplicate pairs: `registration_date`
+(`registreringsdatoEnhetsregisteret` / `registreringsdatoIEnhetsregisteret`) and
+`employee_reg_date_nav` (`registreringsdatoAntallAnsatteNavAaregisteret` /
+`registreringsdatoAntallAnsatteNAVAaregisteret`, a pure casing variant). Demonstrated
+concretely: constructing a payload with both api_paths present under different values
+causes `rename_from_dict()` to silently keep whichever field_dict row is processed last,
+discarding the other (verified: `registration_date` resolves to the second row's value
+when both are supplied). For the NAV pair this is at worst a casing-robustness gap; for
+`registration_date` the two api_paths look like genuinely distinct upstream fields (the
+"I" variant), not a casing accident, so a live payload carrying both would silently lose
+one — this part is **inferred**, not yet confirmed against a live payload carrying both
+keys, since I have not observed that combination on the actual API. Added `P-03` (raw
+duplicate check) and `P-03b` (mechanistic demonstration) to `11-parse-internals.R`, tagged
+`D-90`.
+
+### [23:15] RIG BUG — three checks in `11-parse-internals.R` needed correction
+
+- **P-13** asserted `all(field_dict$col_name %in% names(m))` for a single small payload —
+  this is exactly the pre-`c9bd992` full-schema contract that today's upstream commit
+  deliberately removed. Rewritten to assert the new contract: the emitted column count is
+  smaller than the full dictionary, and every emitted name is either a known dictionary
+  name or a valid auto-snake passthrough.
+- **P-16** iterated over *every* `field_dict` Date/integer column unconditionally and
+  indexed `m[[c]]` even for columns the (now batch-scoped) parse never emitted, so
+  `inherits(NULL, "Date")` failed for the always-absent ones. Fixed to intersect the
+  declared-type columns with the columns actually present before asserting their class.
+- **P-32** was inverted: it asserted `setequal(output columns, full field_dict)` as the
+  *correct* result and tagged the check `D-26` — i.e. it treated the old stamping bug as
+  the thing a correct package should do. That was backwards from the start (a
+  pre-existing bug in the previous turn's test authoring, not something the upstream
+  commit caused) and would have measured the wrong thing even against the originally
+  evaluated commit. Rewritten to assert the actually-correct behavior (no columns beyond
+  what's observed) and split off `P-32b` to confirm a field *is* still emitted once
+  observed anywhere in a multi-row batch. The `D-26` tag is removed from this file — D-26
+  (underenheter carrying all-NA enheter-only columns) is specifically and correctly
+  covered by `DL-18` in `31-download.R` against a real underenheter bulk parse, which is
+  where it belongs.
+
+`11-parse-internals.R` now: 56 pass, 7 confirmed defects (D-90, D-09, D-05×2, D-27, D-17,
+D-18), 0 unexplained.
+
