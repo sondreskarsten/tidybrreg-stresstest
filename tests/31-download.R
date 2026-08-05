@@ -110,7 +110,7 @@ test_download <- function(pw = readRDS(file.path(stress_results_dir(), "prewarm.
       j <- tb$parse_bulk_json(p, type = "enheter")
       abs(nrow(a) - nrow(j)) / nrow(j) < 0.02
     }
-  })
+  }, defect = "D-97")
 
   check("DL-17", "csv and json bulks agree on the column dictionary", {
     p <- pw$paths$enheter_json
@@ -151,7 +151,7 @@ test_download <- function(pw = readRDS(file.path(stress_results_dir(), "prewarm.
       ids <- as.vector(a[["organisasjonsnummer"]] %||% a[["org_nr"]])
       !any(duplicated(ids))
     }
-  })
+  }, defect = "D-97")
 
   check("DL-21", "every register org number is mod-11 valid", {
     if (!has_arrow) NA else {

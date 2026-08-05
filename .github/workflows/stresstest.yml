@@ -36,6 +36,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Clear git-tracked results so only this run's output is uploaded
+        run: rm -f results/*.rds results/*.csv results/summary.txt && rm -rf results/logs
+
       - name: Cache R library
         uses: actions/cache@v4
         with:
@@ -77,6 +80,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Clear git-tracked results so only this run's output is uploaded
+        run: rm -f results/*.rds results/*.csv results/summary.txt && rm -rf results/logs
+
       - name: Free disk space
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
@@ -98,6 +104,14 @@ jobs:
         with:
           name: results-light
           path: results
+
+      - name: Restore bulk cache for this run
+        uses: actions/cache@v4
+        with:
+          path: |
+            tmp/cache
+            tmp/shared-store
+          key: bulk-${{ github.run_id }}
 
       - name: Run tier 2 (bulk prewarm, single writer)
         run: Rscript --vanilla run_all.R 30-bulk-prewarm.R
@@ -129,6 +143,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Clear git-tracked results so only this run's output is uploaded
+        run: rm -f results/*.rds results/*.csv results/summary.txt && rm -rf results/logs
+
       - name: Free disk space
         run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
 
@@ -143,11 +160,25 @@ jobs:
       - name: Bootstrap R and install tidybrreg
         run: bash setup.sh
 
+      - name: Restore bulk cache from prewarm
+        uses: actions/cache@v4
+        with:
+          path: |
+            tmp/cache
+            tmp/shared-store
+          key: bulk-${{ github.run_id }}
+
       - uses: actions/download-artifact@v4
         with:
           pattern: results-*
           merge-multiple: true
           path: results
+
+      - name: Verify the warm cache actually arrived
+        run: |
+          test -s tmp/cache/R/tidybrreg/enheter_bulk.csv.gz \
+            || { echo "::error::bulk cache missing; tier 3 would test against another runner's paths"; exit 1; }
+          ls -lh tmp/cache/R/tidybrreg/ || true
 
       - name: Run ${{ matrix.file }}
         run: Rscript --vanilla run_all.R ${{ matrix.file }}
@@ -169,6 +200,9 @@ jobs:
     if: always()
     steps:
       - uses: actions/checkout@v4
+
+      - name: Clear git-tracked results so only this run's output is uploaded
+        run: rm -f results/*.rds results/*.csv results/summary.txt && rm -rf results/logs
 
       - name: Cache R library
         uses: actions/cache@v4

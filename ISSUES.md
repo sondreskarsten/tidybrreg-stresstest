@@ -295,3 +295,40 @@ tier 3 and was hard-cancelled, which skips even `if: always()` steps, so the art
 lost. Restructured tier 3 into a per-file matrix with `fail-fast: false`: a reclaimed
 runner now costs one file instead of five.
 
+### [11:40] RIG BUG — matrix restructure broke cache locality (tier 3 read another runner's paths)
+Splitting tier 3 into a per-file matrix fixed the runner-reclaim problem but introduced a
+worse one: each matrix job restored `prewarm.rds` (which records absolute paths to the
+warm download cache) without restoring the cache itself. Every tier-3 job therefore
+pointed at `/home/runner/work/.../tmp/cache/...` on a *different, already-destroyed*
+runner. Symptoms looked like package defects and were not:
+
+- `DL-13`, `DL-14`, `DL-15`, `DL-17` — `lexical error: invalid char in json text`, i.e.
+  jsonlite reading a path that isn't the JSON bulk.
+- `IM-01`, `IM-02`, `IM-03`, `IM-05`, `IM-06` — `brreg_import()` failures, because the
+  test's `file.copy()` of the underenheter bulk silently produced nothing to import.
+
+Fixed by keying an `actions/cache` entry on `github.run_id`, saved by `prewarm` and
+restored by every tier-3 job, plus an explicit guard step that fails the job outright if
+`enheter_bulk.csv.gz` is absent rather than letting the file run against phantom paths.
+Nine "regressions" were this, and would have been mischaracterised as tidybrreg defects.
+
+### [11:40] RIG BUG — committed results contaminated CI artifacts
+`results/` is git-tracked (deliberately, so each run is mappable to its file). But every CI
+job checks the repo out *including* my sandbox results, then uploads `results/*.rds`
+wholesale — so each artifact carried stale sandbox copies of files that job never ran, and
+`merge-multiple: true` resolved collisions by upload order. This is why `EV-13` still
+showed as an untagged regression in the merged artifact even though `D-98` was tagged in
+the repo: an older sandbox `33-panel-series-events.rds` won the merge. Fixed with a
+post-checkout step in every job that clears tracked results before anything runs.
+
+### [11:40] RIG BUG — `RP-04` tag never applied
+The earlier bulk retag matched `identical(out, "err")\\n  })` for `EV-13` but the
+corresponding `RP-04` pattern didn't match, so `D-99` was never attached. Applied
+directly and verified by grep rather than by pattern replacement.
+
+### [11:40] CONFIRMED — arrow CSV failure reproduces on a clean 16 GB runner
+`DL-16` and `DL-20` fail on GitHub with the same
+`Expected 90 columns, got 63` at the Tromsø address as in the sandbox, so **D-97 is not a
+memory artefact** — `arrow::read_csv_arrow()` genuinely cannot read the live enheter bulk.
+Both checks now tagged `D-97`.
+
