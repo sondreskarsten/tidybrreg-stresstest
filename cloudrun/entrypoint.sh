@@ -34,7 +34,9 @@ if command -v gcloud >/dev/null 2>&1; then
   gcloud storage cp -r results "${DEST}/" 2>&1 | tail -5
   gcloud storage cp -r tests R run_all.R Dockerfile "${DEST}/code/" 2>&1 | tail -5
 else
-  echo "gcloud not available; results left in ${ROOT}/results"
+  echo "FATAL: gcloud not available in image; results cannot be published" >&2
+  echo "results left in ${ROOT}/results" >&2
+  UPLOAD_FAILED=1
 fi
 
 REGRESSIONS=$(Rscript --vanilla -e '
