@@ -84,6 +84,36 @@ tidybrreg throttles at 5 req/s per process, so aggregate request rate scales wit
   subprocesses with timeouts (`check_subprocess`, `check_budget`), so one pathological
   path cannot take down a worker.
 
+## Continuous integration
+
+Two runners, both driving the same `run_all.R`:
+
+**GitHub Actions** (`.github/workflows/stresstest.yml`) — weekly cron plus manual dispatch
+with the `STRESS_*` knobs as form inputs. Three jobs: `light` (tiers 0-1), `heavy`
+(tiers 2-3, consuming the fixtures artifact from `light`), and `report` (merges artifacts,
+aggregates, writes a job summary). The build fails **only** on unexplained regressions —
+confirmed defects are expected output and do not fail CI.
+
+```bash
+gh workflow run stresstest -f stress_cores=2 -f stress_roller=1
+```
+
+**Cloud Run job** (`Dockerfile`, `cloudrun/`) — built on the project's own
+`r-images/r-base:latest`, 8 CPU / 32 GB, `europe-north1`, scheduler in `europe-west1`.
+Image is pinned by SHA256 digest. Results and the code that produced them land together in
+`gs://sondre_brreg_data/raw/tidybrreg_stresstest/run_date=.../`.
+
+```bash
+bash cloudrun/deploy.sh
+gcloud run jobs execute tidybrreg-stresstest --region europe-north1
+```
+
+Both exist mainly for memory: the JSON bulk parse and the JSON `brreg_sync()` bootstrap
+need well over 4 GB, and are the paths a laptop-sized runner cannot complete.
+
+**Request-rate caveat.** tidybrreg throttles 5 req/s *per process*, so `STRESS_CORES=N`
+means 5N req/s against a public register. Defaults are deliberately below core count.
+
 ## Data source
 
 All register data is Brønnøysund Register Centre content under NLOD 2.0. This repository
