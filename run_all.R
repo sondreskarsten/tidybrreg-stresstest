@@ -25,7 +25,8 @@ stress_manifest <- function() {
     "32-snapshot.R",                   3L, "own",      7200L,
     "33-panel-series-events.R",        3L, "shared",   3600L,
     "34-sync.R",                       3L, "own",     10800L,
-    "35-replay.R",                     3L, "shared",   3600L
+    "35-replay.R",                     3L, "shared",   3600L,
+    "36-file-outputs.R",               4L, "own",      1800L
   )
 }
 

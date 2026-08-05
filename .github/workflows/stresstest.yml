@@ -140,6 +140,7 @@ jobs:
           - 33-panel-series-events.R
           - 34-sync.R
           - 35-replay.R
+          - 36-file-outputs.R
     steps:
       - uses: actions/checkout@v4
 

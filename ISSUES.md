@@ -332,3 +332,49 @@ directly and verified by grep rather than by pattern replacement.
 memory artefact** — `arrow::read_csv_arrow()` genuinely cannot read the live enheter bulk.
 Both checks now tagged `D-97`.
 
+### [12:20] FILE-OUTPUT INSPECTION — new test file `36-file-outputs.R` (25 checks)
+Everything so far judged tidybrreg by its return values. This file judges it by the
+artefacts it leaves on disk: partition layout, parquet contents, `manifest.json`, the sync
+cursor, and the changelog tree. Findings from inspecting the real stores:
+
+**D-54 confirmed end to end, at runtime.** The raw `.gz` really is written *inside* the
+hive partition (`underenheter/snapshot_date=2026-08-05/raw/underenheter_bulk.csv.gz`), and
+`brreg_open("underenheter")` consequently fails with
+`Invalid: Could not open Parquet input source '.../raw/underenheter_bulk.csv.gz'`.
+`brreg_snapshot()` writes a store layout that tidybrreg's own reader cannot open. It also
+doubles storage: 54 MB parquet + 58 MB raw per snapshot. This was *inferred* in the
+original static evaluation; it is now observed. (`FO-04`, `FO-05`, `FO-06`.)
+
+**D-55 confirmed on disk.** `manifest.json` holds three entries with two sharing the id
+`underenheter_2026-08-04`. (`FO-11`.)
+
+**D-102 (new) — the documented CDC bridge metadata is never populated.**
+`brreg_manifest()`'s docs promise the manifest records "CDC bridge metadata", and
+`build_manifest_entry()` takes a `cdc_bridge_first_update_id` argument, but a scan of every
+function in the namespace shows only `build_manifest_entry` (which defines it) and
+`brreg_manifest` (which reads it) mention the field — **no caller ever passes it**. Every
+entry on disk carries `"cdc_bridge_first_update_id": {}`. The consequence matters for this
+platform specifically: without it there is no recorded join point between a bulk snapshot
+and the CDC stream, which is exactly the gap that makes D-36 (the bootstrap blind window)
+unrecoverable after the fact. (`FO-14`.)
+
+**D-103 (new, low severity) — identical content stored under two different dates.**
+Three manifest entries share one `file_hash`, one `etag`, and one server `last_modified`,
+but are filed under `snapshot_date` 2026-08-04 and 2026-08-05. `brreg_snapshot(date=)` is
+documented as a label, so this is legitimate per the docs, but nothing flags that two
+differently-dated "snapshots" are byte-identical, so a panel built over the store will
+silently show zero change across a boundary that never existed. (`FO-15`.)
+
+**D-104 not confirmed — hypothesis was wrong.** After the partial `enheter_bulk.json.gz`
+incident I assumed `brreg_download()` would silently serve truncated cache as valid data.
+`FO-25` tests this directly by truncating a cached payload to 5 MB: the download layer
+*does* reuse it without comment (`Using cached file (4.8 MB)`), but the parse layer errors
+out, so corrupt data does not reach the caller. The reuse-without-validation is real; the
+data-integrity failure I predicted is not. Recording the check as passing rather than
+quietly dropping it.
+
+Checks `FO-17`..`FO-22` skip locally because `brreg_sync()` has never completed on this
+box (OOM), so no cursor, state, or changelog exists to inspect. They are the reason this
+file is registered as tier 4 and included in the CI matrix — the sync artefacts only exist
+on a runner with enough memory.
+
