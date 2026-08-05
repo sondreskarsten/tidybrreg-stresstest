@@ -253,3 +253,45 @@ Caveat carried into both: parallelism multiplies request rate against a public r
 tidybrreg throttles 5 req/s **per process**, so `STRESS_CORES` workers means 5N req/s.
 Defaults are deliberately low (2 on Actions, 4 on Cloud Run) rather than matching core count.
 
+### [10:55] INFRA DEFECT (recurring) — R ABI break inside the Cloud Run image, second occurrence
+Fixed `rlang`'s `undefined symbol: SETLENGTH` by upgrading `r-base-core` alongside the
+packages I named explicitly. The full Cloud Run pass then failed on
+`vroom.so: undefined symbol` — the identical fault in a package I had *not* named. `readr`
+pulls `vroom`, which stayed compiled against the base image's older R while `r-base-core`
+moved forward.
+
+Root cause is structural, not a typo: `FROM r-images/r-base:latest` + `apt-get install
+r-cran-*` mixes two R ABIs whenever r2u has moved ahead of the pinned base image, and it
+surfaces only at *runtime*, disguised as test failures. Fixed properly by running
+`apt-get upgrade -y` so every pre-existing r-cran binary is rebuilt against the new R,
+plus a build-time assertion that `requireNamespace()`-loads all 18 packages the suite
+touches and fails the build listing any that don't.
+
+**This is worth checking across the project's other pipeline images** — anything built
+`FROM r-base:latest` that then apt-installs additional R packages is exposed to the same
+silent break.
+
+Impact on the results already collected: of the 29 "unexplained regressions" from the
+first complete Cloud Run pass, the large majority are this ABI break, not tidybrreg
+defects — `BW-11`, `DL-09`, nine `SN-*`/`IM-*` checks, and then `PN-00` and
+`SY-14`/`SY-37`..`SY-41` as downstream cascade (prewarm and sync partially failed, so the
+snapshot store and changelog those checks depend on were never written). They must be
+re-run on v4 before any of them is characterised. Treating that 29 as a defect count would
+have been wrong.
+
+### [10:55] RIG BUG — GCS publish silently dropped by a malformed copy
+`entrypoint.sh` published with
+`gcloud storage cp -r tests R run_all.R Dockerfile "${DEST}/code/"`, but the Dockerfile was
+never `COPY`d into the image, so the whole invocation failed with "URLs matched no objects
+or files". The results copy had actually succeeded — the failure was cosmetic but looked
+total, and the earlier v2 image had no `gcloud` at all and skipped publishing with only an
+`echo`. Fixed three ways: `COPY` the Dockerfile into the image, copy each code artefact in
+its own invocation guarded by `[ -e ]`, and verify with `gcloud storage ls` afterwards,
+setting a failure flag if zero objects were published.
+
+### [10:55] CI — GitHub runner reclaimed mid-tier
+The `heavy` job received "The runner has received a shutdown signal" 19 minutes into
+tier 3 and was hard-cancelled, which skips even `if: always()` steps, so the artifact was
+lost. Restructured tier 3 into a per-file matrix with `fail-fast: false`: a reclaimed
+runner now costs one file instead of five.
+
