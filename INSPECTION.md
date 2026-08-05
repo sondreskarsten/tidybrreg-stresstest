@@ -140,3 +140,76 @@ page tells a user that passing the documented-in-Usage value silently produces a
 entry, so nothing in the provenance record would ever reveal how it got there.
 
 ---
+## 4. `snapshot-store/underenheter/snapshot_date=2026-08-05/data.parquet` — 56.6 MB
+
+Written by `brreg_snapshot("underenheter")`.
+
+**Expected (EVALUATION #182, #190):** a dated parquet partition, dictionary-mapped column
+names, ~824 K rows.
+
+**Observed:** 854,499 rows x 44 columns. Schema is clean and correctly typed —
+`date32[day]` for all ten date fields, `int32` for `employees`, `bool` for
+`employees_reported` / `vat_registered`, `string` elsewhere. Every column name is a
+`field_dict` name; no raw Norwegian API names survive.
+
+Content integrity checks all pass:
+
+- every `org_nr` passes mod-11 (854,499/854,499)
+- zero duplicate `org_nr`
+- `registration_date` spans 1995-02-20 to 2026-08-04 — plausible, and the upper bound is
+  the day before the snapshot, as it should be
+- sample rows carry sensible Norwegian establishments with valid `parent_org_nr`
+
+**D-26 is improved but not fully resolved.** The evaluation predicted ~40 all-NA
+enheter-only columns stamped onto underenheter rows. That is gone — 44 columns, not 104.
+But five columns are still **100 % NA across all 854,499 rows**:
+`voluntary_vat_descriptions`, `voluntary_vat_reg_date`, `vat_registration_date`,
+`vat_reg_date_er`, `closure_date`. So `c9bd992` scoped emission to columns *present in the
+source header* rather than columns that *carry any value*. For underenheter the VAT block
+exists in the CSV schema but is never populated. That is defensible under a naive-empiricism
+reading (the source declares the field), but it means "the column exists" still cannot be
+read as "the register has this attribute for this entity type".
+
+---
+
+## 5. Sync state — small files, and a cross-validation of the two bootstrap paths
+
+### `sync-store/state/roller.parquet` — 2,757 bytes
+**0 rows x 17 columns**, full roller schema present. This is exactly what EVALUATION #142
+predicted for `roller_method = "cdc"`: an empty typed state written without the 131 MB
+totalbestand download. Correct, and the typed-empty is good practice.
+
+Worth noting: check `SY-46` ("roller cdc sync produces roller changelog rows") passed while
+this state is empty and no changelog exists at all — the check only asserts
+`is.data.frame()`, so it is too weak to mean anything. That is a rig weakness, logged.
+
+### `sync-csv-store/state/historiske_navn.parquet` — 924 bytes, **0 rows x 5 columns**
+versus `sync-store/state/historiske_navn.parquet` at **25 MB**.
+
+This is the documented CSV/JSON divergence made concrete: the CSV bulk carries no
+`historiskeNavn`, so a CSV bootstrap starts with an empty name history and only accrues
+rows as renames arrive over CDC, while a JSON bootstrap backfills 25 MB of history
+immediately. Matches the roxygen. Not a defect — but a strong argument that
+`format = "json"` should be the default rather than `"csv"`.
+
+### Påtegninger: the expensive path buys nothing
+
+| | rows | distinct orgs |
+|---|---|---|
+| JSON bootstrap (inline, no extra requests) | 2,754 | 2,747 |
+| CSV bootstrap (one API call per flagged entity — D-35) | 2,753 | 2,746 |
+
+Set difference: **1 row** (a single `FADR` entry present in the JSON run, absent in the CSV
+run nine minutes later — almost certainly genuine register drift between 15:14 and 15:23,
+not a parsing difference). Infotype distributions are otherwise identical across all twelve
+codes (`FADR` 974 vs 973, everything else exact).
+
+This is the most useful comparison in the whole inspection: **D-35's per-entity request
+storm produces the same påtegninger the JSON path gets for free**, and additionally loses
+the entire name history. The cost is not buying fidelity.
+
+Both stores agree on schema (`org_nr`, `position`, `infotype`, `tekst`, `innfoert_dato`),
+text is correctly UTF-8 encoded Norwegian, and `innfoert_dato` spans 2005-01-26 to
+2026-08-04.
+
+---
