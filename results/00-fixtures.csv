@@ -1,0 +1,16 @@
+"file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
+"00-fixtures","FX-01",NA,"seed ASA resolves",NA,"PASS",NA,0,NA,1.7337703704834
+"00-fixtures","FX-02",NA,"seed bank resolves",NA,"PASS",NA,0,NA,0.182702779769897
+"00-fixtures","FX-03",NA,"discover ENK sample",NA,"PASS",NA,0,NA,0.422629594802856
+"00-fixtures","FX-04",NA,"discover NUF sample",NA,"PASS",NA,0,NA,0.408961296081543
+"00-fixtures","FX-05",NA,"discover bankrupt sample",NA,"PASS",NA,0,NA,0.433936357498169
+"00-fixtures","FX-06",NA,"discover large Oslo AS sample",NA,"PASS",NA,0,NA,0.466483592987061
+"00-fixtures","FX-07",NA,"discover underenheter of seed",NA,"PASS",NA,0,NA,0.268766403198242
+"00-fixtures","FX-08",NA,"discover recently deleted org via CDC",NA,"PASS",NA,0,NA,14.9901177883148
+"00-fixtures","FX-09",NA,"discover recently created org via CDC",NA,"PASS",NA,0,NA,0.000879049301147461
+"00-fixtures","FX-10",NA,"discover org in a corporate group",NA,"PASS",NA,0,NA,2.04529857635498
+"00-fixtures","FX-11",NA,"discover org with no corporate group",NA,"PASS",NA,0,NA,0.350940227508545
+"00-fixtures","FX-12",NA,"discover org with registered prokura",NA,"PASS",NA,0,NA,0.423234462738037
+"00-fixtures","FX-13",NA,"discover org with entity-held role",NA,"PASS",NA,0,NA,0.167893886566162
+"00-fixtures","FX-14",NA,"seed holds legal roles elsewhere",NA,"PASS",NA,0,NA,0.282296180725098
+"00-fixtures","FX-15",NA,"CDC field-level sample available",NA,"PASS",NA,0,NA,0.722438812255859

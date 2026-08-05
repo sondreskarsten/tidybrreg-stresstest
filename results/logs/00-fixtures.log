@@ -1,0 +1,19 @@
+tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
+Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
+[PASS ] FX-01    seed ASA resolves
+[PASS ] FX-02    seed bank resolves
+[PASS ] FX-03    discover ENK sample
+[PASS ] FX-04    discover NUF sample
+[PASS ] FX-05    discover bankrupt sample
+[PASS ] FX-06    discover large Oslo AS sample
+[PASS ] FX-07    discover underenheter of seed
+[PASS ] FX-08    discover recently deleted org via CDC
+[PASS ] FX-09    discover recently created org via CDC
+[PASS ] FX-10    discover org in a corporate group
+[PASS ] FX-11    discover org with no corporate group
+[PASS ] FX-12    discover org with registered prokura
+[PASS ] FX-13    discover org with entity-held role
+[PASS ] FX-14    seed holds legal roles elsewhere
+[PASS ] FX-15    CDC field-level sample available
+
+== 00-fixtures: 15 checks, PASS=15 ==

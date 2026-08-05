@@ -1,6 +1,3 @@
 tmp/
-results/*.rds
-results/*.csv
-results/logs/
 .Rhistory
 .RData

@@ -1,0 +1,21 @@
+"file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
+"10-validate","V-01",NA,"known valid orgnr accepted",NA,"PASS",NA,0,NA,0.000704288482666016
+"10-validate","V-02",NA,"bad check digit rejected",NA,"PASS",NA,0,NA,0.00867080688476562
+"10-validate","V-03",NA,"short input rejected",NA,"PASS",NA,0,NA,0.000479221343994141
+"10-validate","V-04",NA,"long input rejected",NA,"PASS",NA,0,NA,0.000578165054321289
+"10-validate","V-05",NA,"non-digit rejected",NA,"PASS",NA,0,NA,0.00049138069152832
+"10-validate","V-06",NA,"empty string rejected",NA,"PASS",NA,0,NA,0.0005035400390625
+"10-validate","V-07",NA,"NA rejected without error",NA,"PASS",NA,0,NA,0.000777244567871094
+"10-validate","V-08",NA,"NA_character_ rejected",NA,"PASS",NA,0,NA,0.00152707099914551
+"10-validate","V-09",NA,"vectorised over mixed input",NA,"PASS",NA,0,NA,0.00153231620788574
+"10-validate","V-10",NA,"numeric input coerced",NA,"PASS",NA,0,NA,0.00149679183959961
+"10-validate","V-11",NA,"zero-length input returns zero-length logical",NA,"PASS",NA,0,NA,0.00145983695983887
+"10-validate","V-12",NA,"result is unnamed",NA,"PASS",NA,0,NA,0.0016326904296875
+"10-validate","V-13",NA,"check digit 10 case rejected for every possible last digit",NA,"PASS",NA,0,NA,0.00213861465454102
+"10-validate","V-14",NA,"leading whitespace rejected",NA,"PASS",NA,0,NA,0.00158309936523438
+"10-validate","V-15",NA,"prefix rule does not reject mod-11-valid non-8/9 numbers","D-02","FAIL"," logi FALSE",0,NA,0.0765068531036377
+"10-validate","V-16",NA,"agrees with independent mod-11 on 8/9 prefixed numbers",NA,"PASS",NA,0,NA,0.318715333938599
+"10-validate","V-17",NA,"large vector does not error",NA,"PASS",NA,0,NA,0.552970409393311
+"10-validate","V-18",NA,"factor input handled",NA,"PASS",NA,0,NA,0.000802993774414062
+"10-validate","V-19",NA,"list input errors rather than silently coercing",NA,"PASS",NA,0,NA,0.000504970550537109
+"10-validate","V-20",NA,"no side effects on the filesystem",NA,"PASS",NA,0,NA,0.000829219818115234
