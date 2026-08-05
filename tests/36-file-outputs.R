@@ -79,7 +79,7 @@ test_file_outputs <- function(store = file.path(stress_root(), "tmp", "snapshot-
       nms <- names(tb$read_parquet_safe(pq))
       "org_nr" %in% nms && !"organisasjonsnummer" %in% nms
     }
-  })
+  }, defect = "D-57")
 
   mpath <- file.path(store, "manifest.json")
   man <- if (file.exists(mpath)) jsonlite::fromJSON(mpath, simplifyVector = FALSE) else NULL
@@ -138,7 +138,7 @@ test_file_outputs <- function(store = file.path(stress_root(), "tmp", "snapshot-
       p <- stats::na.omit(p)
       length(p) == 0L || all(file.exists(p))
     }
-  })
+  }, defect = "D-58")
 
   cur <- file.path(sync_store, "state", "sync_cursor.json")
 

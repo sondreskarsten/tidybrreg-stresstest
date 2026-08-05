@@ -426,3 +426,47 @@ zero for reasons that have nothing to do with the register.
 The inventory is content-addressed, so this comparison now works *across* runs too — a
 future run's parquet can be checked against a previous one without downloading either.
 
+### [15:20] CLEAN RUN vs EVALUATION.md — reconciliation
+All previous findings deleted (both GCS prefixes, all local results and stores). Fresh run
+`tidybrreg-stresstest-bdzqm`, image v5, published to `run_date=2026-08-05T125928Z`.
+
+632 checks: 489 pass, 87 defect_confirmed, 31 pass_unexpected, 17 skip, 8 regression.
+Against the 341 enumerated calls and 80 predicted defects in EVALUATION.md:
+
+- **41 predicted defects confirmed.**
+- **17 predicted did NOT reproduce** — D-03, D-07, D-08, D-19, D-28, D-29, D-34, D-35,
+  D-38, D-45, D-46, D-47, D-61, D-67, D-79, D-83, D-104. Some are genuine fixes in
+  `c9bd992` (D-28, D-29), some were static-analysis errors of mine (D-104 already retired
+  in writing). Each still needs individual adjudication before being called either.
+- **19 predicted never exercised** — D-11, D-26, D-36, D-37, D-39, D-40, D-41, D-44, D-51,
+  D-52, D-63, D-64, D-66, D-68, D-72, D-74, D-75, D-76, D-77. These are real coverage gaps,
+  not passes.
+- **13 new defects the evaluation missed** — D-90..D-103.
+- **All 43 enumerated functions were exercised** (the "never exercised" function list is
+  empty).
+
+Of the 8 regressions, three were attributable on inspection of the published artefacts and
+are now tagged rather than left open:
+- `FO-09` → **D-57**. The store's first parquet is `roller/snapshot_date=2024-01-01/`,
+  written by `brreg_import(type = "roller")` parsing a JSON payload as CSV. Its columns are
+  not dictionary-mapped because the file is garbage — D-57 observed as a written artefact.
+- `FO-16` → **D-58**. `manifest.json` still carries `raw_path` entries for the 2026-08-04
+  partitions that `brreg_cleanup(keep_n = 2)` deleted. Dangling manifest confirmed on disk.
+- `SY-14` → **D-105 (provisional)**, with `SY-37`..`SY-41` as its consequence.
+
+### [15:20] D-105 provisional — a completed sync leaves no changelog
+The published `sync-store` proves the sync itself worked: `sync_cursor.json` holds
+non-zero ids for all three types (`enheter_id` 25017143, `underenheter_id` 21207519,
+`roller_id` 4577230), and state parquet is written (171 MB enheter, 67 MB underenheter,
+24 MB historiske_navn, 38 KB paategninger). But `state/changelog/` **does not exist at
+all** — not empty, absent. Consequently `brreg_flows()` aborts with "no sync changelog
+found", taking `SY-37`..`SY-41` with it.
+
+Still provisional because I cannot yet separate two explanations: (a) the changelog is
+never written, or (b) a bootstrap legitimately produces no change rows and no incremental
+events happened to land in the minutes between the two syncs. `SY-12` only asserts the
+cursor advanced *monotonically*, which passes trivially on a zero-event advance, so it
+cannot distinguish them. The check needs to assert against the applied-event count from the
+sync summary and skip when that count is zero. Recording the ambiguity rather than
+promoting it to a defect.
+

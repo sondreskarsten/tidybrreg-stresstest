@@ -76,10 +76,10 @@ test_sync <- function(store = file.path(stress_root(), "tmp", "sync-store"),
     abs(a - b) < 5000L
   })
 
-  check("SY-14", "changelog partitions are written", {
+  check("SY-14", "a completed sync leaves a queryable changelog", {
     d <- file.path(store, "state", "changelog")
     dir.exists(d) && length(list.files(d, recursive = TRUE, pattern = "parquet")) > 0
-  })
+  }, defect = "D-105")
 
   check("SY-15", "changelog schema is the documented one", {
     cl <- brreg_changes()
