@@ -1,0 +1,14 @@
+
+-- tidybrreg sync status --
+
+Last sync: NA
+Cursor positions: enheter=0, underenheter=0, roller=0
+! enheter: not initialized
+! underenheter: not initialized
+! roller: not initialized
+! paategninger: not initialized
+! historiske_navn: not initialized
+Changelog: 0 partition(s), 0 file(s)
+[PASS ] SY-01    status before sync reports nothing initialised
+i Using cached file (199.9 MB, 2026-08-05 07:09).
+Killed

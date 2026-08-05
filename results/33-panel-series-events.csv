@@ -1,0 +1,59 @@
+"file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
+"33-panel-series-events","PN-00",NA,"the shared store has at least three snapshots",NA,"PASS",NA,0,NA,0.00131535530090332
+"33-panel-series-events","PN-01",NA,"panel returns rows",NA,"PASS",NA,0,NA,0.0103118419647217
+"33-panel-series-events","PN-02",NA,"documented columns are present",NA,"PASS",NA,0,NA,0.000601530075073242
+"33-panel-series-events","PN-03",NA,"requested columns are present",NA,"PASS",NA,0,NA,0.000832796096801758
+"33-panel-series-events","PN-04",NA,"no unrequested payload columns leak in","D-61","PASS",NA,0,NA,0.000707387924194336
+"33-panel-series-events","PN-05",NA,"date_mapping attribute is attached",NA,"PASS",NA,0,NA,0.000524997711181641
+"33-panel-series-events","PN-06",NA,"every panel snapshot_date exists in the store",NA,"PASS",NA,0,NA,0.00218009948730469
+"33-panel-series-events","PN-07",NA,"LOCF never uses a future snapshot",NA,"PASS",NA,0,NA,0.000479698181152344
+"33-panel-series-events","PN-08",NA,"one row per firm per period",NA,"PASS",NA,0,NA,0.154267311096191
+"33-panel-series-events","PN-09",NA,"quarterly frequency yields more periods than yearly",NA,"PASS",NA,0,NA,7.06192636489868
+"33-panel-series-events","PN-10",NA,"monthly frequency yields the most periods",NA,"PASS",NA,0,NA,7.51357340812683
+"33-panel-series-events","PN-11",NA,"custom dates are honoured",NA,"PASS",NA,0,NA,3.20559453964233
+"33-panel-series-events","PN-12",NA,"from and to bound the panel",NA,"PASS",NA,0,NA,3.27365922927856
+"33-panel-series-events","PN-13",NA,"max_gap removes stale carry-forward",NA,"PASS",NA,0,NA,8.15815210342407
+"33-panel-series-events","PN-14",NA,"max_gap is effective for custom frequency","D-62","FAIL"," logi FALSE",0,NA,6.14250206947327
+"33-panel-series-events","PN-15",NA,"is_entry marks only genuinely new firms","D-60","FAIL"," logi FALSE",0,NA,0.00810670852661133
+"33-panel-series-events","PN-16",NA,"is_exit marks only firms absent from later periods","D-60","FAIL"," logi FALSE",0,NA,0.00484013557434082
+"33-panel-series-events","PN-17",NA,"a firm removed between snapshots is flagged as an exit exactly once","D-60","SKIP","precondition unavailable",0,NA,0.473526954650879
+"33-panel-series-events","PN-18",NA,"labelled panel translates codes",NA,"PASS",NA,0,NA,7.3992645740509
+"33-panel-series-events","PN-19",NA,"underenheter panel works",NA,"PASS",NA,0,NA,1.34273195266724
+"33-panel-series-events","PN-20",NA,"custom frequency without dates aborts informatively",NA,"PASS","No snapshots available for the requested period range.",0,NA,0.0431864261627197
+"33-panel-series-events","PN-21",NA,"period values are period labels, not raw snapshot dates","D-65","FAIL"," logi FALSE",0,NA,3.38900113105774
+"33-panel-series-events","SE-01",NA,"series returns rows",NA,"PASS",NA,0,NA,0.00047755241394043
+"33-panel-series-events","SE-02",NA,"series has a period column",NA,"PASS",NA,0,NA,0.0108804702758789
+"33-panel-series-events","SE-03",NA,"series names summary columns as col_fn",NA,"PASS",NA,0,NA,0.000478029251098633
+"33-panel-series-events","SE-04",NA,"counting mode works without .vars",NA,"PASS",NA,0,NA,0.285086631774902
+"33-panel-series-events","SE-05",NA,"national totals equal the sum of grouped totals",NA,"PASS",NA,0,NA,1.27364683151245
+"33-panel-series-events","SE-06",NA,"multiple summary functions produce multiple columns",NA,"PASS",NA,0,NA,0.209730863571167
+"33-panel-series-events","SE-07",NA,"multiple grouping variables are supported",NA,"PASS",NA,0,NA,0.274900436401367
+"33-panel-series-events","SE-08",NA,"series counts match panel counts per period",NA,"PASS",NA,0,NA,3.78881454467773
+"33-panel-series-events","SE-09",NA,"brreg_panel_meta is attached",NA,"PASS",NA,0,NA,0.000498533248901367
+"33-panel-series-events","SE-10",NA,"an unknown grouping column aborts informatively",NA,"PASS","i In argument: `dplyr::across(dplyr::all_of(grp))`.
+Caused by error in `across()`:
+i In argument: `dplyr::all_of(grp)`.
+Caused by error in `dplyr::all_of()`:
+! Can't subset elements that don't exist.
+x Element `nope` doesn't exist.",0,NA,0.290422916412354
+"33-panel-series-events","SE-11",NA,"quarterly and monthly frequencies work",NA,"PASS",NA,0,NA,2.50200963020325
+"33-panel-series-events","EV-01",NA,"events returns rows",NA,"PASS",NA,0,NA,0.000586032867431641
+"33-panel-series-events","EV-02",NA,"documented columns are present",NA,"PASS",NA,0,NA,0.000514984130859375
+"33-panel-series-events","EV-03",NA,"event types are the documented set",NA,"PASS",NA,0,NA,0.000497341156005859
+"33-panel-series-events","EV-04",NA,"event_date equals the later snapshot",NA,"PASS",NA,0,NA,0.000431537628173828
+"33-panel-series-events","EV-05",NA,"exits equal the set difference of org numbers",NA,"PASS",NA,0,NA,0.270126581192017
+"33-panel-series-events","EV-06",NA,"entries equal the reverse set difference",NA,"PASS",NA,0,NA,0.260302782058716
+"33-panel-series-events","EV-07",NA,"planted municipality changes are detected",NA,"PASS",NA,0,NA,0.00116515159606934
+"33-panel-series-events","EV-08",NA,"change rows carry both values",NA,"PASS",NA,0,NA,0.000703573226928711
+"33-panel-series-events","EV-09",NA,"entry and exit rows carry no field",NA,"PASS",NA,0,NA,0.000496864318847656
+"33-panel-series-events","EV-10",NA,"cols restricts the tracked fields",NA,"PASS",NA,0,NA,0.379315853118896
+"33-panel-series-events","EV-11",NA,"identical snapshots produce no events",NA,"PASS",NA,0,NA,1.87259221076965
+"33-panel-series-events","EV-12",NA,"an unknown snapshot date aborts",NA,"PASS","No snapshot for 1999-01-01. Run `brreg_snapshots()` to see available
+dates.",0,NA,0.0241806507110596
+"33-panel-series-events","EV-13",NA,"reversed dates are rejected or clearly labelled",NA,"FAIL"," logi FALSE",0,NA,1.85228824615479
+"33-panel-series-events","EV-14",NA,"no org number appears as both entry and exit",NA,"PASS",NA,0,NA,0.00057220458984375
+"33-panel-series-events","TS-01",NA,"series converts to a tsibble",NA,"PASS",NA,0,NA,0.0168769359588623
+"33-panel-series-events","TS-02",NA,"panel converts to a tsibble","D-67","PASS",NA,0,NA,5.01832246780396
+"33-panel-series-events","TS-03",NA,"explicit key and index are honoured",NA,"PASS",NA,0,NA,0.0145382881164551
+"33-panel-series-events","TS-04",NA,"the tsibble index is a Date",NA,"PASS",NA,0,NA,0.0314648151397705
+"33-panel-series-events","TS-05",NA,"no rows are lost in conversion",NA,"PASS",NA,0,NA,0.0126967430114746

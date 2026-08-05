@@ -102,6 +102,15 @@ summarise_results <- function(root = normalizePath(getwd())) {
   files <- files[!basename(files) %in% c("fixtures.rds", "prewarm.rds",
                                          "environment.rds", "runs.rds",
                                          "summary.rds")]
+  complete <- files[!grepl("\\.partial\\.rds$", files)]
+  partial <- files[grepl("\\.partial\\.rds$", files)]
+  done <- sub("\\.rds$", "", basename(complete))
+  partial <- partial[!sub("\\.partial\\.rds$", "", basename(partial)) %in% done]
+  files <- c(complete, partial)
+  if (length(partial) > 0) {
+    message("incomplete (process died mid-file): ",
+            paste(sub("\\.partial\\.rds$", "", basename(partial)), collapse = ", "))
+  }
   if (length(files) == 0) {
     message("no results found")
     return(invisible(NULL))

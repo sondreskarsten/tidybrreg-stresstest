@@ -1,0 +1,19 @@
+"file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
+"35-replay","RP-00",NA,"a usable update sample overlaps the base",NA,"PASS",NA,0,NA,0.000674009323120117
+"35-replay","RP-01",NA,"replay returns the base schema",NA,"PASS",NA,0,NA,26.799284696579
+"35-replay","RP-02",NA,"replay attaches replay_info",NA,"PASS",NA,0,NA,24.8591017723083
+"35-replay","RP-03",NA,"replay_info counts sum to the applied updates",NA,"PASS",NA,0,NA,24.6169137954712
+"35-replay","RP-04",NA,"deletions remove rows",NA,"FAIL"," logi FALSE",0,NA,21.6556022167206
+"35-replay","RP-05",NA,"an empty update set returns the base unchanged",NA,"PASS",NA,0,NA,0.000903844833374023
+"35-replay","RP-06",NA,"target_date includes events on that day","D-69","FAIL"," logi FALSE",0,NA,42.768123626709
+"35-replay","RP-07",NA,"an earlier target applies fewer updates",NA,"PASS",NA,0,NA,24.6434361934662
+"35-replay","RP-08",NA,"field changes are actually applied",NA,"PASS",NA,0,NA,25.5055317878723
+"35-replay","RP-09",NA,"address changes are replayed rather than dropped","D-71","FAIL"," logi FALSE",0,NA,0.059502124786377
+"35-replay","RP-10",NA,"every observed CDC field maps to a state column","D-71","FAIL"," logi FALSE",0,NA,0.0606415271759033
+"35-replay","RP-11",NA,"replay without include_changes signals rather than silently no-oping","D-70","FAIL"," logi FALSE",0,NA,1.79617857933044
+"35-replay","RP-12",NA,"cols restricts the replayed columns",NA,"PASS",NA,0,NA,16.0705065727234
+"35-replay","RP-13",NA,"new entities are inserted with a resolvable identity",NA,"SKIP","precondition unavailable",0,NA,23.2507600784302
+"35-replay","RP-14",NA,"replay never introduces duplicate org numbers",NA,"PASS",NA,0,NA,22.2910330295563
+"35-replay","RP-15",NA,"replay preserves column types",NA,"PASS",NA,0,NA,21.8389918804169
+"35-replay","RP-16",NA,"replay agrees with a live lookup on a changed entity",NA,"PASS",NA,0,NA,23.5708935260773
+"35-replay","RP-17",NA,"replaying twice is idempotent",NA,"PASS",NA,0,NA,63.1148128509521

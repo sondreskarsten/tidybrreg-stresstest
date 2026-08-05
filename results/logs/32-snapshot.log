@@ -1,0 +1,39 @@
+i Downloading full underenheter register (~59 MB)
+v Downloading full underenheter register (~59 MB) [1m 8.3s]
+
+v Downloaded 57.9 MB to cache.
+v Snapshot saved: 2026-08-05 (54 MB, 854499 entities)
+[PASS ] SN-01    underenheter snapshot writes a parquet partition
+[PASS ] SN-02    snapshot is listed
+[PASS ] SN-03    snapshot records a manifest entry
+[PASS ] SN-04    manifest records a file hash
+[PASS ] SN-05    manifest record_count matches the parquet row count
+i Snapshot for 2026-08-05 already exists. Use `force = TRUE` to overwrite.
+[PASS ] SN-06    re-snapshotting without force is a no-op
+[FAIL ] SN-07    the snapshot store contains only parquet files <D-54>
+[ERROR] SN-08    arrow can open the store written by brreg_snapshot <D-54>
+[ERROR] SN-09    arrow reads the expected row count from the store <D-54>
+i Downloading full underenheter register (~59 MB)
+v Downloading full underenheter register (~59 MB) [1m 13.1s]
+
+v Downloaded 57.9 MB to cache.
+v Snapshot saved: 2026-08-04 (54 MB, 854499 entities)
+[PASS ] SN-10    snapshot date partition key matches the requested date
+i Downloading full underenheter register (~59 MB)
+v Downloading full underenheter register (~59 MB) [1m 8.1s]
+
+v Downloaded 57.9 MB to cache.
+v Snapshot saved: 2026-08-04 (54 MB, 854499 entities)
+[PASS ] SN-11    force overwrites rather than duplicating a partition
+[FAIL ] SN-12    manifest ids remain unique after a forced re-snapshot <D-55>
+v Imported: 2024-12-31 (54 MB, 854499 rows)
+[PASS ] IM-01    import writes a partition
+[PASS ] IM-02    imported partition is listed
+[PASS ] IM-03    imported partition parses to the mapped schema
+[FAIL ] IM-04    import records provenance in the manifest <D-56>
+i Snapshot for 2024-12-31 already exists. Use `force = TRUE` to overwrite.
+i Snapshot for 2024-12-31 already exists. Use `force = TRUE` to overwrite.
+[PASS ] IM-05    import without force does not overwrite
+v Imported: 2024-12-31 (54 MB, 854499 rows)
+[PASS ] IM-06    import with force overwrites
+Killed

@@ -45,7 +45,20 @@ stress_record <- function(id, desc, status, message = NA_character_,
   assign("rows", c(get("rows", envir = stress_env), list(row)), envir = stress_env)
   cat(sprintf("[%-5s] %-8s %s%s\n", status, id, desc,
               if (!is.na(defect)) paste0(" <", defect, ">") else ""))
+  stress_flush_incremental()
   invisible(row)
+}
+
+stress_flush_incremental <- function() {
+  rd <- tryCatch(get("results_dir", envir = stress_env), error = function(e) NULL)
+  fl <- tryCatch(get("file", envir = stress_env), error = function(e) NULL)
+  if (is.null(rd) || is.null(fl)) return(invisible(NULL))
+  rows <- get("rows", envir = stress_env)
+  res <- dplyr::bind_rows(rows)
+  tmp <- file.path(rd, paste0(".", fl, ".partial.rds"))
+  saveRDS(res, tmp)
+  file.rename(tmp, file.path(rd, paste0(fl, ".partial.rds")))
+  invisible(NULL)
 }
 
 check <- function(id, desc, expr, defect = NA_character_, group = NA_character_) {
@@ -194,6 +207,7 @@ stress_flush <- function(results_dir = get("results_dir", envir = stress_env),
   res <- dplyr::bind_rows(rows)
   saveRDS(res, file.path(results_dir, paste0(file, ".rds")))
   utils::write.csv(res, file.path(results_dir, paste0(file, ".csv")), row.names = FALSE)
+  unlink(file.path(results_dir, paste0(file, ".partial.rds")))
   cat(sprintf("\n== %s: %d checks, %s ==\n", file, nrow(res),
               paste(names(table(res$status)), table(res$status),
                     sep = "=", collapse = " ")))
