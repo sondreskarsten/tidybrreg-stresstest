@@ -282,3 +282,42 @@ timezone designator**, unlike `manifest.json`'s `download_timestamp` which corre
 zoned. Another instance of D-33 reaching disk.
 
 ---
+## 8. `sync-store/state/underenheter.parquet` (70 MB) — and a schema split within one package
+
+854,499 rows x 43 columns. Integrity is clean: every `org_nr` valid mod-11, zero duplicates,
+zero NA `parent_org_nr`, `registration_date` spanning 1995-02-20 to 2026-08-04. Row count
+matches the snapshot store's underenheter partition exactly (854,499), so both paths agree
+on population.
+
+`response_class` is the constant `"Underenhet"` for all 854,499 rows — the same
+zero-information discriminator column seen in the enheter state, correctly reflecting the
+other side of BRREG's type marker.
+
+**New finding — D-107: the same registry persisted by two different functions on the same
+day yields non-unionable schemas.**
+
+| | columns | |
+|---|---|---|
+| `brreg_snapshot("underenheter")` (CSV path) | 44 | |
+| `brreg_sync(format = "json")` | 43 | |
+| shared | **41** | |
+
+Only in the snapshot/CSV path: `voluntary_vat_descriptions`, `voluntary_vat_reg_date`,
+`closure_date`.
+Only in the sync/JSON path: `historiske_navn`, `response_class`.
+
+So `closure_date` — a genuine lifecycle field, and one of the exit dates
+`brreg_survival_data()` looks for — **exists in the snapshot store and is absent from the
+sync state**, while the sync state carries two fields the snapshot store lacks. Neither is
+a superset. A consumer who stitches the two stores together (exactly what the snapshot +
+CDC design invites) gets a ragged table whose column set depends on which function last
+wrote, and any panel spanning both silently loses `closure_date` for the sync-covered
+period.
+
+This is not the batch-scoping behaviour of `c9bd992` doing its job: these are format
+divergences (CSV bulk carries the VAT/closure block, JSON bulk carries history and the
+response discriminator) propagated straight into persisted state with no reconciliation and
+no note in the documentation. `?brreg_sync` and `?brreg_snapshot` both describe their output
+simply as the register, with no indication the column sets differ.
+
+---
