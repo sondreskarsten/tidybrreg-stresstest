@@ -69,8 +69,8 @@ jobs:
             results/*.csv
             results/logs/**
 
-  heavy:
-    name: "tier 2-3 (bulk, snapshot, sync, replay)"
+  prewarm:
+    name: "tier 2 (bulk prewarm)"
     runs-on: ubuntu-24.04
     timeout-minutes: 350
     needs: light
@@ -99,17 +99,64 @@ jobs:
           name: results-light
           path: results
 
-      - name: Run tier 2 and tier 3
-        run: |
-          Rscript --vanilla run_all.R \
-            30-bulk-prewarm.R 31-download.R 32-snapshot.R \
-            33-panel-series-events.R 34-sync.R 35-replay.R
+      - name: Run tier 2 (bulk prewarm, single writer)
+        run: Rscript --vanilla run_all.R 30-bulk-prewarm.R
 
-      - name: Upload heavy results
+      - name: Upload warm cache and snapshot store
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: results-heavy
+          name: results-prewarm
+          path: |
+            results/*.rds
+            results/*.csv
+            results/logs/**
+
+  tier3:
+    name: "tier 3 - ${{ matrix.file }}"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    needs: prewarm
+    strategy:
+      fail-fast: false
+      matrix:
+        file:
+          - 31-download.R
+          - 32-snapshot.R
+          - 33-panel-series-events.R
+          - 34-sync.R
+          - 35-replay.R
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+
+      - name: Cache R library
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/lib/R/site-library
+            /usr/local/lib/R/site-library
+          key: rlib-${{ runner.os }}-${{ hashFiles('setup.sh', 'install.R') }}
+
+      - name: Bootstrap R and install tidybrreg
+        run: bash setup.sh
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: results-*
+          merge-multiple: true
+          path: results
+
+      - name: Run ${{ matrix.file }}
+        run: Rscript --vanilla run_all.R ${{ matrix.file }}
+
+      - name: Upload ${{ matrix.file }} results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-tier3-${{ matrix.file }}
           path: |
             results/*.rds
             results/*.csv
@@ -118,7 +165,7 @@ jobs:
   report:
     name: "aggregate and report"
     runs-on: ubuntu-24.04
-    needs: [light, heavy]
+    needs: [light, prewarm, tier3]
     if: always()
     steps:
       - uses: actions/checkout@v4
