@@ -213,3 +213,72 @@ text is correctly UTF-8 encoded Norwegian, and `innfoert_dato` spans 2005-01-26 
 2026-08-04.
 
 ---
+## 6. `sync-store/state/enheter.parquet` (171 MB) vs `sync-csv-store/state/enheter.parquet` (156 MB)
+
+**Expected (EVALUATION #134–137):** a full-register state table written by the bootstrap,
+identical in population regardless of source format.
+
+**Observed:** both hold exactly **1,170,637 rows** — population agreement is exact, which
+is the important result. Schemas differ by two columns, both present only in the JSON
+state:
+
+### `response_class` — a constant, and evidence for D-91
+Every one of the 1,170,637 rows carries `response_class = "Enhet"`. This is BRREG's
+`respons_klasse` type discriminator passed through into state. It carries zero information
+in a bulk download (nothing deleted appears in the current register), so it is a wasted
+column — but its presence is direct evidence for **D-91**: the API really does use
+`respons_klasse` as the entity/deleted discriminator, tidybrreg really does carry it
+through the bulk path, and `brreg_entity()` still ignores it on the single-entity path
+where it actually matters (`"SlettetEnhet"`).
+
+### `historiske_navn` — the same data stored twice, once untyped
+18.74 % of rows (219,397) carry a `historiske_navn` value, and that value is **unparsed
+JSON text** inside an otherwise fully typed table:
+
+```
+[{"navn":"AKSJESELSKAPET AGDERPOSTEN","fraDato":"1995-03-12 12:27:00","tilDato":"2006-01-07 14:34:39"},...]
+```
+
+The same information is *also* written, properly parsed, to
+`sync-store/state/historiske_navn.parquet` (635,234 rows x 5 columns). Verified: the
+219,397 blob-carrying orgs are a strict subset of the dedicated table's orgs. The dedicated
+table additionally covers 346,918 orgs absent from the enheter state — those are
+underenheter, so one shared name-history table spans both registries while the JSON blob
+column duplicates only the enheter slice.
+
+So a JSON bootstrap persists name history twice: once tidy, once as JSON strings glued into
+the entity table. The blob column is redundant, inflates the state file, and reintroduces
+exactly the nested structure the parse layer exists to remove.
+
+### `historiske_navn.parquet` quality
+Structurally sound: no duplicate `(org_nr, position)` pairs, `position` is 0-based and runs
+to 27, `to_date` is never NA. But **`from_date` and `to_date` are `character`**, holding
+`"1995-02-19 16:52:00"` — not `Date`, not `POSIXct`, and with no timezone. This matches
+`brreg_historical_names()`'s documentation, which does say the dates are returned as
+character, so it is documented rather than surprising; it is still the only state table in
+the store whose temporal columns are untyped, and it makes the naive-local-time problem
+(D-33) permanent in the persisted artefact rather than merely transient.
+
+---
+
+## 7. What the sync stores do *not* contain
+
+Neither `sync-store/state/` nor `sync-csv-store/state/` contains a `changelog/` directory —
+not empty, absent — despite both cursors recording real progress:
+
+```
+sync-store      enheter_id 25017143  underenheter_id 21207519  roller_id 4577230
+sync-csv-store  enheter_id 25017181  underenheter_id 0         roller_id 0
+```
+
+This is **D-105**, and the artefacts sharpen it: the CSV store's zero cursors for
+underenheter and roller confirm that store only ever synced enheter (it was the budget
+probe), while the JSON store advanced all three. Both wrote state, neither wrote a
+changelog. `brreg_flows()` consequently aborts on both.
+
+The cursors also show `last_sync` as `"2026-08-05T15:14:27"` — ISO-shaped but with **no
+timezone designator**, unlike `manifest.json`'s `download_timestamp` which correctly carries
+`Z`. Two persistence formats written by the same package disagree on whether timestamps are
+zoned. Another instance of D-33 reaching disk.
+
+---
