@@ -42,7 +42,7 @@ test_roles <- function(fx = load_fixtures()) {
               !is.na(r$entity_org_nr[!is.na(r$entity_org_nr)])))
 
   check("R-11", "entity role names are resolved, not JSON",
-        !any(grepl("^list\\(|^\\{", r$entity_name, useNames = FALSE), na.rm = TRUE))
+        !any(grepl("^list\\(|^\\{", r$entity_name), na.rm = TRUE))
 
   check("R-12", "person_id is unique per person within one entity", {
     p <- r[!is.na(r$person_id), ]

@@ -1,0 +1,38 @@
+"file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
+"20-request-manifest","Q-01",NA,"enhetsregisteret base url is correct",NA,"PASS",NA,0,NA,0.000840187072753906
+"20-request-manifest","Q-02",NA,"fullmakt base url is correct",NA,"PASS",NA,0,NA,0.0116825103759766
+"20-request-manifest","Q-03",NA,"unknown service aborts",NA,"PASS","'arg' should be one of ""enhetsregisteret"", ""fullmakt""",0,NA,0.000888824462890625
+"20-request-manifest","Q-04",NA,"request carries a descriptive user agent",NA,"PASS",NA,0,NA,0.0278711318969727
+"20-request-manifest","Q-05",NA,"request sets a UTF-8 accept header",NA,"PASS",NA,0,NA,0.00313019752502441
+"20-request-manifest","Q-06",NA,"query parameters are appended",NA,"PASS",NA,0,NA,0.00285220146179199
+"20-request-manifest","Q-07",NA,"NULL query parameters are dropped",NA,"PASS",NA,0,NA,0.00304794311523438
+"20-request-manifest","Q-08",NA,"klass requests target SSB",NA,"PASS",NA,0,NA,0.00222277641296387
+"20-request-manifest","Q-09",NA,"brreg and klass use different throttle realms",NA,"ERROR","$ operator is invalid for atomic vectors",0,NA,0.0029599666595459
+"20-request-manifest","Q-10",NA,"retry policy is configured",NA,"PASS",NA,0,NA,0.00197362899780273
+"20-request-manifest","Q-11",NA,"error body extractor returns character or empty",NA,"PASS",NA,0,NA,0.000407218933105469
+"20-request-manifest","Q-12",NA,"path segments are escaped, not concatenated blindly",NA,"PASS",NA,0,NA,0.00162100791931152
+"20-request-manifest","DD-01",NA,"data_dir honours the option",NA,"PASS",NA,0,NA,0.000747919082641602
+"20-request-manifest","DD-02",NA,"data_dir creates the directory",NA,"PASS",NA,0,NA,0.000427961349487305
+"20-request-manifest","DD-03",NA,"snapshots on an empty store returns a typed empty tibble",NA,"PASS",NA,0,NA,0.00142765045166016
+"20-request-manifest","DD-04",NA,"snapshots snapshot_date column is a Date",NA,"PASS",NA,0,NA,0.0015566349029541
+"20-request-manifest","DD-05",NA,"snapshots supports all three types",NA,"PASS",NA,0,NA,0.00281000137329102
+"20-request-manifest","DD-06",NA,"open on an empty store aborts",NA,"PASS","No snapshots found for ""enheter"".
+i Run `brreg_snapshot()` to save one.",0,NA,2.72652578353882
+"20-request-manifest","DD-07",NA,"cleanup without criteria aborts",NA,"PASS","Provide at least one of `keep_n` or `max_age_days`.",0,NA,0.0291037559509277
+"20-request-manifest","DD-08",NA,"cleanup on an empty store is a no-op",NA,"PASS",NA,0,NA,0.00152111053466797
+"20-request-manifest","MN-01",NA,"manifest on an empty store returns a typed empty tibble",NA,"PASS",NA,0,NA,0.00649785995483398
+"20-request-manifest","MN-02",NA,"manifest snapshot_date is a Date",NA,"PASS",NA,0,NA,0.00279831886291504
+"20-request-manifest","MN-03",NA,"manifest with an empty downloads array terminates","D-59","FAIL","exit=1 :: tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller. | Run brreg_snapshot() for full network/panel support. See ?brreg_status for details. | Error in `<current-expression>` : node stack overflow | Calls: brreg_manifest ... parse_and_simplify -> parseJSON -> parse_con -> stopifnot | Execution halted",0,NA,1.66910624504089
+"20-request-manifest","MN-04",NA,"manifest entry carries the documented fields",NA,"PASS",NA,0,NA,0.000768423080444336
+"20-request-manifest","MN-05",NA,"written entry is readable",NA,"PASS",NA,0,NA,0.00619173049926758
+"20-request-manifest","MN-06",NA,"manifest ids stay unique across writes","D-55","FAIL"," logi FALSE",0,NA,0.0235369205474854
+"20-request-manifest","ST-01",NA,"status reports all three datasets",NA,"PASS",NA,0,NA,0.00434565544128418
+"20-request-manifest","ST-02",NA,"status all_ready is consistent",NA,"PASS",NA,0,NA,0.00372648239135742
+"20-request-manifest","ST-03",NA,"status accepts a subset",NA,"PASS",NA,0,NA,0.00158786773681641
+"20-request-manifest","ST-04",NA,"status rejects an unknown dataset",NA,"PASS","'arg' should be one of ""enheter"", ""underenheter"", ""roller""",0,NA,0.000670433044433594
+"20-request-manifest","ST-05",NA,"sync_status runs on an uninitialised store",NA,"PASS",NA,0,NA,0.0315194129943848
+"20-request-manifest","ST-06",NA,"sync_status reports never rather than NA before any sync","D-45","PASS",NA,0,NA,0.0393307209014893
+"20-request-manifest","ST-07",NA,"sync_status cursors start at zero",NA,"PASS",NA,0,NA,0.0308835506439209
+"20-request-manifest","PQ-01",NA,"a parquet backend is available",NA,"PASS",NA,0,NA,0.000689029693603516
+"20-request-manifest","PQ-02",NA,"parquet round trip preserves a tibble",NA,"PASS",NA,0,NA,0.1025710105896
+"20-request-manifest","PQ-03",NA,"parquet writes are atomic (no temp files left behind)",NA,"PASS",NA,0,NA,0.00526618957519531

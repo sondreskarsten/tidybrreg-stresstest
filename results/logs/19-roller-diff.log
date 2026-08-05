@@ -1,0 +1,34 @@
+tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
+Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
+[PASS ] RD-01    identical states produce no changelog rows
+[PASS ] RD-02    changelog schema is exactly the documented one
+[PASS ] RD-03    NULL old state treats everything as entry
+[PASS ] RD-04    zero-row old state treats everything as entry
+[PASS ] RD-05    zero-row new state treats everything as exit
+[PASS ] RD-06    registry is always roller
+[PASS ] RD-07    an added role yields entry rows only for that role
+[PASS ] RD-08    a removed role yields exit rows only
+[PASS ] RD-09    a modified field yields exactly one change row
+[PASS ] RD-10    change rows carry both old and new values
+[PASS ] RD-11    entry rows have NA value_from
+[PASS ] RD-12    exit rows have NA value_to
+[PASS ] RD-13    diff is antisymmetric on entry and exit
+[PASS ] RD-14    NA to value transition is recorded
+[PASS ] RD-15    value to NA transition is recorded
+[PASS ] RD-16    a birth date correction is not silently invisible
+[PASS ] RD-17    timestamp is passed through
+[PASS ] RD-18    integer update_id is passed through
+[FAIL ] RD-19    character update_id does not become NA <D-82>
+[PASS ] RD-20    legacy state without the post-0.3.4 columns diffs cleanly
+[PASS ] RD-21    state with resigned diffs against state without
+[PASS ] RD-22    entity-held roles are keyed distinctly
+[FAIL ] RD-23    duplicate role rows are not silently collapsed
+[PASS ] RD-24    diff of a large state completes
+[PASS ] RD-25    org_nr on every changelog row is populated
+[PASS ] RD-26    no role key leaks into the output
+[PASS ] RD-27    diff works without tidyr attached explicitly <D-83>
+[PASS ] RD-28    live round trip on a real entity
+[PASS ] RD-29    live bootstrap diff yields entries for every role
+[PASS ] RD-30    empty against empty yields a typed empty changelog
+
+== 19-roller-diff: 30 checks, FAIL=2 PASS=28 ==

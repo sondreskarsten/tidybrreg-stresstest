@@ -1,0 +1,28 @@
+"file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
+"16-governance","G-01",NA,"board network builds from org numbers",NA,"PASS",NA,0,NA,0.374475479125977
+"16-governance","G-02",NA,"board network builds from pre-fetched roles",NA,"PASS",NA,0,NA,0.0147535800933838
+"16-governance","G-03",NA,"node count equals distinct entities plus distinct persons",NA,"PASS",NA,0,NA,0.00719785690307617
+"16-governance","G-04",NA,"node types are exactly entity and person",NA,"PASS",NA,0,NA,0.00671792030334473
+"16-governance","G-05",NA,"entity nodes are labelled with the entity's own name","D-19","PASS",NA,0,NA,0.186600208282471
+"16-governance","G-06",NA,"edge count equals person-held role rows",NA,"PASS",NA,0,NA,0.0203094482421875
+"16-governance","G-07",NA,"no edge references a missing node",NA,"PASS",NA,0,NA,0.0102427005767822
+"16-governance","G-08",NA,"no arguments aborts",NA,"PASS","Provide `org_nrs` or `roles_data`.",0,NA,0.0549774169921875
+"16-governance","G-09",NA,"empty roles aborts",NA,"PASS","No role data available to build network.",0,NA,0.0141847133636475
+"16-governance","G-10",NA,"an interlock across two firms is represented",NA,"PASS",NA,0,NA,0.00802898406982422
+"16-governance","SV-01",NA,"survival columns are added",NA,"PASS",NA,0,NA,0.000587224960327148
+"16-governance","SV-02",NA,"row count is preserved",NA,"PASS",NA,0,NA,0.000770092010498047
+"16-governance","SV-03",NA,"entry_date is a Date",NA,"PASS",NA,0,NA,0.000459194183349609
+"16-governance","SV-04",NA,"exit_date is a Date",NA,"PASS",NA,0,NA,0.000524997711181641
+"16-governance","SV-05",NA,"event is 0/1 integer",NA,"PASS",NA,0,NA,0.000441551208496094
+"16-governance","SV-06",NA,"duration is never negative",NA,"PASS",NA,0,NA,0.00050806999206543
+"16-governance","SV-07",NA,"duration is finite where entry is known",NA,"PASS",NA,0,NA,0.000432968139648438
+"16-governance","SV-08",NA,"event 1 implies a non-NA exit date",NA,"PASS",NA,0,NA,0.000763177871704102
+"16-governance","SV-09",NA,"event 0 implies an NA exit date",NA,"PASS",NA,0,NA,0.000523090362548828
+"16-governance","SV-10",NA,"censored duration matches the censoring date",NA,"PASS",NA,0,NA,0.00132203102111816
+"16-governance","SV-11",NA,"explicit censoring_date is honoured",NA,"PASS",NA,0,NA,0.00233101844787598
+"16-governance","SV-12",NA,"entry_var = registration_date works",NA,"PASS",NA,0,NA,0.00140857696533203
+"16-governance","SV-13",NA,"founding date never precedes registration by an implausible margin",NA,"PASS",NA,0,NA,0.00587081909179688
+"16-governance","SV-14",NA,"missing entry column aborts",NA,"PASS","Column ""nope"" not found in data.",0,NA,0.0171127319335938
+"16-governance","SV-15",NA,"bankrupt firms are events",NA,"PASS",NA,0,NA,0.000956058502197266
+"16-governance","SV-16",NA,"the input register is not survivor-only for survival analysis","D-20","FAIL"," logi FALSE",0,NA,0.00395703315734863
+"16-governance","SV-17",NA,"duration_years default entry basis is documented as registration","D-20","FAIL"," logi FALSE",0,NA,0.0059211254119873

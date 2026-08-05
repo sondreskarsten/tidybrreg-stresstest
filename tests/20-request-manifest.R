@@ -45,7 +45,7 @@ test_request_manifest <- function() {
   check("Q-09", "brreg and klass use different throttle realms", {
     a <- tb$brreg_req("enheter")
     b <- tb$klass_req("classifications/6")
-    !identical(a$policies$throttle$realm, b$policies$throttle$realm)
+    !identical(a$policies$throttle_realm, b$policies$throttle_realm)
   })
 
   check("Q-10", "retry policy is configured", {

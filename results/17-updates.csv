@@ -1,0 +1,43 @@
+"file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
+"17-updates","U-01",NA,"updates returns rows",NA,"PASS",NA,0,NA,0.000592708587646484
+"17-updates","U-02",NA,"documented columns are present",NA,"PASS",NA,0,NA,0.0103862285614014
+"17-updates","U-03",NA,"timestamp is POSIXct",NA,"PASS",NA,0,NA,0.000538349151611328
+"17-updates","U-04",NA,"timestamps carry a UTC timezone","D-33","FAIL"," logi FALSE",0,NA,0.0028998851776123
+"17-updates","U-05",NA,"timestamps are not in the future","D-33","PASS",NA,0,NA,0.000787258148193359
+"17-updates","U-06",NA,"update_id is strictly increasing",NA,"PASS",NA,0,NA,0.000602960586547852
+"17-updates","U-07",NA,"update_id has no duplicates",NA,"PASS",NA,0,NA,0.000539302825927734
+"17-updates","U-08",NA,"change_type values are the documented set",NA,"PASS",NA,0,NA,0.000488758087158203
+"17-updates","U-09",NA,"org numbers are valid",NA,"PASS",NA,0,NA,0.0219345092773438
+"17-updates","U-10",NA,"default call does not silently truncate","D-30","FAIL"," logi FALSE",0,NA,1.82951402664185
+"17-updates","U-11",NA,"max_pages beyond the data does not loop forever",NA,"PASS",NA,0,NA,1.52046513557434
+"17-updates","U-12",NA,"pagination is contiguous with a single-page read",NA,"PASS",NA,0,NA,0.740400075912476
+"17-updates","U-13",NA,"since respects the time of day","D-31","FAIL"," logi FALSE",0,NA,3.37543058395386
+"17-updates","U-14",NA,"include_changes adds a list column of tibbles",NA,"PASS",NA,0,NA,0.438651561737061
+"17-updates","U-15",NA,"change tibbles carry the documented columns",NA,"PASS",NA,0,NA,0.409886598587036
+"17-updates","U-16",NA,"patch operations are RFC 6902 verbs",NA,"PASS",NA,0,NA,0.404345750808716
+"17-updates","U-17",NA,"underenheter stream works",NA,"PASS",NA,0,NA,0.36230206489563
+"17-updates","U-18",NA,"roller stream works",NA,"PASS",NA,0,NA,0.175389289855957
+"17-updates","U-19",NA,"roller stream honours max_pages","D-32","FAIL"," logi FALSE",0,NA,0.356167554855347
+"17-updates","U-20",NA,"roller stream schema matches the enheter stream",NA,"PASS",NA,0,NA,0.170958757400513
+"17-updates","U-21",NA,"future since yields a typed empty tibble","D-05","FAIL"," logi FALSE",0,NA,0.167301654815674
+"17-updates","U-22",NA,"size above the API ceiling is capped, not rejected",NA,"PASS",NA,0,NA,1.51892995834351
+"17-updates","UF-01",NA,"update_fields returns rows",NA,"PASS",NA,0,NA,0.000584840774536133
+"17-updates","UF-02",NA,"documented columns are present",NA,"PASS",NA,0,NA,0.000598669052124023
+"17-updates","UF-03",NA,"no list columns",NA,"PASS",NA,0,NA,0.000518083572387695
+"17-updates","UF-04",NA,"patch-less events appear as synthetic NA rows",NA,"PASS",NA,0,NA,0.00111484527587891
+"17-updates","UF-05",NA,"every event in the event view appears in the field view",NA,"PASS",NA,0,NA,0.379683971405029
+"17-updates","UF-06",NA,"field names contain no slashes",NA,"PASS",NA,0,NA,0.000766992568969727
+"17-updates","UF-07",NA,"move operations emit a paired remove",NA,"SKIP","precondition unavailable",0,NA,0.00066375732421875
+"17-updates","UF-08",NA,"roller is rejected for the field view",NA,"PASS",NA,0,NA,0.000774860382080078
+"17-updates","UF-09",NA,"field values are character or NA",NA,"PASS",NA,0,NA,0.000434398651123047
+"17-updates","UF-10",NA,"empty window yields a typed empty tibble",NA,"PASS",NA,0,NA,0.170818567276001
+"17-updates","PT-01",NA,"parse_patch flattens a depth-2 value",NA,"PASS",NA,0,NA,0.00229978561401367
+"17-updates","PT-02",NA,"parse_patch handles depth-3 nesting",NA,"PASS",NA,0,NA,0.00787615776062012
+"17-updates","PT-03",NA,"parse_patch emits both sides of a move",NA,"FAIL"," logi FALSE",0,NA,0.00264263153076172
+"17-updates","PT-04",NA,"parse_patch expands arrays positionally",NA,"PASS",NA,0,NA,0.00227904319763184
+"17-updates","PT-05",NA,"flatten_page_patches agrees with parse_patch on field names","D-34","PASS",NA,0,NA,0.00398945808410645
+"17-updates","PT-06",NA,"flatten_page_patches survives depth-3 nesting","D-34","PASS",NA,0,NA,0.00219130516052246
+"17-updates","PT-07",NA,"flatten_page_patches emits one synthetic row for patch-less events",NA,"PASS",NA,0,NA,0.002105712890625
+"17-updates","PT-08",NA,"flatten_page_patches grows past the pre-allocation",NA,"PASS",NA,0,NA,0.0197303295135498
+"17-updates","PT-09",NA,"parse_updates_page handles an empty page",NA,"PASS",NA,0,NA,0.0014958381652832
+"17-updates","PT-10",NA,"parse_patch on an empty patch list returns a typed empty tibble",NA,"PASS",NA,0,NA,0.00116419792175293

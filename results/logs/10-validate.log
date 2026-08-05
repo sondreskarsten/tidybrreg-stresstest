@@ -1,0 +1,24 @@
+tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
+Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
+[PASS ] V-01     known valid orgnr accepted
+[PASS ] V-02     bad check digit rejected
+[PASS ] V-03     short input rejected
+[PASS ] V-04     long input rejected
+[PASS ] V-05     non-digit rejected
+[PASS ] V-06     empty string rejected
+[PASS ] V-07     NA rejected without error
+[PASS ] V-08     NA_character_ rejected
+[PASS ] V-09     vectorised over mixed input
+[PASS ] V-10     numeric input coerced
+[PASS ] V-11     zero-length input returns zero-length logical
+[PASS ] V-12     result is unnamed
+[PASS ] V-13     check digit 10 case rejected for every possible last digit
+[PASS ] V-14     leading whitespace rejected
+[FAIL ] V-15     prefix rule does not reject mod-11-valid non-8/9 numbers <D-02>
+[PASS ] V-16     agrees with independent mod-11 on 8/9 prefixed numbers
+[PASS ] V-17     large vector does not error
+[PASS ] V-18     factor input handled
+[PASS ] V-19     list input errors rather than silently coercing
+[PASS ] V-20     no side effects on the filesystem
+
+== 10-validate: 20 checks, FAIL=1 PASS=19 ==

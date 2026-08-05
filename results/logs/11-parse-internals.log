@@ -1,0 +1,67 @@
+tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
+Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
+[PASS ] P-01     field_dict has the documented shape
+[PASS ] P-02     field_dict api_path values are unique
+[FAIL ] P-03     field_dict col_name values are unique <D-90>
+[PASS ] P-03b    a field_dict col_name collision causes a silent last-row-wins overwrite <D-90>
+[PASS ] P-04     field_dict types are all coercible targets
+[PASS ] P-05     no two api_paths collapse to the same snake_case name <D-29>
+[PASS ] P-06     to_snake handles camelCase
+[PASS ] P-07     to_snake handles dot notation
+[PASS ] P-08     to_snake handles digit boundaries
+[PASS ] P-09     to_snake is idempotent
+[PASS ] P-10     flatten_json produces dot-notation keys
+[PASS ] P-11     flatten_json recurses past depth 2
+[PASS ] P-12     unnamed arrays are joined with the same separator as the bulk path <D-28>
+[PASS ] P-13     rename_from_dict emits only observed columns, not the full dictionary
+[PASS ] P-13b    every column rename_from_dict does emit is a real dictionary or passthrough name
+[PASS ] P-14     rename_from_dict drops nothing (zero-drop policy) <D-29>
+[PASS ] P-15     HAL links never reach the output
+[PASS ] P-16     coerce_types produces the declared classes for every emitted column
+[PASS ] P-17     parse_entity returns exactly one row
+[PASS ] P-18     parse_entities on heterogeneous payloads keeps a stable schema
+[PASS ] P-19     parse_entity is invariant to field order
+[PASS ] P-20     empty payload does not error
+[PASS ] P-21     clean bulk CSV parses
+[PASS ] P-22     20 integer parse failures are reported as an attribute
+[ERROR] P-23     more than 20 integer parse failures do not abort the parse <D-27>
+[PASS ] P-24     parse problem table rows equal the number of failures <D-27>
+[PASS ] P-25     flatten_cell on NULL yields NA
+[PASS ] P-26     flatten_cell on an empty data frame yields NA
+[PASS ] P-27     flatten_cell on a data frame yields valid JSON
+[PASS ] P-28     flatten_cell on a named list yields valid JSON
+[PASS ] P-29     flatten_cell is total over all-NULL lists
+[PASS ] P-30     drop_hal_links removes only link columns
+[PASS ] P-31     rename_and_coerce is case insensitive on api paths
+[PASS ] P-32     rename_and_coerce does not materialize fields absent from the batch
+[PASS ] P-32b    rename_and_coerce emits a field once observed anywhere in the batch
+[PASS ] P-33     extract_entity_name handles the jsonlite shape
+[PASS ] P-34     extract_entity_name handles the yyjsonr shape
+[PASS ] P-35     extract_entity_name handles unnamed lists
+[PASS ] P-36     extract_entity_name handles NULL
+[PASS ] P-37     flatten_roles produces the documented columns
+[FAIL ] P-38     flatten_roles schema is invariant to fratraadt presence <D-09>
+[PASS ] P-39     flatten_roles handles more than 200 roles
+[PASS ] P-40     flatten_roles person_id is stable across calls
+[FAIL ] P-41     flatten_roles empty group yields a typed empty tibble <D-05>
+[PASS ] P-42     flatten_roles_bulk_fast matches flatten_roles
+[PASS ] P-43     bulk flatten produces identical person_id to the per-org flatten
+[FAIL ] P-44     bulk flatten on zero entities yields typed empty <D-05>
+[PASS ] P-45     lookup_role passes unknown codes through
+[PASS ] P-46     lookup_role_vec is vectorised and order preserving
+[PASS ] P-47     role_types codes are unique
+[PASS ] P-48     role_groups codes are unique
+[PASS ] P-49     legal_forms codes are unique
+[PASS ] P-50     annotation_infotypes codes are unique
+[PASS ] P-51     signature-mode role codes are present in role_types
+[PASS ] P-52     reference tables carry no NA labels
+[PASS ] P-53     flatten_konsern flattens a deep tree
+[PASS ] P-54     flatten_konsern synthesises the root link form
+[ERROR] P-55     flatten_konsern tolerates dotted date formats <D-17>
+[FAIL ] P-56     flatten_signatur handles ISO birth dates <D-18>
+[PASS ] P-57     flatten_signatur handles dotted birth dates
+[PASS ] P-58     flatten_signatur keeps rules with no persons
+[PASS ] P-59     flatten_signatur returns the documented columns
+[PASS ] P-60     compact drops NULLs only
+
+== 11-parse-internals: 63 checks, ERROR=2 FAIL=5 PASS=56 ==

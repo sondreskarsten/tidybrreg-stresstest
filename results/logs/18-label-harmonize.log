@@ -1,0 +1,49 @@
+tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
+Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
+[PASS ] L-01     labelling a data frame preserves shape
+[PASS ] L-02     legal form is translated
+[PASS ] L-03     nace is translated
+[PASS ] L-04     org_nr is never touched
+[PASS ] L-05     name is never touched
+[PASS ] L-06     dates are never touched
+[FAIL ] L-07     labelling is idempotent
+[PASS ] L-08     code = retains the original value
+[PASS ] L-09     code = places the code column adjacent to the label
+[PASS ] L-10     multiple code columns are supported
+[PASS ] L-11     code = on a non-labelable column is a no-op
+[PASS ] L-12     vector labelling of legal forms
+[PASS ] L-13     vector labelling of roles
+[PASS ] L-14     vector labelling of role groups
+[PASS ] L-15     vector labelling of nace
+[PASS ] L-16     vector labelling of sector
+[FAIL ] L-17     unknown codes pass through unchanged
+[PASS ] L-18     vector without dic aborts
+[PASS ] L-19     unknown dic aborts
+[PASS ] L-20     empty data frame returns unchanged
+[FAIL ] L-21     lang = no yields Norwegian labels
+[PASS ] L-22     get_brreg_dic returns the documented columns
+[PASS ] L-23     nace dictionary is non-trivial
+[PASS ] L-24     sector dictionary is non-trivial
+[PASS ] L-25     dictionary codes are unique
+[PASS ] L-26     second dictionary call is served from cache
+[PASS ] L-27     lang variants are cached separately
+[PASS ] L-28     the KLASS fallback objects exist in the namespace
+[PASS ] L-29     labelling many rows is stable
+[PASS ] H-01     kommune harmonisation returns the documented columns
+[FAIL ] H-02     a pre-2020 code is actually remapped <D-78>
+[FAIL ] H-03     harmonisation changes at least one reformed code <D-78>
+[PASS ] H-04     target names are resolved for current codes
+[PASS ] H-05     harmonisation is idempotent
+[PASS ] H-06     a failed correspondence fetch does not poison the session cache <D-79>
+[PASS ] H-07     custom column name is honoured
+Connection failed with error code 404
+[ERROR] H-10     nace harmonisation returns the documented columns
+[ERROR] H-11     harmonised nace values look like codes, not descriptions <D-80>
+[ERROR] H-12     at least one code changes between SN2007 and SN2025 <D-80>
+[ERROR] H-13     ambiguity flag is logical
+Connection failed with error code 404
+[ERROR] H-14     reverse direction is supported
+[PASS ] H-15     unknown classification aborts
+[ERROR] H-16     nace harmonisation preserves row count
+
+== 18-label-harmonize: 43 checks, ERROR=6 FAIL=5 PASS=32 ==
