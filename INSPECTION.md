@@ -321,3 +321,55 @@ no note in the documentation. `?brreg_sync` and `?brreg_snapshot` both describe 
 simply as the register, with no indication the column sets differ.
 
 ---
+## 9. Raw bulk payloads — and a correction to D-90
+
+### Field counts reconcile exactly with the parsed output
+
+| bulk | header fields | parsed parquet columns |
+|---|---|---|
+| `underenheter_bulk.csv.gz` (60.7 MB) | 44 | 44 (`brreg_snapshot`) |
+| `enheter_bulk.csv.gz` (154 MB) | 90 | 90 (shared-store enheter) |
+
+One column out per field in, nothing fabricated and nothing dropped. This is the clean
+confirmation that `c9bd992` fixed D-26 at the CSV path: the five all-NA columns noted in
+section 4 (`closure_date`, the VAT block) are present *in the source header* and simply
+empty for every underenhet, so emitting them is faithful to the source rather than
+invented.
+
+### D-90 must be downgraded — the collision is a deliberate alias, not data loss
+
+`field_dict` maps two `api_path` values onto `registration_date`
+(`registreringsdatoEnhetsregisteret`, `registreringsdatoIEnhetsregisteret`) and two onto
+`employee_reg_date_nav` (`...NavAaregisteret`, `...NAVAaregisteret`). I originally
+registered this as an S1 silent last-row-wins overwrite. Inspecting the actual headers
+settles it:
+
+```
+enheter_bulk.csv       field 38: "registreringsdatoenhetsregisteret"
+underenheter_bulk.csv  field 35: "registreringsdatoIEnhetsregisteret"
+
+both bulks             field 16: "registreringsdatoantallansatteNAVAaregisteret"
+```
+
+The two registration-date spellings are **mutually exclusive by registry** — BRREG spells
+the field differently in the enheter and underenheter exports, and the dictionary carries
+both so one `col_name` covers both files. No payload ever contains both, so the overwrite
+never fires. The NAV pair are pure case-variants of a single real field, and since matching
+is case-insensitive (`P-31`) both dictionary rows resolve to the same actual column and the
+same `col_name` — the "overwrite" picks between two identical outcomes.
+
+**Corrected verdict on D-90:** the mechanism I demonstrated in `P-03b` is real (constructing
+a synthetic payload with both paths populated does silently discard one), but it is
+unreachable with real BRREG data, and the duplicate rows exist precisely to normalise a
+registry-specific spelling difference. Downgraded from **S1 to cosmetic**: worth a comment
+in `field_dict` explaining the aliasing, not a defect to fix. My original inference —
+"a live payload carrying both keys would silently lose one" — was explicitly marked
+*inferred* at the time and is now disproven by observation.
+
+Also visible in the enheter header and worth noting for anyone mapping the register: BRREG's
+own casing is inconsistent within a single file (`registreringsdatoenhetsregisteret` all
+lowercase at field 38, `registreringsdatoAntallAnsatteEnhetsregisteret` camelCase at field
+15, `registreringsdatoantallansatteNAVAaregisteret` mixed at field 16). tidybrreg's
+case-insensitive matching is the right design choice against a source like that.
+
+---
