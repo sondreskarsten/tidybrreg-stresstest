@@ -136,7 +136,7 @@ test_roller_diff <- function(fx = load_fixtures()) {
     dup <- dplyr::bind_rows(old, old[1, ])
     d <- diff_roller_state(old, dup)
     nrow(d) > 0
-  })
+  }, defect = "D-100")
 
   check("RD-24", "diff of a large state completes", {
     big_old <- dplyr::bind_rows(lapply(1:200, function(i)

@@ -1,5 +1,3 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] R-01     roles returns rows for a large ASA
 [PASS ] R-02     documented columns are present
 [PASS ] R-03     birth_date is a Date
@@ -10,7 +8,7 @@ Run brreg_snapshot() for full network/panel support. See ?brreg_status for detai
 [PASS ] R-08     every role_group_code is known to role_groups
 [PASS ] R-09     person rows carry a person_id
 [PASS ] R-10     entity-held roles carry an org number
-[ERROR] R-11     entity role names are resolved, not JSON
+[PASS ] R-11     entity role names are resolved, not JSON
 [PASS ] R-12     person_id is unique per person within one entity
 [PASS ] R-13     schema is identical across 8 different entities <D-09>
 [PASS ] R-14     roles bind_rows cleanly across entities
@@ -35,4 +33,4 @@ Run brreg_snapshot() for full network/panel support. See ?brreg_status for detai
 [FAIL ] R-33     n_employee_elected counts only employee-elected members <D-13>
 [PASS ] R-34     board_summary is stable under row permutation
 
-== 14-roles: 34 checks, ERROR=1 FAIL=6 PASS=26 SKIP=1 ==
+== 14-roles: 34 checks, FAIL=6 PASS=27 SKIP=1 ==

@@ -1,5 +1,3 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] U-01     updates returns rows
 [PASS ] U-02     documented columns are present
 [PASS ] U-03     timestamp is POSIXct
@@ -34,7 +32,7 @@ Run brreg_snapshot() for full network/panel support. See ?brreg_status for detai
 [PASS ] UF-10    empty window yields a typed empty tibble
 [PASS ] PT-01    parse_patch flattens a depth-2 value
 [PASS ] PT-02    parse_patch handles depth-3 nesting
-[FAIL ] PT-03    parse_patch emits both sides of a move
+[FAIL ] PT-03    parse_patch emits both sides of a move <D-94>
 [PASS ] PT-04    parse_patch expands arrays positionally
 [PASS ] PT-05    flatten_page_patches agrees with parse_patch on field names <D-34>
 [PASS ] PT-06    flatten_page_patches survives depth-3 nesting <D-34>

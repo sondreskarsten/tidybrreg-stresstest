@@ -1,5 +1,3 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] Q-01     enhetsregisteret base url is correct
 [PASS ] Q-02     fullmakt base url is correct
 [PASS ] Q-03     unknown service aborts
@@ -8,7 +6,7 @@ Run brreg_snapshot() for full network/panel support. See ?brreg_status for detai
 [PASS ] Q-06     query parameters are appended
 [PASS ] Q-07     NULL query parameters are dropped
 [PASS ] Q-08     klass requests target SSB
-[ERROR] Q-09     brreg and klass use different throttle realms
+[PASS ] Q-09     brreg and klass use different throttle realms
 [PASS ] Q-10     retry policy is configured
 [PASS ] Q-11     error body extractor returns character or empty
 [PASS ] Q-12     path segments are escaped, not concatenated blindly
@@ -70,4 +68,4 @@ Changelog: 0 partition(s), 0 file(s)
 [PASS ] PQ-02    parquet round trip preserves a tibble
 [PASS ] PQ-03    parquet writes are atomic (no temp files left behind)
 
-== 20-request-manifest: 36 checks, ERROR=1 FAIL=2 PASS=33 ==
+== 20-request-manifest: 36 checks, FAIL=2 PASS=34 ==

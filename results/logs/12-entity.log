@@ -1,5 +1,3 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] E-01     auto registry returns one row
 [PASS ] E-02     org_nr round-trips
 [PASS ] E-03     registry column records the matched registry
@@ -38,7 +36,7 @@ Run brreg_snapshot() for full network/panel support. See ?brreg_status for detai
 [FAIL ] E-30     the documented key columns are present for every entity type <D-93>
 [PASS ] E-30b    bind_rows across heterogeneous entity types never errors and unions gracefully
 [PASS ] E-31     brreg_entity makes no filesystem writes
-[PASS ] E-32     a nested HAL _links block survives into the output as a real column <D-92>
-[PASS ] E-32b    the leaked link column is not filtered by the top-level _links guard <D-92>
+[FAIL ] E-32     no nested HAL _links block leaks into the output <D-92>
+[FAIL ] E-32b    nested _links are filtered the same way top-level _links are <D-92>
 
-== 12-entity: 40 checks, FAIL=8 PASS=32 ==
+== 12-entity: 40 checks, FAIL=10 PASS=30 ==

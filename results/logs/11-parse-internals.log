@@ -1,9 +1,7 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] P-01     field_dict has the documented shape
 [PASS ] P-02     field_dict api_path values are unique
 [FAIL ] P-03     field_dict col_name values are unique <D-90>
-[PASS ] P-03b    a field_dict col_name collision causes a silent last-row-wins overwrite <D-90>
+[FAIL ] P-03b    colliding api_paths do not silently discard one another's value <D-90>
 [PASS ] P-04     field_dict types are all coercible targets
 [PASS ] P-05     no two api_paths collapse to the same snake_case name <D-29>
 [PASS ] P-06     to_snake handles camelCase
@@ -64,4 +62,4 @@ Run brreg_snapshot() for full network/panel support. See ?brreg_status for detai
 [PASS ] P-59     flatten_signatur returns the documented columns
 [PASS ] P-60     compact drops NULLs only
 
-== 11-parse-internals: 63 checks, ERROR=2 FAIL=5 PASS=56 ==
+== 11-parse-internals: 63 checks, ERROR=2 FAIL=6 PASS=55 ==

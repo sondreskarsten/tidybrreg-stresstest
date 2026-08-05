@@ -70,14 +70,14 @@ test_download <- function(pw = readRDS(file.path(stress_results_dir(), "prewarm.
 
   check("DL-11", "arrow output is not materialised as a data frame", {
     if (!has_arrow) NA else !is.data.frame(brreg_download("enheter", type_output = "arrow"))
-  })
+  }, defect = "D-97")
 
   check("DL-12", "arrow output row count matches the register", {
     if (!has_arrow) NA else {
       a <- brreg_download("enheter", type_output = "arrow")
       nrow(a) > 900000L
     }
-  })
+  }, defect = "D-97")
 
   check("DL-13", "json bulk parses to a tibble with atomic columns", {
     p <- pw$paths$enheter_json

@@ -7,6 +7,7 @@ tb <- asNamespace("tidybrreg")
 test_snapshot <- function(pw = readRDS(file.path(stress_results_dir(), "prewarm.rds")),
                           store = file.path(stress_root(), "tmp", "snapshot-store")) {
   stress_init("32-snapshot")
+  unlink(store, recursive = TRUE)
   dir.create(store, recursive = TRUE, showWarnings = FALSE)
   options(brreg.data_dir = store, brreg.allow_download = TRUE)
 
