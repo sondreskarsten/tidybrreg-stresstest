@@ -4,7 +4,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -qq \
     && apt-get install -y --no-install-recommends r-base-core r-recommended \
-    && apt-get upgrade -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends --only-upgrade \
+       $(dpkg-query -W -f='${Package}\n' 'r-*' 2>/dev/null | tr '\n' ' ') \
     && apt-get install -y --no-install-recommends \
       r-cran-tidygraph r-cran-igraph r-cran-tsibble r-cran-klassr \
       r-cran-yyjsonr r-cran-httptest2 r-cran-nanoparquet \
