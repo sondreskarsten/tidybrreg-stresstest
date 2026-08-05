@@ -378,3 +378,28 @@ box (OOM), so no cursor, state, or changelog exists to inspect. They are the rea
 file is registered as tier 4 and included in the CI matrix — the sync artefacts only exist
 on a runner with enough memory.
 
+### [12:40] GAP CLOSED — artefacts produced by function calls were never saved
+Until now only `results/` (the check records) and `code/` were published. Every file the
+functions under test actually *wrote* — snapshot parquet partitions, the copied raw `.gz`,
+`manifest.json`, sync state parquet, `sync_cursor.json`, changelog partitions, the download
+cache — lived in the container or runner and was destroyed with it. So `36-file-outputs.R`
+could only ever inspect artefacts on whichever machine happened to still have them, and the
+Cloud Run runs (the only ones where `brreg_sync()` completes) left nothing behind at all.
+
+Added `cloudrun/capture_artifacts.sh`, invoked from the Cloud Run entrypoint and from every
+tier-3 CI job. It walks the `tmp/` tree and writes:
+
+- `results/artifact_inventory.tsv` — one row per file with size, mtime, and SHA-256, so a
+  run's outputs are content-addressable and comparable across runs.
+- `results/artifact_summary.txt` — per-store counts and byte totals plus a depth-4 tree.
+- `results/artifacts/` — every file at or under 50 MB copied verbatim.
+
+Files above the cap (the four bulk payloads: 154 MB enheter CSV, 210 MB enheter JSON,
+130 MB roller JSON, 61 MB underenheter CSV) are catalogued with a `head1m:` fingerprint
+rather than uploaded, so they stay identifiable without moving ~550 MB per run into GCS.
+
+Measured on the local sandbox tree: 20 files, 883,482,947 bytes on disk, 11 published
+verbatim. The inspectable artefacts — `manifest.json`, the etags, the sync cursor, the
+changelog partitions, and the snapshot parquet where small enough — are exactly the ones
+that fit under the cap, which is what makes the file-output checks meaningful off-machine.
+

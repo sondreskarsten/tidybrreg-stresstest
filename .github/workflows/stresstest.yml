@@ -184,6 +184,10 @@ jobs:
       - name: Run ${{ matrix.file }}
         run: Rscript --vanilla run_all.R ${{ matrix.file }}
 
+      - name: Capture artefacts written by ${{ matrix.file }}
+        if: always()
+        run: TIDYBRREG_STRESS_ROOT="$PWD" bash cloudrun/capture_artifacts.sh || true
+
       - name: Upload ${{ matrix.file }} results
         if: always()
         uses: actions/upload-artifact@v4
@@ -193,6 +197,9 @@ jobs:
             results/*.rds
             results/*.csv
             results/logs/**
+            results/artifact_inventory.tsv
+            results/artifact_summary.txt
+            results/artifacts/**
 
   report:
     name: "aggregate and report"

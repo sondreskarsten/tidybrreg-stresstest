@@ -28,8 +28,8 @@ WORKDIR /app
 COPY R /app/R
 COPY tests /app/tests
 COPY run_all.R install.R Dockerfile /app/
-COPY cloudrun/entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+COPY cloudrun /app/cloudrun
+RUN chmod +x /app/cloudrun/*.sh && cp /app/cloudrun/entrypoint.sh /app/entrypoint.sh
 
 ENV TIDYBRREG_STRESS_ROOT=/app
 ENTRYPOINT ["/app/entrypoint.sh"]

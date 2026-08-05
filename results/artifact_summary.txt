@@ -1,0 +1,71 @@
+artefact inventory
+  files written by the run : 20
+  files published verbatim : 11
+  total bytes on disk      : 883482947
+
+by store:
+  shared-store            6 files     33913077 bytes
+  snapshot-store          6 files    295381054 bytes
+  cache                   8 files    554188816 bytes
+
+directory tree (depth 4):
+  tmp
+  tmp/cache
+  tmp/cache/R
+  tmp/cache/R/tidybrreg
+  tmp/cache/R/tidybrreg/enheter_bulk.json.etag
+  tmp/cache/R/tidybrreg/enheter_bulk.csv.etag
+  tmp/cache/R/tidybrreg/roller_bulk.json.etag
+  tmp/cache/R/tidybrreg/enheter_bulk.csv.gz
+  tmp/cache/R/tidybrreg/underenheter_bulk.csv.gz
+  tmp/cache/R/tidybrreg/enheter_bulk.json.gz
+  tmp/cache/R/tidybrreg/underenheter_bulk.csv.etag
+  tmp/cache/R/tidybrreg/roller_bulk.json.gz
+  tmp/snapshot-store
+  tmp/snapshot-store/manifest.json
+  tmp/snapshot-store/underenheter
+  tmp/snapshot-store/underenheter/snapshot_date=2026-08-04
+  tmp/snapshot-store/underenheter/snapshot_date=2026-08-04/data.parquet
+  tmp/snapshot-store/underenheter/snapshot_date=2026-08-04/raw
+  tmp/snapshot-store/underenheter/snapshot_date=2026-08-05
+  tmp/snapshot-store/underenheter/snapshot_date=2026-08-05/data.parquet
+  tmp/snapshot-store/underenheter/snapshot_date=2026-08-05/raw
+  tmp/snapshot-store/import-src.csv.gz
+  tmp/shared-store
+  tmp/shared-store/R
+  tmp/shared-store/R/tidybrreg
+  tmp/shared-store/underenheter
+  tmp/shared-store/underenheter/snapshot_date=2026-08-05
+  tmp/shared-store/underenheter/snapshot_date=2026-08-05/data.parquet
+  tmp/shared-store/underenheter/snapshot_date=2025-07-01
+  tmp/shared-store/underenheter/snapshot_date=2025-07-01/data.parquet
+  tmp/shared-store/enheter
+  tmp/shared-store/enheter/snapshot_date=2026-01-17
+  tmp/shared-store/enheter/snapshot_date=2026-01-17/data.parquet
+  tmp/shared-store/enheter/snapshot_date=2026-07-06
+  tmp/shared-store/enheter/snapshot_date=2026-07-06/data.parquet
+  tmp/shared-store/enheter/snapshot_date=2026-08-05
+  tmp/shared-store/enheter/snapshot_date=2026-08-05/data.parquet
+  tmp/shared-store/enheter/snapshot_date=2025-07-01
+  tmp/shared-store/enheter/snapshot_date=2025-07-01/data.parquet
+  tmp/sync-store
+  tmp/sync-store/state
+  tmp/sync-store/state/changelog
+  tmp/data
+  tmp/data/32-snapshot
+  tmp/data/32-snapshot/R
+  tmp/data/32-snapshot/R/tidybrreg
+  tmp/data/35-replay
+  tmp/data/34-sync
+  tmp/data/34-sync/R
+  tmp/data/34-sync/R/tidybrreg
+  tmp/data/31-download
+  tmp/data/16-governance
+  tmp/data/16-governance/R
+  tmp/data/16-governance/R/tidybrreg
+  tmp/data/15-konsern-signatur
+  tmp/data/15-konsern-signatur/R
+  tmp/data/15-konsern-signatur/R/tidybrreg
+  tmp/data/20-request-manifest
+  tmp/data/20-request-manifest/R
+  tmp/data/20-request-manifest/R/tidybrreg

@@ -27,6 +27,9 @@ Rscript --vanilla run_all.R
 RUN_STATUS=$?
 
 Rscript --vanilla run_all.R summarise | tee results/summary.txt
+
+echo "== capturing artefacts written by the run =="
+bash "${ROOT}/cloudrun/capture_artifacts.sh" || echo "artefact capture failed (non-fatal)"
 echo "run_all exit status: ${RUN_STATUS}"
 
 if command -v gcloud >/dev/null 2>&1; then
