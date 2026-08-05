@@ -31,8 +31,22 @@ echo "run_all exit status: ${RUN_STATUS}"
 
 if command -v gcloud >/dev/null 2>&1; then
   echo "publishing results to ${DEST}"
-  gcloud storage cp -r results "${DEST}/" 2>&1 | tail -5
-  gcloud storage cp -r tests R run_all.R Dockerfile "${DEST}/code/" 2>&1 | tail -5
+  gcloud storage cp -r results "${DEST}/results" 2>&1 | tail -3
+
+  for item in tests R run_all.R install.R Dockerfile cloudrun; do
+    if [ -e "$item" ]; then
+      gcloud storage cp -r "$item" "${DEST}/code/$item" 2>&1 | tail -2
+    else
+      echo "  skip (absent in image): $item"
+    fi
+  done
+
+  PUBLISHED=$(gcloud storage ls "${DEST}/results/**" 2>/dev/null | wc -l)
+  echo "published objects under ${DEST}/results: ${PUBLISHED}"
+  if [ "${PUBLISHED}" -eq 0 ]; then
+    echo "FATAL: publish produced no objects" >&2
+    UPLOAD_FAILED=1
+  fi
 else
   echo "FATAL: gcloud not available in image; results cannot be published" >&2
   echo "results left in ${ROOT}/results" >&2
