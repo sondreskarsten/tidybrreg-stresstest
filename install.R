@@ -1,7 +1,22 @@
+writable_lib <- function(candidates = .libPaths()) {
+  ok <- candidates[file.access(candidates, 2L) == 0L]
+  if (length(ok) > 0) return(ok[1])
+  user_lib <- Sys.getenv("R_LIBS_USER")
+  if (!nzchar(user_lib)) {
+    user_lib <- file.path("~", "R", paste0(R.version$platform, "-library"),
+                          paste(R.version$major, substr(R.version$minor, 1, 1), sep = "."))
+  }
+  user_lib <- path.expand(strsplit(user_lib, .Platform$path.sep)[[1]][1])
+  dir.create(user_lib, recursive = TRUE, showWarnings = FALSE)
+  .libPaths(c(user_lib, .libPaths()))
+  user_lib
+}
+
 install_tidybrreg <- function(repos = c(sondreskarsten = "https://sondreskarsten.r-universe.dev",
                                         CRAN = "https://cloud.r-project.org"),
-                              lib = .libPaths()[1],
+                              lib = writable_lib(),
                               out = "results/environment.rds") {
+  message("installing into: ", lib)
   install.packages("tidybrreg", repos = repos, lib = lib)
 
   required <- c("cli", "dplyr", "httr2", "jsonlite", "readr", "rlang", "tibble")

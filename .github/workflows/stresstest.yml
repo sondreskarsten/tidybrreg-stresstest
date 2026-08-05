@@ -39,7 +39,9 @@ jobs:
       - name: Cache R library
         uses: actions/cache@v4
         with:
-          path: /usr/lib/R/site-library
+          path: |
+            /usr/lib/R/site-library
+            /usr/local/lib/R/site-library
           key: rlib-${{ runner.os }}-${{ hashFiles('setup.sh', 'install.R') }}
 
       - name: Bootstrap R and install tidybrreg
@@ -83,7 +85,9 @@ jobs:
       - name: Cache R library
         uses: actions/cache@v4
         with:
-          path: /usr/lib/R/site-library
+          path: |
+            /usr/lib/R/site-library
+            /usr/local/lib/R/site-library
           key: rlib-${{ runner.os }}-${{ hashFiles('setup.sh', 'install.R') }}
 
       - name: Bootstrap R and install tidybrreg
@@ -122,7 +126,9 @@ jobs:
       - name: Cache R library
         uses: actions/cache@v4
         with:
-          path: /usr/lib/R/site-library
+          path: |
+            /usr/lib/R/site-library
+            /usr/local/lib/R/site-library
           key: rlib-${{ runner.os }}-${{ hashFiles('setup.sh', 'install.R') }}
 
       - name: Bootstrap R and install tidybrreg

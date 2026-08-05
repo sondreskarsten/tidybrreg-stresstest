@@ -39,4 +39,4 @@ $SUDO apt-get install -y --no-install-recommends \
   r-cran-tidygraph r-cran-igraph r-cran-tsibble r-cran-klassr \
   r-cran-testthat r-cran-withr r-cran-httptest2 r-cran-jsonvalidate
 
-Rscript install.R
+$SUDO Rscript install.R
