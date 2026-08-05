@@ -5,7 +5,7 @@ i Using cached file (147.1 MB, 2026-08-05 06:43).
 i Roller only available as JSON. Using "json" format.
 i Using cached file (123.6 MB, 2026-08-05 07:12).
 [PASS ] DL-03    roller csv is coerced to json with a message
-i Using cached file (57.9 MB, 2026-08-05 06:44).
+i Using cached file (57.9 MB, 2026-08-05 07:22).
 [PASS ] DL-04    underenheter path output works
 i Using cached file (147.1 MB, 2026-08-05 06:43).
 i Using cached file (147.1 MB, 2026-08-05 06:43).
@@ -14,7 +14,7 @@ i Using cached file (147.1 MB, 2026-08-05 06:43).
 i Using cached file (147.1 MB, 2026-08-05 06:43).
 [FAIL ] DL-07    an unrecognised refresh value is rejected <D-23>
 i Downloading full underenheter register (~59 MB)
-v Downloading full underenheter register (~59 MB) [1m 8.6s]
+v Downloading full underenheter register (~59 MB) [1m 9.1s]
 
 v Downloaded 57.9 MB to cache.
 [FAIL ] DL-08    cache = FALSE does not leave a cached payload behind <D-24>

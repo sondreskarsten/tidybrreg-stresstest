@@ -176,3 +176,45 @@ Rewrites that stand (internal, undocumented machinery, not doc-licensed): `P-13`
 `P-32`'s original form asserted the defective behavior itself, which was a genuine authoring
 error independent of any upstream change.
 
+### [08:10] NEW DEFECT — D-97: `type_output = "arrow"` is broken on the real bulk CSV
+`brreg_download(type = "enheter", type_output = "arrow")` fails outright:
+`Invalid: CSV parse error: Expected 90 columns, got 63`. Reproduced independently outside
+the harness by calling `arrow::read_csv_arrow()` on the cached file directly. The same file
+parses cleanly via `readr::read_csv()` (200,000 rows x 90 columns), so the file is not
+corrupt — arrow's CSV reader and readr disagree on embedded newlines inside quoted address
+fields (the failing record is a Tromsø street address). The documented arrow path is
+therefore unusable against the live register, not merely inconsistent in column naming as
+D-25 described. D-25 (arrow path returns unrenamed columns) cannot even be reached, since
+the read itself aborts. Affects `DL-10`, `DL-11`, `DL-12`.
+
+### [08:10] ENV — OOM at 3.9 GB on JSON bulk parse and JSON sync bootstrap
+`parse_bulk_json()` on the 200 MB enheter JSON, and `brreg_sync(format = "json")`
+bootstrap, are both killed by the OOM reaper on this box (3.9 GB RAM, single core). Not a
+tidybrreg defect per se, but a real capacity finding: the JSON path materialises the whole
+register in memory. Recorded rather than worked around, per instruction not to reduce
+scope.
+
+### [08:10] RIG FIX — results were lost entirely when a process was killed
+`stress_flush()` only wrote at end-of-file, so the three OOM kills (31-download,
+32-snapshot, 34-sync) produced no results at all despite dozens of checks having already
+run. Added `stress_flush_incremental()` called from `stress_record()`, writing
+`{file}.partial.rds` atomically after every check, and taught `summarise_results()` to fold
+in partials for files with no completed result (flagged as incomplete). Re-running
+31-download now captures 12 checks up to the OOM point where previously it captured zero.
+This is a genuine mechanical rig defect, not an assertion change.
+
+### [08:10] DOC ADJUDICATION (partial)
+- **D-95** (label leaves a mutating `names` attribute): `brreg_label()` Value states "the
+  same tibble with code columns replaced by English labels". A column carrying a stray
+  `names` attribute whose value changes between passes (`"ASA"` then `NA`) is not that.
+  → tidybrreg issue.
+- **D-96** (`lang = "no"` returns English): the `lang` argument is documented as
+  '"no" (Norwegian original from brreg API)'. Returns English for both `nace_1` and
+  `legal_form`. Unambiguous documented-contract violation. → tidybrreg issue.
+- **D-94** (RFC 6902 `move` emits no source removal): `brreg_update_fields()` docs are
+  silent on `move` semantics — they only document the synthetic-NA-row behaviour for Ny /
+  Sletting / Fjernet. Not doc-licensed, so the check is an RFC-derived expectation rather
+  than a documentation violation. Still filed, because the consequence is real (a replay
+  applying only the destination row leaves the source field stale), but flagged as
+  spec-derived. → tidybrreg issue, lower confidence.
+
