@@ -1,9 +1,0 @@
-[PASS ] PN-00    the shared store has at least three snapshots
-[PASS ] PN-01    panel returns rows
-[PASS ] PN-02    documented columns are present
-[PASS ] PN-03    requested columns are present
-[PASS ] PN-04    no unrequested payload columns leak in <D-61>
-[PASS ] PN-05    date_mapping attribute is attached
-[PASS ] PN-06    every panel snapshot_date exists in the store
-[PASS ] PN-07    LOCF never uses a future snapshot
-[PASS ] PN-08    one row per firm per period

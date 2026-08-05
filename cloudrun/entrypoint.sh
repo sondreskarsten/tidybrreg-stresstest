@@ -28,6 +28,9 @@ RUN_STATUS=$?
 
 Rscript --vanilla run_all.R summarise | tee results/summary.txt
 
+echo "== comparing results against EVALUATION.md =="
+Rscript --vanilla compare_to_evaluation.R || echo "comparison failed (non-fatal)"
+
 echo "== capturing artefacts written by the run =="
 bash "${ROOT}/cloudrun/capture_artifacts.sh" || echo "artefact capture failed (non-fatal)"
 echo "run_all exit status: ${RUN_STATUS}"

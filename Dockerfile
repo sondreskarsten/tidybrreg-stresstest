@@ -27,7 +27,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 WORKDIR /app
 COPY R /app/R
 COPY tests /app/tests
-COPY run_all.R install.R Dockerfile /app/
+COPY run_all.R install.R Dockerfile compare_to_evaluation.R EVALUATION.md /app/
 COPY cloudrun /app/cloudrun
 RUN chmod +x /app/cloudrun/*.sh && cp /app/cloudrun/entrypoint.sh /app/entrypoint.sh
 
