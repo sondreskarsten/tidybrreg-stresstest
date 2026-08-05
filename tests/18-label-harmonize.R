@@ -33,7 +33,7 @@ test_label_harmonize <- function(fx = load_fixtures()) {
     a <- brreg_label(e)
     b <- brreg_label(a)
     identical(a$legal_form, b$legal_form)
-  })
+  }, defect = "D-95")
 
   check("L-08", "code = retains the original value", {
     l <- brreg_label(e, code = "legal_form")
@@ -75,7 +75,8 @@ test_label_harmonize <- function(fx = load_fixtures()) {
         is.character(brreg_label(c("2100"), dic = "sector")))
 
   check("L-17", "unknown codes pass through unchanged",
-        identical(brreg_label(c("AS", "ZZZ"), dic = "legal_form")[2], "ZZZ"))
+        identical(brreg_label(c("AS", "ZZZ"), dic = "legal_form")[2], "ZZZ"),
+        defect = "D-95")
 
   check_error("L-18", "vector without dic aborts",
               brreg_label(c("AS")), pattern = "dic")
@@ -90,7 +91,7 @@ test_label_harmonize <- function(fx = load_fixtures()) {
     en <- brreg_label(e, lang = "en")$nace_1
     no <- brreg_label(e, lang = "no")$nace_1
     !identical(en, no)
-  })
+  }, defect = "D-96")
 
   check("L-22", "get_brreg_dic returns the documented columns", {
     d <- get_brreg_dic("nace")
@@ -195,7 +196,7 @@ test_label_harmonize <- function(fx = load_fixtures()) {
       out <- brreg_harmonize_nace(nc)
       all(c("nace_1_harmonized", "nace_1_ambiguous") %in% names(out))
     }
-  })
+  }, defect = "D-80")
 
   check("H-11", "harmonised nace values look like codes, not descriptions", {
     if (!has_klassr) NA else {
@@ -213,21 +214,21 @@ test_label_harmonize <- function(fx = load_fixtures()) {
 
   check("H-13", "ambiguity flag is logical", {
     if (!has_klassr) NA else is.logical(brreg_harmonize_nace(nc)$nace_1_ambiguous)
-  })
+  }, defect = "D-80")
 
   check("H-14", "reverse direction is supported", {
     if (!has_klassr) NA else {
       out <- brreg_harmonize_nace(nc, from = "SN2025", to = "SN2007")
       "nace_1_harmonized" %in% names(out)
     }
-  })
+  }, defect = "D-80")
 
   check_error("H-15", "unknown classification aborts",
               brreg_harmonize_nace(nc, from = "SN1994"), pattern = "Unknown")
 
   check("H-16", "nace harmonisation preserves row count", {
     if (!has_klassr) NA else nrow(brreg_harmonize_nace(nc)) == nrow(nc)
-  })
+  }, defect = "D-80")
 
   stress_flush()
 }

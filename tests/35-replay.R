@@ -37,7 +37,7 @@ test_replay <- function(pw = readRDS(file.path(stress_results_dir(), "prewarm.rd
     del <- unique(upd$org_nr[upd$change_type %in% c("Sletting", "Fjernet")])
     del <- intersect(del, base$org_nr)
     if (length(del) == 0) NA else !any(del %in% st$org_nr)
-  })
+  }, defect = "D-99")
 
   check("RP-05", "an empty update set returns the base unchanged", {
     st <- brreg_replay(base, upd[0, ], target_date = Sys.Date())

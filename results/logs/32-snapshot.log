@@ -28,3 +28,4 @@ i Snapshot for 2024-12-31 already exists. Use `force = TRUE` to overwrite.
 [PASS ] IM-05    import without force does not overwrite
 v Imported: 2024-12-31 (54 MB, 854499 rows)
 [PASS ] IM-06    import with force overwrites
+Killed

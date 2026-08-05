@@ -173,7 +173,7 @@ test_updates <- function(fx = load_fixtures()) {
   check("PT-03", "parse_patch emits both sides of a move", {
     p <- tb$parse_patch(payload_patch())
     sum(p$operation == "remove") >= 2L
-  })
+  }, defect = "D-94")
 
   check("PT-04", "parse_patch expands arrays positionally", {
     p <- tb$parse_patch(payload_patch())

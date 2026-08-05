@@ -20,7 +20,7 @@ test_parse_internals <- function() {
         !any(duplicated(fd$col_name)),
         defect = "D-90")
 
-  check("P-03b", "a field_dict col_name collision causes a silent last-row-wins overwrite", {
+  check("P-03b", "colliding api_paths do not silently discard one another's value", {
     dup <- fd$col_name[duplicated(fd$col_name)]
     if (length(dup) == 0) NA else {
       cn <- dup[1]
@@ -34,8 +34,7 @@ test_parse_internals <- function() {
       only2 <- as.character(tb$rename_from_dict(f2)[[cn]])
       both <- as.character(tb$rename_from_dict(fboth)[[cn]])
       identical(only1, "VALUE_ONE") && identical(only2, "VALUE_TWO") &&
-        (identical(both, "VALUE_ONE") || identical(both, "VALUE_TWO")) &&
-        !identical(both, "VALUE_ONE;VALUE_TWO")
+        !identical(both, "VALUE_ONE") && !identical(both, "VALUE_TWO")
     }
   }, defect = "D-90")
 

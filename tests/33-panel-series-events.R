@@ -222,7 +222,7 @@ test_panel <- function(pw = readRDS(file.path(stress_results_dir(), "prewarm.rds
     out <- tryCatch(brreg_events(dates[length(dates)], dates[1]),
                     error = function(e) "err")
     identical(out, "err")
-  })
+  }, defect = "D-98")
 
   check("EV-14", "no org number appears as both entry and exit",
         length(intersect(ev$org_nr[ev$event_type == "entry"],

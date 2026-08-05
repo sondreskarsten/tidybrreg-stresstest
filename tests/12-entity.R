@@ -245,20 +245,18 @@ test_entity <- function(fx = load_fixtures()) {
     length(list.files(d, recursive = TRUE)) == before
   })
 
-  check("E-32", "a nested HAL _links block survives into the output as a real column", {
-    "organisasjonsform__links_self_href" %in% names(base) &&
-      !"organisasjonsform__links_self_href" %in% tidybrreg::field_dict$col_name &&
-      grepl("^https?://", base$organisasjonsform__links_self_href)
+  check("E-32", "no nested HAL _links block leaks into the output", {
+    !any(grepl("_links", names(base)))
   }, defect = "D-92")
 
-  check("E-32b", "the leaked link column is not filtered by the top-level _links guard", {
+  check("E-32b", "nested _links are filtered the same way top-level _links are", {
     tb <- asNamespace("tidybrreg")
     flat <- tb$flatten_json(list(
       organisasjonsnummer = "923609016",
       organisasjonsform = list(kode = "ASA", `_links` = list(self = list(href = "http://x")))
     ))
     m <- tb$rename_from_dict(flat)
-    "organisasjonsform__links_self_href" %in% names(m)
+    !any(grepl("_links", names(m)))
   }, defect = "D-92")
 
 
