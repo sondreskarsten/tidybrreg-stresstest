@@ -157,3 +157,22 @@ about the package.
 
 `12-entity.R` now: 35 pass, 5 confirmed defects (D-01 ×2, D-91 ×3), 0 unexplained.
 
+### [23:50] METHOD CORRECTION — a rigid assertion licensed by the docs is a RESULT, not a rig bug
+I had been reclassifying doc-licensed assertions as "rig bugs" and softening them whenever
+the installed build disagreed. That is backwards: if the function signature and its
+documentation led to the assertion, a failure is a finding about the package, not about the
+test. Reverted the softening of `E-04`, `E-26`, `E-27`, `E-28`, `E-30` and `S-04`.
+
+`brreg_entity()`'s own Value section states: "Key columns include 'org_nr', 'name',
+'legal_form', 'employees', 'founding_date', 'nace_1', 'municipality_code', 'bankrupt', and
+'parent_org_nr'." Empirically, ENK entities carry neither `founding_date` nor `employees`,
+and NUF entities carry no `municipality_code`. The documented contract is violated →
+registered as **D-93** rather than absorbed into the tests. The `c9bd992` NEWS entry
+documents the new batch-scoped behavior but the function's own Value section was never
+updated to match, so the two now contradict each other inside the same installed build.
+
+Rewrites that stand (internal, undocumented machinery, not doc-licensed): `P-13`, `P-16`,
+`P-32` in `11-parse-internals.R` target unexported helpers with no roxygen contract, and
+`P-32`'s original form asserted the defective behavior itself, which was a genuine authoring
+error independent of any upstream change.
+

@@ -22,15 +22,18 @@ test_entity <- function(fx = load_fixtures()) {
   check("E-03", "registry column records the matched registry",
         identical(base$registry, "enheter"))
 
-  check("E-04", "returned columns are a proper subset of the dictionary plus known passthroughs", {
+  doc_key_cols <- c("org_nr", "name", "legal_form", "employees", "founding_date",
+                    "nace_1", "municipality_code", "bankrupt")
+
+  check("E-04", "the documented key columns are present", {
+    all(doc_key_cols %in% names(base))
+  }, defect = "D-93")
+
+  check("E-04b", "column names follow the package field dictionary as documented", {
     known_passthrough <- c("registry", "historiske_navn",
                            "organisasjonsform__links_self_href")
-    ncol(base) < nrow(tidybrreg::field_dict) &&
-      all(setdiff(names(base), known_passthrough) %in% tidybrreg::field_dict$col_name)
+    all(setdiff(names(base), known_passthrough) %in% tidybrreg::field_dict$col_name)
   })
-
-  check("E-04b", "universal fields present on any resolvable entity are present here",
-        all(c("org_nr", "name", "legal_form", "registration_date") %in% names(base)))
 
   check("E-05", "declared types are honoured",
         inherits(base$founding_date, "Date") && is.integer(base$employees))
@@ -202,41 +205,38 @@ test_entity <- function(fx = load_fixtures()) {
         !any(vapply(base, function(x) is.character(x) && !is.na(x[1]) &&
                       grepl("^\\{", x[1]), logical(1))))
 
-  core_universal <- c("org_nr", "name", "legal_form", "legal_form_desc",
-                      "registration_date", "nace_1")
+  check("E-26", "bank entity carries the documented key columns",
+        all(doc_key_cols %in% names(brreg_entity(bank))), defect = "D-93")
 
-  check("E-26", "bank entity resolves and carries the empirically universal core fields",
-        all(core_universal %in% names(brreg_entity(bank))))
-
-  check("E-27", "ENK entity resolves and carries the empirically universal core fields", {
+  check("E-27", "ENK entity carries the documented key columns", {
     if (length(fx$enk) == 0) NA else
-      all(core_universal %in% names(brreg_entity(fx$enk[1])))
-  })
+      all(doc_key_cols %in% names(brreg_entity(fx$enk[1])))
+  }, defect = "D-93")
 
-  check("E-28", "NUF entity resolves and carries the empirically universal core fields", {
+  check("E-28", "NUF entity carries the documented key columns", {
     if (length(fx$nuf) == 0) NA else
-      all(core_universal %in% names(brreg_entity(fx$nuf[1])))
-  })
+      all(doc_key_cols %in% names(brreg_entity(fx$nuf[1])))
+  }, defect = "D-93")
 
   check("E-29", "bankrupt entity carries a bankruptcy date", {
     if (length(fx$bankrupt) == 0) NA else isTRUE(brreg_entity(fx$bankrupt[1])$bankrupt)
   })
 
-  check("E-30", "column counts genuinely differ across different entity types", {
-    orgs <- utils::head(unique(c(asa, bank, fx$enk[1], fx$nuf[1])), 4L)
-    if (length(orgs) < 3) NA else {
-      ncols <- vapply(orgs, function(o) ncol(brreg_entity(o)), integer(1))
-      length(unique(ncols)) > 1L
-    }
-  })
+  check("E-30", "the documented key columns are present for every entity type", {
+    orgs <- utils::head(unique(c(asa, bank, fx$enk[1], fx$nuf[1], fx$oslo_as)), 10L)
+    if (length(orgs) < 3) NA else
+      all(vapply(orgs, function(o) all(doc_key_cols %in% names(brreg_entity(o))),
+                 logical(1)))
+  }, defect = "D-93")
 
   check("E-30b", "bind_rows across heterogeneous entity types never errors and unions gracefully", {
     orgs <- utils::head(unique(c(fx$oslo_as, fx$enk, fx$nuf, asa, bank)), 10L)
     if (length(orgs) < 2) NA else {
       out <- dplyr::bind_rows(lapply(orgs, brreg_entity))
-      nrow(out) == length(orgs) && all(core_universal %in% names(out))
+      nrow(out) == length(orgs) && all(c("org_nr", "name", "legal_form") %in% names(out))
     }
   })
+
 
   check("E-31", "brreg_entity makes no filesystem writes", {
     d <- tempfile(); dir.create(d)

@@ -1,0 +1,38 @@
+tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
+Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
+[PASS ] S-01     name search returns rows
+[PASS ] S-02     total_matches attribute is set and numeric
+[PASS ] S-03     total_matches is at least the returned row count
+[FAIL ] S-04     search schema matches entity schema minus registry <D-93>
+[PASS ] S-05     max_results is respected exactly
+[PASS ] S-06     max_results below the page size does not over-fetch
+[PASS ] S-07     max_results above the page size paginates
+[PASS ] S-08     legal_form filter is honoured
+[PASS ] S-09     municipality filter is honoured on enheter
+[PASS ] S-10     municipality filter is honoured on underenheter
+[PASS ] S-11     nace filter is honoured
+[PASS ] S-12     min_employees is honoured
+[PASS ] S-13     max_employees is honoured
+[PASS ] S-14     bankrupt filter is honoured
+[FAIL ] S-15     bankrupt on underenheter either filters or signals <D-04>
+[PASS ] S-16     parent_org_nr filter is honoured
+[PASS ] S-17     combined filters are ANDed
+[FAIL ] S-18     no-match search returns a typed empty tibble <D-05>
+[PASS ] S-19     no-match search still reports total_matches zero
+[PASS ] S-20     type = label preserves total_matches
+[PASS ] S-21     brreg_label(code=) preserves total_matches <D-07>
+[PASS ] S-22     underenheter registry returns rows
+[PASS ] S-23     results are unique on org_nr
+[PASS ] S-24     pagination is stable across two identical calls
+[PASS ] S-25     max_results beyond the API ceiling warns and truncates
+[PASS ] S-26     brreg_underenheter default does not silently truncate a large parent <D-08>
+[PASS ] S-27     brreg_underenheter with a large cap retrieves everything
+[PASS ] S-28     brreg_children returns the ORGL hierarchy
+[FAIL ] S-29     brreg_children on an AS returns a typed empty tibble <D-05>
+[PASS ] S-30     brreg_underenheter type = label works
+[PASS ] S-31     search never returns list columns
+[PASS ] S-32     search column types match the dictionary
+[PASS ] S-33     an unreachable filter combination returns empty, not an error
+[PASS ] S-34     search and entity agree on a single org
+
+== 13-search: 34 checks, FAIL=4 PASS=30 ==

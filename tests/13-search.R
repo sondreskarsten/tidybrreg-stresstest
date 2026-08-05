@@ -21,7 +21,7 @@ test_search <- function(fx = load_fixtures()) {
     e <- brreg_entity(asa)
     setequal(setdiff(names(e), "registry"), setdiff(names(base), "registry")) ||
       all(tidybrreg::field_dict$col_name %in% names(base))
-  })
+  }, defect = "D-93")
 
   check("S-05", "max_results is respected exactly",
         nrow(brreg_search(legal_form = "AS", max_results = 7)) == 7L)
