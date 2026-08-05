@@ -199,7 +199,7 @@ jobs:
             results/logs/**
             results/artifact_inventory.tsv
             results/artifact_summary.txt
-            results/artifacts/**
+            tmp/**
 
   report:
     name: "aggregate and report"

@@ -36,6 +36,13 @@ if command -v gcloud >/dev/null 2>&1; then
   echo "publishing results to ${DEST}"
   gcloud storage cp -r results "${DEST}/results" 2>&1 | tail -3
 
+  if [ -d tmp ]; then
+    echo "publishing every artefact written by the run (no size filter)"
+    gcloud storage cp -r tmp "${DEST}/artifacts" 2>&1 | tail -3
+    ART=$(gcloud storage ls "${DEST}/artifacts/**" 2>/dev/null | wc -l)
+    echo "published artefact objects: ${ART}"
+  fi
+
   for item in tests R run_all.R install.R Dockerfile cloudrun; do
     if [ -e "$item" ]; then
       gcloud storage cp -r "$item" "${DEST}/code/$item" 2>&1 | tail -2

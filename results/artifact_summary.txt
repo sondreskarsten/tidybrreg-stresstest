@@ -1,14 +1,17 @@
 artefact inventory
   files written by the run : 20
-  files published verbatim : 11
   total bytes on disk      : 883482947
 
 by store:
-  shared-store            6 files     33913077 bytes
-  snapshot-store          6 files    295381054 bytes
-  cache                   8 files    554188816 bytes
+  shared-store            6 files       33913077 bytes
+  snapshot-store          6 files      295381054 bytes
+  cache                   8 files      554188816 bytes
 
-directory tree (depth 4):
+duplicate content (same sha256 under different paths):
+  8ebc97433bf7842c -> tmp/cache/R/tidybrreg/underenheter_bulk.csv.gz tmp/snapshot-store/import-src.csv.gz tmp/snapshot-store/underenheter/snapshot_date=2026-08-04/raw/underenheter_bulk.csv.gz tmp/snapshot-store/underenheter/snapshot_date=2026-08-05/raw/underenheter_bulk.csv.gz
+  5bb335e6c1d7c0f8 -> tmp/snapshot-store/underenheter/snapshot_date=2026-08-04/data.parquet tmp/snapshot-store/underenheter/snapshot_date=2026-08-05/data.parquet
+
+directory tree (depth 5):
   tmp
   tmp/cache
   tmp/cache/R
@@ -27,9 +30,11 @@ directory tree (depth 4):
   tmp/snapshot-store/underenheter/snapshot_date=2026-08-04
   tmp/snapshot-store/underenheter/snapshot_date=2026-08-04/data.parquet
   tmp/snapshot-store/underenheter/snapshot_date=2026-08-04/raw
+  tmp/snapshot-store/underenheter/snapshot_date=2026-08-04/raw/underenheter_bulk.csv.gz
   tmp/snapshot-store/underenheter/snapshot_date=2026-08-05
   tmp/snapshot-store/underenheter/snapshot_date=2026-08-05/data.parquet
   tmp/snapshot-store/underenheter/snapshot_date=2026-08-05/raw
+  tmp/snapshot-store/underenheter/snapshot_date=2026-08-05/raw/underenheter_bulk.csv.gz
   tmp/snapshot-store/import-src.csv.gz
   tmp/shared-store
   tmp/shared-store/R
@@ -69,3 +74,38 @@ directory tree (depth 4):
   tmp/data/20-request-manifest
   tmp/data/20-request-manifest/R
   tmp/data/20-request-manifest/R/tidybrreg
+  tmp/data/33-panel-series-events
+  tmp/data/12-entity
+  tmp/data/12-entity/R
+  tmp/data/12-entity/R/tidybrreg
+  tmp/data/10-validate
+  tmp/data/10-validate/R
+  tmp/data/10-validate/R/tidybrreg
+  tmp/data/19-roller-diff
+  tmp/data/19-roller-diff/R
+  tmp/data/19-roller-diff/R/tidybrreg
+  tmp/data/36
+  tmp/data/36/R
+  tmp/data/36/R/tidybrreg
+  tmp/data/18-label-harmonize
+  tmp/data/18-label-harmonize/R
+  tmp/data/18-label-harmonize/R/tidybrreg
+  tmp/data/13-search
+  tmp/data/13-search/R
+  tmp/data/13-search/R/tidybrreg
+  tmp/data/14-roles
+  tmp/data/14-roles/R
+  tmp/data/14-roles/R/tidybrreg
+  tmp/data/11-parse-internals
+  tmp/data/11-parse-internals/R
+  tmp/data/11-parse-internals/R/tidybrreg
+  tmp/data/30-bulk-prewarm
+  tmp/data/00-fixtures
+  tmp/data/00-fixtures/R
+  tmp/data/00-fixtures/R/tidybrreg
+  tmp/data/21-network
+  tmp/data/21-network/R
+  tmp/data/21-network/R/tidybrreg
+  tmp/data/17-updates
+  tmp/data/17-updates/R
+  tmp/data/17-updates/R/tidybrreg

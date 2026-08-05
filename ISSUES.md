@@ -403,3 +403,26 @@ verbatim. The inspectable artefacts — `manifest.json`, the etags, the sync cur
 changelog partitions, and the snapshot parquet where small enough — are exactly the ones
 that fit under the cap, which is what makes the file-output checks meaningful off-machine.
 
+### [12:55] ARTEFACT CAPTURE — size filter removed, and the full checksums found something
+Per instruction, no size filter: every file the run writes is inventoried with a full
+SHA-256 and published. Also switched from copying files into `results/artifacts/` to
+uploading the `tmp/` tree in place, so nothing is duplicated on Cloud Run's memory-backed
+filesystem (that copy would have added ~880 MB of RAM pressure to a 32 GB job for no gain).
+
+Hashing every file rather than sampling immediately paid for itself — it proves exact
+duplication that the earlier `head1m:` fingerprints could only have hinted at:
+
+- `8ebc9743…` appears **four times**: the download cache copy, the test's `import-src.csv.gz`,
+  and the raw `.gz` inside *both* snapshot partitions.
+- `5bb335e6…` appears twice: `snapshot_date=2026-08-04/data.parquet` and
+  `snapshot_date=2026-08-05/data.parquet` are byte-identical parquet.
+
+**228 MB of the 883 MB written per run is exact-duplicate content.** This is D-54 (raw
+copied into the partition) and D-103 (identical content filed under two dates) measured
+rather than argued: the second hash is direct proof that the two "snapshots" differ only in
+their directory name, which is what makes a panel across that boundary show a change of
+zero for reasons that have nothing to do with the register.
+
+The inventory is content-addressed, so this comparison now works *across* runs too — a
+future run's parquet can be checked against a previous one without downloading either.
+
