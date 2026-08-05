@@ -72,3 +72,71 @@ documentation describes the column only as "HTTP headers", so this is under-spec
 rather than contradicted — but it makes the field effectively unusable as a timestamp.
 
 ---
+## 3. `snapshot-store/roller/snapshot_date=2024-01-01/data.parquet` — 120,697,617 bytes
+
+Written by `brreg_import(path_to_roller_json, "2024-01-01", type = "roller")` (check
+`IM-07`).
+
+**Expected (EVALUATION #193):** either a parsed roller table or a refusal. The evaluation
+predicted `match.arg` would accept `"roller"` while the body always calls
+`parse_bulk_csv()`, producing garbage.
+
+**Observed — worse than predicted:**
+
+```
+rows: 116,018,041   cols: 1
+column names: "["
+```
+
+The single column is literally named `[`. Its values are the raw JSON text of the roller
+bulk, one line per row:
+
+```
+ 1 | {
+ 2 | _links : {
+ 3 | self : {
+ 4 | href : https://data.brreg.no/enhetsregisteret/api/enheter/810034882/roller
+ 5 | },
+ 6 | enhet : {
+ 7 | href : https://data.brreg.no/enhetsregisteret/api/enheter/810034882
+ 8 | }
+ 9 | },
+10 | organisasjonsnummer : 810034882,
+11 | rollegrupper : [ {
+12 | roller : [ {
+```
+
+The CSV reader treated the opening `[` of the JSON array as a header row and every
+subsequent line as a single-field record. Commas inside the JSON were consumed as
+delimiters, which is why quoting has been stripped from the values. 116 million rows,
+116 MB on disk, zero recoverable structure.
+
+**The store does not quarantine it.** It is fully integrated into the public API:
+
+```
+brreg_snapshots("roller")
+  snapshot_date  file_size    path
+  2024-01-01     120697617    .../roller/snapshot_date=2024-01-01/data.parquet
+
+brreg_open("roller")   ->   opened, cols: [ , snapshot_date
+```
+
+So `brreg_panel(type = "roller")` or `brreg_series(type = "roller")` over this store would
+silently consume 116 M rows of JSON fragments as if they were register records.
+
+**Documentation contradicts itself on this exact point.** `?brreg_import` shows
+
+- *Usage:* `type = c("enheter", "underenheter", "roller")` — so `match.arg()` accepts
+  `"roller"`;
+- *Arguments:* `type: One of "enheter" or "underenheter"` — which excludes it;
+- *Description:* "Read a brreg bulk **CSV** file … and save as a dated Parquet partition".
+
+The signature admits a value the prose forbids and the description cannot honour. D-57 is
+therefore both an implementation defect and a documentation defect: no reading of the help
+page tells a user that passing the documented-in-Usage value silently produces a
+116-million-row artefact.
+
+**Also confirms D-56 from the other direction:** this 120 MB partition has no manifest
+entry, so nothing in the provenance record would ever reveal how it got there.
+
+---
