@@ -1,0 +1,168 @@
+name: stresstest
+
+on:
+  workflow_dispatch:
+    inputs:
+      stress_cores:
+        description: "Parallel workers within a tier (each throttles 5 req/s against BRREG)"
+        default: "2"
+      stress_roller:
+        description: "Download and parse the 131 MB roller totalbestand (1/0)"
+        default: "1"
+      stress_json:
+        description: "Download and parse the JSON bulk (1/0)"
+        default: "1"
+      sample_rows:
+        description: "Rows sampled into the synthetic snapshot store"
+        default: "50000"
+  schedule:
+    - cron: "17 3 * * 1"
+
+concurrency:
+  group: stresstest
+  cancel-in-progress: false
+
+env:
+  STRESS_CORES: ${{ github.event.inputs.stress_cores || '2' }}
+  STRESS_ROLLER: ${{ github.event.inputs.stress_roller || '1' }}
+  STRESS_JSON: ${{ github.event.inputs.stress_json || '1' }}
+  STRESS_SAMPLE_ROWS: ${{ github.event.inputs.sample_rows || '50000' }}
+
+jobs:
+  light:
+    name: "tier 0-1 (offline + light API)"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache R library
+        uses: actions/cache@v4
+        with:
+          path: /usr/lib/R/site-library
+          key: rlib-${{ runner.os }}-${{ hashFiles('setup.sh', 'install.R') }}
+
+      - name: Bootstrap R and install tidybrreg
+        run: bash setup.sh
+
+      - name: Record environment
+        run: |
+          Rscript -e 'e <- readRDS("results/environment.rds"); str(e, max.level = 1)'
+
+      - name: Run tier 0 and tier 1
+        run: |
+          Rscript --vanilla run_all.R \
+            00-fixtures.R 10-validate.R 11-parse-internals.R 12-entity.R \
+            13-search.R 14-roles.R 15-konsern-signatur.R 16-governance.R \
+            17-updates.R 18-label-harmonize.R 19-roller-diff.R \
+            20-request-manifest.R 21-network.R
+
+      - name: Upload light results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-light
+          path: |
+            results/*.rds
+            results/*.csv
+            results/logs/**
+
+  heavy:
+    name: "tier 2-3 (bulk, snapshot, sync, replay)"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    needs: light
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          df -h /
+
+      - name: Cache R library
+        uses: actions/cache@v4
+        with:
+          path: /usr/lib/R/site-library
+          key: rlib-${{ runner.os }}-${{ hashFiles('setup.sh', 'install.R') }}
+
+      - name: Bootstrap R and install tidybrreg
+        run: bash setup.sh
+
+      - name: Restore fixtures from the light job
+        uses: actions/download-artifact@v4
+        with:
+          name: results-light
+          path: results
+
+      - name: Run tier 2 and tier 3
+        run: |
+          Rscript --vanilla run_all.R \
+            30-bulk-prewarm.R 31-download.R 32-snapshot.R \
+            33-panel-series-events.R 34-sync.R 35-replay.R
+
+      - name: Upload heavy results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-heavy
+          path: |
+            results/*.rds
+            results/*.csv
+            results/logs/**
+
+  report:
+    name: "aggregate and report"
+    runs-on: ubuntu-24.04
+    needs: [light, heavy]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache R library
+        uses: actions/cache@v4
+        with:
+          path: /usr/lib/R/site-library
+          key: rlib-${{ runner.os }}-${{ hashFiles('setup.sh', 'install.R') }}
+
+      - name: Bootstrap R and install tidybrreg
+        run: bash setup.sh
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: results-*
+          merge-multiple: true
+          path: results
+
+      - name: Aggregate
+        run: Rscript --vanilla run_all.R summarise | tee results/summary.txt
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo '## tidybrreg stresstest'
+            echo '```'
+            cat results/summary.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail on unexplained regressions
+        run: |
+          Rscript --vanilla -e '
+            s <- readRDS("results/summary.rds")
+            n <- sum(s$results$outcome == "regression")
+            cat("regressions:", n, "\n")
+            if (n > 0) {
+              print(as.data.frame(
+                s$results[s$results$outcome == "regression",
+                          c("file", "id", "status", "description")]))
+              quit(status = 1)
+            }'
+
+      - name: Upload aggregate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-aggregate
+          path: results

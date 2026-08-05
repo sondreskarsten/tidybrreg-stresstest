@@ -1,44 +1,44 @@
 "file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
-"12-entity","E-01",NA,"auto registry returns one row",NA,"PASS",NA,0,NA,0.000851869583129883
-"12-entity","E-02",NA,"org_nr round-trips",NA,"PASS",NA,0,NA,0.00792813301086426
-"12-entity","E-03",NA,"registry column records the matched registry",NA,"PASS",NA,0,NA,0.000861167907714844
-"12-entity","E-04",NA,"the documented key columns are present","D-93","PASS",NA,0,NA,0.000543832778930664
-"12-entity","E-04b",NA,"column names follow the package field dictionary as documented",NA,"PASS",NA,0,NA,0.000664710998535156
-"12-entity","E-05",NA,"declared types are honoured",NA,"PASS",NA,0,NA,0.000515460968017578
-"12-entity","E-06",NA,"explicit enheter equals auto",NA,"PASS",NA,0,NA,0.169674873352051
-"12-entity","E-07",NA,"underenheter registry aborts for a hovedenhet",NA,"PASS",NA,0,NA,0.202467441558838
-"12-entity","E-08",NA,"auto falls through to underenheter",NA,"PASS",NA,0,NA,0.336889028549194
-"12-entity","E-09",NA,"sub-entity carries the parent org number",NA,"PASS",NA,0,NA,0.17064380645752
-"12-entity","E-10",NA,"type = label preserves the row count and schema",NA,"PASS",NA,0,NA,5.10893654823303
-"12-entity","E-11",NA,"type = label translates the legal form",NA,"PASS",NA,0,NA,0.17742919921875
-"12-entity","E-12",NA,"type = label leaves the org number untouched",NA,"PASS",NA,0,NA,0.172741651535034
-"12-entity","E-13",NA,"label via pipe equals label via argument",NA,"PASS",NA,0,NA,0.345509052276611
-"12-entity","E-14",NA,"brreg_label(code=) retains the raw code",NA,"PASS",NA,0,NA,0.00206899642944336
-"12-entity","E-15",NA,"the 410 branch, when it fires, returns exactly the documented 4-col schema","D-01","FAIL"," logi FALSE",0,NA,0.0440196990966797
-"12-entity","E-16",NA,"the 410 branch sets deleted = TRUE and a parsed deletion_date",NA,"PASS",NA,0,NA,0.0154135227203369
-"12-entity","E-17",NA,"type = label has an observable effect even on the reduced deleted-entity schema","D-01","FAIL"," logi FALSE",0,NA,0.0364735126495361
-"12-entity","E-18",NA,"the 410 branch warns",NA,"PASS",NA,0,NA,0.0148773193359375
-"12-entity","E-19a",NA,"precondition: live deletions are actually served as HTTP 200, not 410",NA,"PASS",NA,0,NA,0.837805986404419
-"12-entity","E-19b",NA,"precondition: a live deleted entity carries the respons_klasse=SlettetEnhet marker",NA,"PASS",NA,0,NA,0.168649911880493
-"12-entity","E-19c",NA,"brreg_entity() explicitly flags a live deleted entity as deleted","D-91","FAIL"," logi FALSE",1,"Unknown or uninitialised column: `deleted`.",0.170527696609497
-"12-entity","E-19d",NA,"a live deleted entity resolved via the 200 path still warns the caller","D-91","FAIL","no warning raised",0,NA,0.170765399932861
-"12-entity","E-19e",NA,"across every discovered deleted org, brreg_entity() flags each one as deleted","D-91","FAIL"," logi FALSE",8,"Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`.",1.34981799125671
+"12-entity","E-01",NA,"auto registry returns one row",NA,"PASS",NA,0,NA,0.000703811645507812
+"12-entity","E-02",NA,"org_nr round-trips",NA,"PASS",NA,0,NA,0.00859522819519043
+"12-entity","E-03",NA,"registry column records the matched registry",NA,"PASS",NA,0,NA,0.00082087516784668
+"12-entity","E-04",NA,"the documented key columns are present","D-93","PASS",NA,0,NA,0.000718116760253906
+"12-entity","E-04b",NA,"column names follow the package field dictionary as documented",NA,"PASS",NA,0,NA,0.00079655647277832
+"12-entity","E-05",NA,"declared types are honoured",NA,"PASS",NA,0,NA,0.000528573989868164
+"12-entity","E-06",NA,"explicit enheter equals auto",NA,"PASS",NA,0,NA,0.169040679931641
+"12-entity","E-07",NA,"underenheter registry aborts for a hovedenhet",NA,"PASS",NA,0,NA,0.208934307098389
+"12-entity","E-08",NA,"auto falls through to underenheter",NA,"PASS",NA,0,NA,0.344367265701294
+"12-entity","E-09",NA,"sub-entity carries the parent org number",NA,"PASS",NA,0,NA,0.168015003204346
+"12-entity","E-10",NA,"type = label preserves the row count and schema",NA,"PASS",NA,0,NA,4.0053334236145
+"12-entity","E-11",NA,"type = label translates the legal form",NA,"PASS",NA,0,NA,0.17734169960022
+"12-entity","E-12",NA,"type = label leaves the org number untouched",NA,"PASS",NA,0,NA,0.170873165130615
+"12-entity","E-13",NA,"label via pipe equals label via argument",NA,"PASS",NA,0,NA,0.342877149581909
+"12-entity","E-14",NA,"brreg_label(code=) retains the raw code",NA,"PASS",NA,0,NA,0.00189900398254395
+"12-entity","E-15",NA,"the 410 branch, when it fires, returns exactly the documented 4-col schema","D-01","FAIL"," logi FALSE",0,NA,0.033839225769043
+"12-entity","E-16",NA,"the 410 branch sets deleted = TRUE and a parsed deletion_date",NA,"PASS",NA,0,NA,0.01511549949646
+"12-entity","E-17",NA,"type = label has an observable effect even on the reduced deleted-entity schema","D-01","FAIL"," logi FALSE",0,NA,0.0364274978637695
+"12-entity","E-18",NA,"the 410 branch warns",NA,"PASS",NA,0,NA,0.014615535736084
+"12-entity","E-19a",NA,"precondition: live deletions are actually served as HTTP 200, not 410",NA,"PASS",NA,0,NA,0.160930395126343
+"12-entity","E-19b",NA,"precondition: a live deleted entity carries the respons_klasse=SlettetEnhet marker",NA,"PASS",NA,0,NA,0.162713050842285
+"12-entity","E-19c",NA,"brreg_entity() explicitly flags a live deleted entity as deleted","D-91","FAIL"," logi FALSE",1,"Unknown or uninitialised column: `deleted`.",0.168336391448975
+"12-entity","E-19d",NA,"a live deleted entity resolved via the 200 path still warns the caller","D-91","FAIL","no warning raised",0,NA,0.167994737625122
+"12-entity","E-19e",NA,"across every discovered deleted org, brreg_entity() flags each one as deleted","D-91","FAIL"," logi FALSE",8,"Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`. / Unknown or uninitialised column: `deleted`.",1.33313608169556
 "12-entity","E-19",NA,"an org number that never existed in the register aborts",NA,"PASS","Entity ""832071404"" not found in the Norwegian Business Registry.
-i Searched: ""enheter"" and ""underenheter""",0,NA,0.355359554290771
+i Searched: ""enheter"" and ""underenheter""",0,NA,0.364245414733887
 "12-entity","E-20",NA,"invalid check digit aborts before any call",NA,"PASS","Invalid organization number: ""923609017""
 i Must be 9 digits starting with 8 or 9, with a modulus-11 check digit.
-i Examples: 923609016 (Equinor), 984851006 (DNB Bank)",0,NA,0.0292599201202393
-"12-entity","E-21",NA,"numeric input is accepted",NA,"PASS",NA,0,NA,0.170062303543091
-"12-entity","E-22",NA,"vectorised input either works or aborts, never returns one wrong row","D-03","PASS",NA,0,NA,0.000771045684814453
-"12-entity","E-23",NA,"repeated calls are deterministic",NA,"PASS",NA,0,NA,0.342923879623413
-"12-entity","E-24",NA,"no unnamed list columns leak into the result",NA,"PASS",NA,0,NA,0.000606775283813477
-"12-entity","E-25",NA,"no column is entirely a JSON blob string",NA,"PASS",NA,0,NA,0.000759363174438477
-"12-entity","E-26",NA,"bank entity carries the documented key columns","D-93","PASS",NA,0,NA,0.176578283309937
-"12-entity","E-27",NA,"ENK entity carries the documented key columns","D-93","FAIL"," logi FALSE",0,NA,0.170384883880615
-"12-entity","E-28",NA,"NUF entity carries the documented key columns","D-93","FAIL"," logi FALSE",0,NA,0.170385837554932
-"12-entity","E-29",NA,"bankrupt entity carries a bankruptcy date",NA,"PASS",NA,0,NA,0.170276165008545
-"12-entity","E-30",NA,"the documented key columns are present for every entity type","D-93","FAIL"," logi FALSE",0,NA,1.72281861305237
-"12-entity","E-30b",NA,"bind_rows across heterogeneous entity types never errors and unions gracefully",NA,"PASS",NA,0,NA,1.71529579162598
-"12-entity","E-31",NA,"brreg_entity makes no filesystem writes",NA,"PASS",NA,0,NA,0.176589965820312
-"12-entity","E-32",NA,"no nested HAL _links block leaks into the output","D-92","FAIL"," logi FALSE",0,NA,0.00115370750427246
-"12-entity","E-32b",NA,"nested _links are filtered the same way top-level _links are","D-92","FAIL"," logi FALSE",0,NA,0.00179910659790039
+i Examples: 923609016 (Equinor), 984851006 (DNB Bank)",0,NA,0.0307445526123047
+"12-entity","E-21",NA,"numeric input is accepted",NA,"PASS",NA,0,NA,0.170940637588501
+"12-entity","E-22",NA,"vectorised input either works or aborts, never returns one wrong row","D-03","PASS",NA,0,NA,0.000785589218139648
+"12-entity","E-23",NA,"repeated calls are deterministic",NA,"PASS",NA,0,NA,0.341592073440552
+"12-entity","E-24",NA,"no unnamed list columns leak into the result",NA,"PASS",NA,0,NA,0.000714302062988281
+"12-entity","E-25",NA,"no column is entirely a JSON blob string",NA,"PASS",NA,0,NA,0.000816822052001953
+"12-entity","E-26",NA,"bank entity carries the documented key columns","D-93","PASS",NA,0,NA,0.168936491012573
+"12-entity","E-27",NA,"ENK entity carries the documented key columns","D-93","FAIL"," logi FALSE",0,NA,0.167904615402222
+"12-entity","E-28",NA,"NUF entity carries the documented key columns","D-93","FAIL"," logi FALSE",0,NA,0.169204950332642
+"12-entity","E-29",NA,"bankrupt entity carries a bankruptcy date",NA,"PASS",NA,0,NA,0.167815208435059
+"12-entity","E-30",NA,"the documented key columns are present for every entity type","D-93","FAIL"," logi FALSE",0,NA,1.77562880516052
+"12-entity","E-30b",NA,"bind_rows across heterogeneous entity types never errors and unions gracefully",NA,"PASS",NA,0,NA,1.78273701667786
+"12-entity","E-31",NA,"brreg_entity makes no filesystem writes",NA,"PASS",NA,0,NA,0.187028884887695
+"12-entity","E-32",NA,"no nested HAL _links block leaks into the output","D-92","FAIL"," logi FALSE",0,NA,0.00205779075622559
+"12-entity","E-32b",NA,"nested _links are filtered the same way top-level _links are","D-92","FAIL"," logi FALSE",0,NA,0.00361990928649902

@@ -218,3 +218,38 @@ This is a genuine mechanical rig defect, not an assertion change.
   applying only the destination row leaves the source field stale), but flagged as
   spec-derived. → tidybrreg issue, lower confidence.
 
+### [09:20] RIG BUG — `run_all.R` could not be sourced without executing a full run
+The bottom-of-file dispatcher was guarded by `if (!interactive())`, which is TRUE under
+`source()` as well as under `Rscript run_all.R`. Sourcing the file to reach
+`summarise_results()` or `stress_manifest()` therefore kicked off a complete 19-file run.
+Found while wiring CI, where the report job needs the aggregation functions without
+re-running anything. Replaced with `stress_invoked_as_script()`, which additionally
+requires `run_all.R` to appear in `commandArgs(trailingOnly = FALSE)`. Verified both paths:
+`source()` now loads 19 manifest rows and runs nothing; `Rscript run_all.R summarise` still
+aggregates.
+
+### [09:20] CI — GitHub Actions and Cloud Run job added
+Both exist because the OOM kills recorded earlier are an artifact of this 3.9 GB sandbox,
+not of the suite. GitHub runners give 16 GB and Cloud Run is configured for 32 GB / 8 CPU,
+so the JSON bulk parse and the JSON `brreg_sync()` bootstrap that were killed here should
+complete there — which is the only way to get a real result for `DL-13`..`DL-17`, the
+`32-snapshot` tail, and all of `34-sync`.
+
+- `.github/workflows/stresstest.yml` — three jobs: `light` (tiers 0-1), `heavy` (tiers 2-3,
+  needs the fixtures artifact from `light`), `report` (merges artifacts, aggregates, writes
+  a job summary, and exits non-zero **only** on unexplained regressions — confirmed defects
+  do not fail the build, which is the whole point of the outcome taxonomy). Weekly cron plus
+  `workflow_dispatch` with the STRESS_* knobs as inputs.
+- `Dockerfile` + `cloudrun/entrypoint.sh` + `cloudrun/deploy.sh` — built on the project's
+  own `r-images/r-base:latest`, deployed via the Cloud Build REST API with the context
+  tarball in `gs://sondreskarsten-d7d14_cloudbuild/`, image pinned by SHA256 digest rather
+  than `:latest`, job in `europe-north1`, scheduler in `europe-west1`. Results and the code
+  that produced them are published together to
+  `gs://sondre_brreg_data/raw/tidybrreg_stresstest/run_date=.../`.
+- `setup.sh` made sudo-aware so it works both as root (container) and as a normal user
+  (GitHub runner).
+
+Caveat carried into both: parallelism multiplies request rate against a public register.
+tidybrreg throttles 5 req/s **per process**, so `STRESS_CORES` workers means 5N req/s.
+Defaults are deliberately low (2 on Actions, 4 on Cloud Run) rather than matching core count.
+

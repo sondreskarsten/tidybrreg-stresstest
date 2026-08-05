@@ -1,31 +1,31 @@
 "file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
-"19-roller-diff","RD-01",NA,"identical states produce no changelog rows",NA,"PASS",NA,0,NA,0.068852424621582
-"19-roller-diff","RD-02",NA,"changelog schema is exactly the documented one",NA,"PASS",NA,0,NA,0.0205588340759277
-"19-roller-diff","RD-03",NA,"NULL old state treats everything as entry",NA,"PASS",NA,0,NA,0.0167577266693115
-"19-roller-diff","RD-04",NA,"zero-row old state treats everything as entry",NA,"PASS",NA,0,NA,0.0111994743347168
-"19-roller-diff","RD-05",NA,"zero-row new state treats everything as exit",NA,"PASS",NA,0,NA,0.0124506950378418
-"19-roller-diff","RD-06",NA,"registry is always roller",NA,"PASS",NA,0,NA,0.0115153789520264
-"19-roller-diff","RD-07",NA,"an added role yields entry rows only for that role",NA,"PASS",NA,0,NA,0.028386116027832
-"19-roller-diff","RD-08",NA,"a removed role yields exit rows only",NA,"PASS",NA,0,NA,0.0305378437042236
-"19-roller-diff","RD-09",NA,"a modified field yields exactly one change row",NA,"PASS",NA,0,NA,0.0223207473754883
-"19-roller-diff","RD-10",NA,"change rows carry both old and new values",NA,"PASS",NA,0,NA,0.0200400352478027
-"19-roller-diff","RD-11",NA,"entry rows have NA value_from",NA,"PASS",NA,0,NA,0.00972795486450195
-"19-roller-diff","RD-12",NA,"exit rows have NA value_to",NA,"PASS",NA,0,NA,0.0137784481048584
-"19-roller-diff","RD-13",NA,"diff is antisymmetric on entry and exit",NA,"PASS",NA,0,NA,0.0565776824951172
-"19-roller-diff","RD-14",NA,"NA to value transition is recorded",NA,"PASS",NA,0,NA,0.0243582725524902
-"19-roller-diff","RD-15",NA,"value to NA transition is recorded",NA,"PASS",NA,0,NA,0.0215587615966797
-"19-roller-diff","RD-16",NA,"a birth date correction is not silently invisible",NA,"PASS",NA,0,NA,0.0383830070495605
-"19-roller-diff","RD-17",NA,"timestamp is passed through",NA,"PASS",NA,0,NA,0.0108022689819336
-"19-roller-diff","RD-18",NA,"integer update_id is passed through",NA,"PASS",NA,0,NA,0.00989222526550293
-"19-roller-diff","RD-19",NA,"character update_id does not become NA","D-82","FAIL"," logi FALSE",0,NA,0.0130419731140137
-"19-roller-diff","RD-20",NA,"legacy state without the post-0.3.4 columns diffs cleanly",NA,"PASS",NA,0,NA,0.0270833969116211
-"19-roller-diff","RD-21",NA,"state with resigned diffs against state without",NA,"PASS",NA,0,NA,0.0218949317932129
-"19-roller-diff","RD-22",NA,"entity-held roles are keyed distinctly",NA,"PASS",NA,0,NA,0.0225605964660645
-"19-roller-diff","RD-23",NA,"duplicate role rows are not silently collapsed",NA,"FAIL"," logi FALSE",0,NA,0.024245023727417
-"19-roller-diff","RD-24",NA,"diff of a large state completes",NA,"PASS",NA,0,NA,0.618601083755493
-"19-roller-diff","RD-25",NA,"org_nr on every changelog row is populated",NA,"PASS",NA,0,NA,0.0210251808166504
-"19-roller-diff","RD-26",NA,"no role key leaks into the output",NA,"PASS",NA,0,NA,0.0105690956115723
-"19-roller-diff","RD-27",NA,"diff works without tidyr attached explicitly","D-83","PASS",NA,0,NA,0.0107126235961914
-"19-roller-diff","RD-28",NA,"live round trip on a real entity",NA,"PASS",NA,0,NA,0.289052963256836
-"19-roller-diff","RD-29",NA,"live bootstrap diff yields entries for every role",NA,"PASS",NA,0,NA,0.180718183517456
-"19-roller-diff","RD-30",NA,"empty against empty yields a typed empty changelog",NA,"PASS",NA,0,NA,0.00348329544067383
+"19-roller-diff","RD-01",NA,"identical states produce no changelog rows",NA,"PASS",NA,0,NA,0.279672861099243
+"19-roller-diff","RD-02",NA,"changelog schema is exactly the documented one",NA,"PASS",NA,0,NA,0.0499062538146973
+"19-roller-diff","RD-03",NA,"NULL old state treats everything as entry",NA,"PASS",NA,0,NA,0.0440981388092041
+"19-roller-diff","RD-04",NA,"zero-row old state treats everything as entry",NA,"PASS",NA,0,NA,0.0261878967285156
+"19-roller-diff","RD-05",NA,"zero-row new state treats everything as exit",NA,"PASS",NA,0,NA,0.0324628353118896
+"19-roller-diff","RD-06",NA,"registry is always roller",NA,"PASS",NA,0,NA,0.0369546413421631
+"19-roller-diff","RD-07",NA,"an added role yields entry rows only for that role",NA,"PASS",NA,0,NA,0.0792081356048584
+"19-roller-diff","RD-08",NA,"a removed role yields exit rows only",NA,"PASS",NA,0,NA,0.0814180374145508
+"19-roller-diff","RD-09",NA,"a modified field yields exactly one change row",NA,"PASS",NA,0,NA,0.0575313568115234
+"19-roller-diff","RD-10",NA,"change rows carry both old and new values",NA,"PASS",NA,0,NA,0.0501899719238281
+"19-roller-diff","RD-11",NA,"entry rows have NA value_from",NA,"PASS",NA,0,NA,0.0209426879882812
+"19-roller-diff","RD-12",NA,"exit rows have NA value_to",NA,"PASS",NA,0,NA,0.037325382232666
+"19-roller-diff","RD-13",NA,"diff is antisymmetric on entry and exit",NA,"PASS",NA,0,NA,0.146271705627441
+"19-roller-diff","RD-14",NA,"NA to value transition is recorded",NA,"PASS",NA,0,NA,0.0625042915344238
+"19-roller-diff","RD-15",NA,"value to NA transition is recorded",NA,"PASS",NA,0,NA,0.0561301708221436
+"19-roller-diff","RD-16",NA,"a birth date correction is not silently invisible",NA,"PASS",NA,0,NA,0.105290174484253
+"19-roller-diff","RD-17",NA,"timestamp is passed through",NA,"PASS",NA,0,NA,0.0268874168395996
+"19-roller-diff","RD-18",NA,"integer update_id is passed through",NA,"PASS",NA,0,NA,0.0254197120666504
+"19-roller-diff","RD-19",NA,"character update_id does not become NA","D-82","FAIL"," logi FALSE",0,NA,0.0344491004943848
+"19-roller-diff","RD-20",NA,"legacy state without the post-0.3.4 columns diffs cleanly",NA,"PASS",NA,0,NA,0.0578653812408447
+"19-roller-diff","RD-21",NA,"state with resigned diffs against state without",NA,"PASS",NA,0,NA,0.0511651039123535
+"19-roller-diff","RD-22",NA,"entity-held roles are keyed distinctly",NA,"PASS",NA,0,NA,0.0657718181610107
+"19-roller-diff","RD-23",NA,"duplicate role rows are not silently collapsed","D-100","FAIL"," logi FALSE",0,NA,0.0649223327636719
+"19-roller-diff","RD-24",NA,"diff of a large state completes",NA,"PASS",NA,0,NA,1.49676656723022
+"19-roller-diff","RD-25",NA,"org_nr on every changelog row is populated",NA,"PASS",NA,0,NA,0.0692861080169678
+"19-roller-diff","RD-26",NA,"no role key leaks into the output",NA,"PASS",NA,0,NA,0.0273606777191162
+"19-roller-diff","RD-27",NA,"diff works without tidyr attached explicitly","D-83","PASS",NA,0,NA,0.0279169082641602
+"19-roller-diff","RD-28",NA,"live round trip on a real entity",NA,"PASS",NA,0,NA,0.503383874893188
+"19-roller-diff","RD-29",NA,"live bootstrap diff yields entries for every role",NA,"PASS",NA,0,NA,0.207153081893921
+"19-roller-diff","RD-30",NA,"empty against empty yields a typed empty changelog",NA,"PASS",NA,0,NA,0.00729274749755859

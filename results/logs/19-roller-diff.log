@@ -20,7 +20,7 @@
 [PASS ] RD-20    legacy state without the post-0.3.4 columns diffs cleanly
 [PASS ] RD-21    state with resigned diffs against state without
 [PASS ] RD-22    entity-held roles are keyed distinctly
-[FAIL ] RD-23    duplicate role rows are not silently collapsed
+[FAIL ] RD-23    duplicate role rows are not silently collapsed <D-100>
 [PASS ] RD-24    diff of a large state completes
 [PASS ] RD-25    org_nr on every changelog row is populated
 [PASS ] RD-26    no role key leaks into the output

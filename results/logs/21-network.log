@@ -1,5 +1,3 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] N-01     depth 0 returns a tbl_graph
 [PASS ] N-02     depth 0 has exactly one node
 [PASS ] N-03     depth 0 has no edges
@@ -22,8 +20,3 @@ Run brreg_snapshot() for full network/panel support. See ?brreg_status for detai
 [PASS ] N-20     multiple seeds produce a union graph
 [PASS ] N-21     repeated seeds do not duplicate nodes
 [PASS ] N-22     depth 1 role edges match brreg_roles row count
-[PASS ] N-23     depth 2 without bulk data aborts with instructions
-[PASS ] N-24     depth above 2 does not silently equal depth 2
-[PASS ] N-25     graph is directed
-
-== 21-network: 25 checks, FAIL=1 PASS=24 ==

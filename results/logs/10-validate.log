@@ -1,5 +1,3 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] V-01     known valid orgnr accepted
 [PASS ] V-02     bad check digit rejected
 [PASS ] V-03     short input rejected

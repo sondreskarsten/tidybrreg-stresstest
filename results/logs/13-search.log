@@ -1,5 +1,3 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] S-01     name search returns rows
 [PASS ] S-02     total_matches attribute is set and numeric
 [PASS ] S-03     total_matches is at least the returned row count

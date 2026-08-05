@@ -1,5 +1,3 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] FX-01    seed ASA resolves
 [PASS ] FX-02    seed bank resolves
 [PASS ] FX-03    discover ENK sample

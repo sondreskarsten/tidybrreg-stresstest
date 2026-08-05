@@ -150,7 +150,12 @@ summarise_results <- function(root = normalizePath(getwd())) {
   invisible(res)
 }
 
-if (!interactive()) {
+stress_invoked_as_script <- function() {
+  sys.nframe() <= 1L && !interactive() &&
+    any(grepl("run_all\\.R$", commandArgs(trailingOnly = FALSE)))
+}
+
+if (stress_invoked_as_script()) {
   args <- commandArgs(trailingOnly = TRUE)
   if (length(args) > 0 && args[1] == "summarise") {
     summarise_results()

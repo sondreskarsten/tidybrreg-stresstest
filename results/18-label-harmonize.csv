@@ -1,52 +1,52 @@
 "file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
-"18-label-harmonize","L-01",NA,"labelling a data frame preserves shape",NA,"PASS",NA,0,NA,2.92246150970459
-"18-label-harmonize","L-02",NA,"legal form is translated",NA,"PASS",NA,0,NA,0.0102131366729736
-"18-label-harmonize","L-03",NA,"nace is translated",NA,"PASS",NA,0,NA,0.00147604942321777
-"18-label-harmonize","L-04",NA,"org_nr is never touched",NA,"PASS",NA,0,NA,0.0014793872833252
-"18-label-harmonize","L-05",NA,"name is never touched",NA,"PASS",NA,0,NA,0.00135231018066406
-"18-label-harmonize","L-06",NA,"dates are never touched",NA,"PASS",NA,0,NA,0.00141644477844238
-"18-label-harmonize","L-07",NA,"labelling is idempotent","D-95","FAIL"," logi FALSE",0,NA,0.00520038604736328
-"18-label-harmonize","L-08",NA,"code = retains the original value",NA,"PASS",NA,0,NA,0.00182318687438965
-"18-label-harmonize","L-09",NA,"code = places the code column adjacent to the label",NA,"PASS",NA,0,NA,0.00143027305603027
-"18-label-harmonize","L-10",NA,"multiple code columns are supported",NA,"PASS",NA,0,NA,0.00135278701782227
-"18-label-harmonize","L-11",NA,"code = on a non-labelable column is a no-op",NA,"PASS",NA,0,NA,0.0014042854309082
-"18-label-harmonize","L-12",NA,"vector labelling of legal forms",NA,"PASS",NA,0,NA,0.000899791717529297
-"18-label-harmonize","L-13",NA,"vector labelling of roles",NA,"PASS",NA,0,NA,0.000831842422485352
-"18-label-harmonize","L-14",NA,"vector labelling of role groups",NA,"PASS",NA,0,NA,0.000777482986450195
-"18-label-harmonize","L-15",NA,"vector labelling of nace",NA,"PASS",NA,0,NA,0.000767946243286133
-"18-label-harmonize","L-16",NA,"vector labelling of sector",NA,"PASS",NA,0,NA,0.000859737396240234
-"18-label-harmonize","L-17",NA,"unknown codes pass through unchanged","D-95","FAIL"," logi FALSE",0,NA,0.00455021858215332
-"18-label-harmonize","L-18",NA,"vector without dic aborts",NA,"PASS","When `x` is a vector, `dic` must be provided.",0,NA,0.0455396175384521
+"18-label-harmonize","L-01",NA,"labelling a data frame preserves shape",NA,"PASS",NA,0,NA,6.65965938568115
+"18-label-harmonize","L-02",NA,"legal form is translated",NA,"PASS",NA,0,NA,0.0173072814941406
+"18-label-harmonize","L-03",NA,"nace is translated",NA,"PASS",NA,0,NA,0.00130343437194824
+"18-label-harmonize","L-04",NA,"org_nr is never touched",NA,"PASS",NA,0,NA,0.0017542839050293
+"18-label-harmonize","L-05",NA,"name is never touched",NA,"PASS",NA,0,NA,0.00170063972473145
+"18-label-harmonize","L-06",NA,"dates are never touched",NA,"PASS",NA,0,NA,0.00133323669433594
+"18-label-harmonize","L-07",NA,"labelling is idempotent","D-95","FAIL"," logi FALSE",0,NA,0.0153274536132812
+"18-label-harmonize","L-08",NA,"code = retains the original value",NA,"PASS",NA,0,NA,0.00298285484313965
+"18-label-harmonize","L-09",NA,"code = places the code column adjacent to the label",NA,"PASS",NA,0,NA,0.00526571273803711
+"18-label-harmonize","L-10",NA,"multiple code columns are supported",NA,"PASS",NA,0,NA,0.00155329704284668
+"18-label-harmonize","L-11",NA,"code = on a non-labelable column is a no-op",NA,"PASS",NA,0,NA,0.00119638442993164
+"18-label-harmonize","L-12",NA,"vector labelling of legal forms",NA,"PASS",NA,0,NA,0.000879764556884766
+"18-label-harmonize","L-13",NA,"vector labelling of roles",NA,"PASS",NA,0,NA,0.000593423843383789
+"18-label-harmonize","L-14",NA,"vector labelling of role groups",NA,"PASS",NA,0,NA,0.000642299652099609
+"18-label-harmonize","L-15",NA,"vector labelling of nace",NA,"PASS",NA,0,NA,0.000766277313232422
+"18-label-harmonize","L-16",NA,"vector labelling of sector",NA,"PASS",NA,0,NA,0.000575065612792969
+"18-label-harmonize","L-17",NA,"unknown codes pass through unchanged","D-95","FAIL"," logi FALSE",0,NA,0.00894021987915039
+"18-label-harmonize","L-18",NA,"vector without dic aborts",NA,"PASS","When `x` is a vector, `dic` must be provided.",0,NA,0.0916836261749268
 "18-label-harmonize","L-19",NA,"unknown dic aborts",NA,"PASS","Unknown dictionary: ""nope"". Options: legal_form, nace, sector, role,
-role_group.",0,NA,0.0185713768005371
-"18-label-harmonize","L-20",NA,"empty data frame returns unchanged",NA,"PASS",NA,0,NA,0.000750064849853516
-"18-label-harmonize","L-21",NA,"lang = no yields Norwegian labels","D-96","FAIL"," logi FALSE",0,NA,0.940696477890015
-"18-label-harmonize","L-22",NA,"get_brreg_dic returns the documented columns",NA,"PASS",NA,0,NA,0.000687599182128906
-"18-label-harmonize","L-23",NA,"nace dictionary is non-trivial",NA,"PASS",NA,0,NA,0.000586986541748047
-"18-label-harmonize","L-24",NA,"sector dictionary is non-trivial",NA,"PASS",NA,0,NA,0.00053715705871582
-"18-label-harmonize","L-25",NA,"dictionary codes are unique",NA,"PASS",NA,0,NA,0.000582456588745117
-"18-label-harmonize","L-26",NA,"second dictionary call is served from cache",NA,"PASS",NA,0,NA,0.132120609283447
-"18-label-harmonize","L-27",NA,"lang variants are cached separately",NA,"PASS",NA,0,NA,0.00061488151550293
-"18-label-harmonize","L-28",NA,"the KLASS fallback objects exist in the namespace",NA,"PASS",NA,0,NA,0.000495672225952148
-"18-label-harmonize","L-29",NA,"labelling many rows is stable",NA,"PASS",NA,0,NA,1.63612818717957
-"18-label-harmonize","H-01",NA,"kommune harmonisation returns the documented columns",NA,"PASS",NA,1,"Only one level was detected. Classification returned with output_style normal. ",1.16080331802368
-"18-label-harmonize","H-02",NA,"a pre-2020 code is actually remapped","D-78","FAIL"," logi FALSE",0,NA,0.0014040470123291
-"18-label-harmonize","H-03",NA,"harmonisation changes at least one reformed code","D-78","FAIL"," logi FALSE",0,NA,0.00121331214904785
-"18-label-harmonize","H-04",NA,"target names are resolved for current codes",NA,"PASS",NA,0,NA,0.000709056854248047
-"18-label-harmonize","H-05",NA,"harmonisation is idempotent",NA,"PASS",NA,0,NA,0.00138521194458008
+role_group.",0,NA,0.0379469394683838
+"18-label-harmonize","L-20",NA,"empty data frame returns unchanged",NA,"PASS",NA,0,NA,0.00522422790527344
+"18-label-harmonize","L-21",NA,"lang = no yields Norwegian labels","D-96","FAIL"," logi FALSE",0,NA,1.05174231529236
+"18-label-harmonize","L-22",NA,"get_brreg_dic returns the documented columns",NA,"PASS",NA,0,NA,0.0027003288269043
+"18-label-harmonize","L-23",NA,"nace dictionary is non-trivial",NA,"PASS",NA,0,NA,0.000612258911132812
+"18-label-harmonize","L-24",NA,"sector dictionary is non-trivial",NA,"PASS",NA,0,NA,0.000530481338500977
+"18-label-harmonize","L-25",NA,"dictionary codes are unique",NA,"PASS",NA,0,NA,0.000620126724243164
+"18-label-harmonize","L-26",NA,"second dictionary call is served from cache",NA,"PASS",NA,0,NA,0.331813812255859
+"18-label-harmonize","L-27",NA,"lang variants are cached separately",NA,"PASS",NA,0,NA,0.00492739677429199
+"18-label-harmonize","L-28",NA,"the KLASS fallback objects exist in the namespace",NA,"PASS",NA,0,NA,0.00172924995422363
+"18-label-harmonize","L-29",NA,"labelling many rows is stable",NA,"PASS",NA,0,NA,2.70177912712097
+"18-label-harmonize","H-01",NA,"kommune harmonisation returns the documented columns",NA,"PASS",NA,1,"Only one level was detected. Classification returned with output_style normal. ",0.736388444900513
+"18-label-harmonize","H-02",NA,"a pre-2020 code is actually remapped","D-78","FAIL"," logi FALSE",0,NA,0.00585770606994629
+"18-label-harmonize","H-03",NA,"harmonisation changes at least one reformed code","D-78","FAIL"," logi FALSE",0,NA,0.00581812858581543
+"18-label-harmonize","H-04",NA,"target names are resolved for current codes",NA,"PASS",NA,0,NA,0.00540018081665039
+"18-label-harmonize","H-05",NA,"harmonisation is idempotent",NA,"PASS",NA,0,NA,0.00618386268615723
 "18-label-harmonize","H-06",NA,"a failed correspondence fetch does not poison the session cache","D-79","PASS",NA,1,"Could not fetch municipality correspondence from SSB KLASS: incorrect number of
-dimensions",0.526210784912109
-"18-label-harmonize","H-07",NA,"custom column name is honoured",NA,"PASS",NA,0,NA,0.00171422958374023
+dimensions",0.444058179855347
+"18-label-harmonize","H-07",NA,"custom column name is honoured",NA,"PASS",NA,0,NA,0.0062558650970459
 "18-label-harmonize","H-10",NA,"nace harmonisation returns the documented columns","D-80","ERROR","Can't extract column with `target_col`.
-x Subscript `target_col` must be a location, not a character `NA`.",1,"Could not fetch NACE correspondence from SSB KLASS: argument is of length zero",0.968899011611938
+x Subscript `target_col` must be a location, not a character `NA`.",1,"Could not fetch NACE correspondence from SSB KLASS: argument is of length zero",1.18759989738464
 "18-label-harmonize","H-11",NA,"harmonised nace values look like codes, not descriptions","D-80","ERROR","Can't extract column with `target_col`.
-x Subscript `target_col` must be a location, not a character `NA`.",0,NA,0.0156607627868652
+x Subscript `target_col` must be a location, not a character `NA`.",0,NA,0.0402781963348389
 "18-label-harmonize","H-12",NA,"at least one code changes between SN2007 and SN2025","D-80","ERROR","Can't extract column with `target_col`.
-x Subscript `target_col` must be a location, not a character `NA`.",0,NA,0.0157716274261475
+x Subscript `target_col` must be a location, not a character `NA`.",0,NA,0.0434184074401855
 "18-label-harmonize","H-13",NA,"ambiguity flag is logical","D-80","ERROR","Can't extract column with `target_col`.
-x Subscript `target_col` must be a location, not a character `NA`.",0,NA,0.0218708515167236
+x Subscript `target_col` must be a location, not a character `NA`.",0,NA,0.0508840084075928
 "18-label-harmonize","H-14",NA,"reverse direction is supported","D-80","ERROR","Can't extract column with `target_col`.
-x Subscript `target_col` must be a location, not a character `NA`.",1,"Could not fetch NACE correspondence from SSB KLASS: argument is of length zero",0.571527004241943
-"18-label-harmonize","H-15",NA,"unknown classification aborts",NA,"PASS","Unknown classification. Use ""SN2007"" or ""SN2025"".",0,NA,0.0292580127716064
+x Subscript `target_col` must be a location, not a character `NA`.",1,"Could not fetch NACE correspondence from SSB KLASS: argument is of length zero",0.386348247528076
+"18-label-harmonize","H-15",NA,"unknown classification aborts",NA,"PASS","Unknown classification. Use ""SN2007"" or ""SN2025"".",0,NA,0.0787365436553955
 "18-label-harmonize","H-16",NA,"nace harmonisation preserves row count","D-80","ERROR","Can't extract column with `target_col`.
-x Subscript `target_col` must be a location, not a character `NA`.",0,NA,0.0142350196838379
+x Subscript `target_col` must be a location, not a character `NA`.",0,NA,0.0377955436706543

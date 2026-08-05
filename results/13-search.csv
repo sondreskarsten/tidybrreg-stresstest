@@ -1,35 +1,35 @@
 "file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
-"13-search","S-01",NA,"name search returns rows",NA,"PASS",NA,0,NA,0.000776290893554688
-"13-search","S-02",NA,"total_matches attribute is set and numeric",NA,"PASS",NA,0,NA,0.00885581970214844
-"13-search","S-03",NA,"total_matches is at least the returned row count",NA,"PASS",NA,0,NA,0.000453948974609375
-"13-search","S-04",NA,"search schema matches entity schema minus registry","D-93","FAIL"," logi FALSE",0,NA,0.175380229949951
-"13-search","S-05",NA,"max_results is respected exactly",NA,"PASS",NA,0,NA,0.225771427154541
-"13-search","S-06",NA,"max_results below the page size does not over-fetch",NA,"PASS",NA,0,NA,0.20040225982666
-"13-search","S-07",NA,"max_results above the page size paginates",NA,"PASS",NA,0,NA,2.45401525497437
-"13-search","S-08",NA,"legal_form filter is honoured",NA,"PASS",NA,0,NA,0.290403127670288
-"13-search","S-09",NA,"municipality filter is honoured on enheter",NA,"PASS",NA,0,NA,0.299072504043579
-"13-search","S-10",NA,"municipality filter is honoured on underenheter",NA,"PASS",NA,1,"Unknown or uninitialised column: `municipality_code`.",0.290522575378418
-"13-search","S-11",NA,"nace filter is honoured",NA,"PASS",NA,0,NA,0.319363594055176
-"13-search","S-12",NA,"min_employees is honoured",NA,"PASS",NA,0,NA,0.325973987579346
-"13-search","S-13",NA,"max_employees is honoured",NA,"PASS",NA,1,"Unknown or uninitialised column: `employees`.",0.171701669692993
-"13-search","S-14",NA,"bankrupt filter is honoured",NA,"PASS",NA,0,NA,0.297280550003052
-"13-search","S-15",NA,"bankrupt on underenheter either filters or signals","D-04","FAIL"," logi FALSE",0,NA,0.207954406738281
-"13-search","S-16",NA,"parent_org_nr filter is honoured",NA,"PASS",NA,0,NA,0.273975133895874
-"13-search","S-17",NA,"combined filters are ANDed",NA,"PASS",NA,0,NA,0.251964569091797
-"13-search","S-18",NA,"no-match search returns a typed empty tibble","D-05","FAIL"," logi FALSE",0,NA,0.173594236373901
-"13-search","S-19",NA,"no-match search still reports total_matches zero",NA,"PASS",NA,0,NA,0.183593273162842
-"13-search","S-20",NA,"type = label preserves total_matches",NA,"PASS",NA,0,NA,3.79598808288574
-"13-search","S-21",NA,"brreg_label(code=) preserves total_matches","D-07","PASS",NA,0,NA,0.00313496589660645
-"13-search","S-22",NA,"underenheter registry returns rows",NA,"PASS",NA,0,NA,0.238188743591309
-"13-search","S-23",NA,"results are unique on org_nr",NA,"PASS",NA,0,NA,2.87296795845032
-"13-search","S-24",NA,"pagination is stable across two identical calls",NA,"PASS",NA,0,NA,3.40310907363892
-"13-search","S-25",NA,"max_results beyond the API ceiling warns and truncates",NA,"PASS",NA,0,NA,93.4069440364838
-"13-search","S-26",NA,"brreg_underenheter default does not silently truncate a large parent","D-08","PASS",NA,0,NA,0.397699356079102
-"13-search","S-27",NA,"brreg_underenheter with a large cap retrieves everything",NA,"PASS",NA,0,NA,0.348944425582886
-"13-search","S-28",NA,"brreg_children returns the ORGL hierarchy",NA,"PASS",NA,0,NA,0.201484203338623
-"13-search","S-29",NA,"brreg_children on an AS returns a typed empty tibble","D-05","FAIL"," logi FALSE",0,NA,0.174434185028076
-"13-search","S-30",NA,"brreg_underenheter type = label works",NA,"PASS",NA,0,NA,0.19553804397583
-"13-search","S-31",NA,"search never returns list columns",NA,"PASS",NA,0,NA,0.51514720916748
-"13-search","S-32",NA,"search column types match the dictionary",NA,"PASS",NA,0,NA,0.478074789047241
-"13-search","S-33",NA,"an unreachable filter combination returns empty, not an error",NA,"PASS",NA,0,NA,0.462807178497314
-"13-search","S-34",NA,"search and entity agree on a single org",NA,"PASS",NA,0,NA,0.871918439865112
+"13-search","S-01",NA,"name search returns rows",NA,"PASS",NA,0,NA,0.000567436218261719
+"13-search","S-02",NA,"total_matches attribute is set and numeric",NA,"PASS",NA,0,NA,0.0081634521484375
+"13-search","S-03",NA,"total_matches is at least the returned row count",NA,"PASS",NA,0,NA,0.000629663467407227
+"13-search","S-04",NA,"search schema matches entity schema minus registry","D-93","FAIL"," logi FALSE",0,NA,0.172909736633301
+"13-search","S-05",NA,"max_results is respected exactly",NA,"PASS",NA,0,NA,0.222981691360474
+"13-search","S-06",NA,"max_results below the page size does not over-fetch",NA,"PASS",NA,0,NA,0.201119661331177
+"13-search","S-07",NA,"max_results above the page size paginates",NA,"PASS",NA,0,NA,2.3743257522583
+"13-search","S-08",NA,"legal_form filter is honoured",NA,"PASS",NA,0,NA,0.274099588394165
+"13-search","S-09",NA,"municipality filter is honoured on enheter",NA,"PASS",NA,0,NA,0.277145624160767
+"13-search","S-10",NA,"municipality filter is honoured on underenheter",NA,"PASS",NA,1,"Unknown or uninitialised column: `municipality_code`.",0.282325744628906
+"13-search","S-11",NA,"nace filter is honoured",NA,"PASS",NA,0,NA,0.291823148727417
+"13-search","S-12",NA,"min_employees is honoured",NA,"PASS",NA,0,NA,0.312149524688721
+"13-search","S-13",NA,"max_employees is honoured",NA,"PASS",NA,1,"Unknown or uninitialised column: `employees`.",0.165894746780396
+"13-search","S-14",NA,"bankrupt filter is honoured",NA,"PASS",NA,0,NA,0.278907537460327
+"13-search","S-15",NA,"bankrupt on underenheter either filters or signals","D-04","FAIL"," logi FALSE",0,NA,0.212697744369507
+"13-search","S-16",NA,"parent_org_nr filter is honoured",NA,"PASS",NA,0,NA,0.270597696304321
+"13-search","S-17",NA,"combined filters are ANDed",NA,"PASS",NA,0,NA,0.246916055679321
+"13-search","S-18",NA,"no-match search returns a typed empty tibble","D-05","FAIL"," logi FALSE",0,NA,0.179983854293823
+"13-search","S-19",NA,"no-match search still reports total_matches zero",NA,"PASS",NA,0,NA,0.169525146484375
+"13-search","S-20",NA,"type = label preserves total_matches",NA,"PASS",NA,0,NA,3.21079969406128
+"13-search","S-21",NA,"brreg_label(code=) preserves total_matches","D-07","PASS",NA,0,NA,0.00298857688903809
+"13-search","S-22",NA,"underenheter registry returns rows",NA,"PASS",NA,0,NA,0.232023239135742
+"13-search","S-23",NA,"results are unique on org_nr",NA,"PASS",NA,0,NA,2.57919335365295
+"13-search","S-24",NA,"pagination is stable across two identical calls",NA,"PASS",NA,0,NA,3.02257466316223
+"13-search","S-25",NA,"max_results beyond the API ceiling warns and truncates",NA,"PASS",NA,0,NA,123.918823242188
+"13-search","S-26",NA,"brreg_underenheter default does not silently truncate a large parent","D-08","PASS",NA,0,NA,1.04319167137146
+"13-search","S-27",NA,"brreg_underenheter with a large cap retrieves everything",NA,"PASS",NA,0,NA,0.472018957138062
+"13-search","S-28",NA,"brreg_children returns the ORGL hierarchy",NA,"PASS",NA,0,NA,0.196540594100952
+"13-search","S-29",NA,"brreg_children on an AS returns a typed empty tibble","D-05","FAIL"," logi FALSE",0,NA,0.172893524169922
+"13-search","S-30",NA,"brreg_underenheter type = label works",NA,"PASS",NA,0,NA,0.189811706542969
+"13-search","S-31",NA,"search never returns list columns",NA,"PASS",NA,0,NA,0.792852401733398
+"13-search","S-32",NA,"search column types match the dictionary",NA,"PASS",NA,0,NA,0.587088823318481
+"13-search","S-33",NA,"an unreachable filter combination returns empty, not an error",NA,"PASS",NA,0,NA,0.175398111343384
+"13-search","S-34",NA,"search and entity agree on a single org",NA,"PASS",NA,0,NA,0.7783362865448

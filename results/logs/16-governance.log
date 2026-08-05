@@ -1,5 +1,3 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] G-01     board network builds from org numbers
 [PASS ] G-02     board network builds from pre-fetched roles
 [PASS ] G-03     node count equals distinct entities plus distinct persons

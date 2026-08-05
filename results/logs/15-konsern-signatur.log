@@ -1,5 +1,3 @@
-tidybrreg: bulk data not yet downloaded for: enheter, underenheter, roller.
-Run brreg_snapshot() for full network/panel support. See ?brreg_status for details.
 [PASS ] K-01     konsern returns rows for a group member
 [PASS ] K-02     documented columns are present
 [PASS ] K-03     relation_date is a Date <D-17>

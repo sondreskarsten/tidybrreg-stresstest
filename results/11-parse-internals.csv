@@ -1,67 +1,67 @@
 "file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
-"11-parse-internals","P-01",NA,"field_dict has the documented shape",NA,"PASS",NA,0,NA,0.000617504119873047
-"11-parse-internals","P-02",NA,"field_dict api_path values are unique",NA,"PASS",NA,0,NA,0.0078279972076416
-"11-parse-internals","P-03",NA,"field_dict col_name values are unique","D-90","FAIL"," logi FALSE",0,NA,0.00329256057739258
-"11-parse-internals","P-03b",NA,"colliding api_paths do not silently discard one another's value","D-90","FAIL"," logi FALSE",0,NA,0.00692152976989746
-"11-parse-internals","P-04",NA,"field_dict types are all coercible targets",NA,"PASS",NA,0,NA,0.000605106353759766
-"11-parse-internals","P-05",NA,"no two api_paths collapse to the same snake_case name","D-29","PASS",NA,0,NA,0.000808954238891602
-"11-parse-internals","P-06",NA,"to_snake handles camelCase",NA,"PASS",NA,0,NA,0.000516653060913086
-"11-parse-internals","P-07",NA,"to_snake handles dot notation",NA,"PASS",NA,0,NA,0.000498771667480469
-"11-parse-internals","P-08",NA,"to_snake handles digit boundaries",NA,"PASS",NA,0,NA,0.000501632690429688
-"11-parse-internals","P-09",NA,"to_snake is idempotent",NA,"PASS",NA,0,NA,0.000522136688232422
-"11-parse-internals","P-10",NA,"flatten_json produces dot-notation keys",NA,"PASS",NA,0,NA,0.000658273696899414
-"11-parse-internals","P-11",NA,"flatten_json recurses past depth 2",NA,"PASS",NA,0,NA,0.00517487525939941
-"11-parse-internals","P-12",NA,"unnamed arrays are joined with the same separator as the bulk path","D-28","PASS",NA,0,NA,0.000794887542724609
-"11-parse-internals","P-13",NA,"rename_from_dict emits only observed columns, not the full dictionary",NA,"PASS",NA,0,NA,0.00132250785827637
-"11-parse-internals","P-13b",NA,"every column rename_from_dict does emit is a real dictionary or passthrough name",NA,"PASS",NA,0,NA,0.00159978866577148
-"11-parse-internals","P-14",NA,"rename_from_dict drops nothing (zero-drop policy)","D-29","PASS",NA,0,NA,0.00170159339904785
-"11-parse-internals","P-15",NA,"HAL links never reach the output",NA,"PASS",NA,0,NA,0.00135564804077148
-"11-parse-internals","P-16",NA,"coerce_types produces the declared classes for every emitted column",NA,"PASS",NA,0,NA,0.00385332107543945
-"11-parse-internals","P-17",NA,"parse_entity returns exactly one row",NA,"PASS",NA,0,NA,0.00281476974487305
-"11-parse-internals","P-18",NA,"parse_entities on heterogeneous payloads keeps a stable schema",NA,"PASS",NA,0,NA,0.00519037246704102
-"11-parse-internals","P-19",NA,"parse_entity is invariant to field order",NA,"PASS",NA,0,NA,0.00529837608337402
-"11-parse-internals","P-20",NA,"empty payload does not error",NA,"PASS",NA,0,NA,0.00146985054016113
-"11-parse-internals","P-21",NA,"clean bulk CSV parses",NA,"PASS",NA,0,NA,0.135568380355835
-"11-parse-internals","P-22",NA,"20 integer parse failures are reported as an attribute",NA,"PASS",NA,0,NA,0.036780834197998
+"11-parse-internals","P-01",NA,"field_dict has the documented shape",NA,"PASS",NA,0,NA,0.00481081008911133
+"11-parse-internals","P-02",NA,"field_dict api_path values are unique",NA,"PASS",NA,0,NA,0.0161178112030029
+"11-parse-internals","P-03",NA,"field_dict col_name values are unique","D-90","FAIL"," logi FALSE",0,NA,0.00590753555297852
+"11-parse-internals","P-03b",NA,"colliding api_paths do not silently discard one another's value","D-90","FAIL"," logi FALSE",0,NA,0.0135655403137207
+"11-parse-internals","P-04",NA,"field_dict types are all coercible targets",NA,"PASS",NA,0,NA,0.0066375732421875
+"11-parse-internals","P-05",NA,"no two api_paths collapse to the same snake_case name","D-29","PASS",NA,0,NA,0.00514817237854004
+"11-parse-internals","P-06",NA,"to_snake handles camelCase",NA,"PASS",NA,0,NA,0.000507831573486328
+"11-parse-internals","P-07",NA,"to_snake handles dot notation",NA,"PASS",NA,0,NA,0.0005950927734375
+"11-parse-internals","P-08",NA,"to_snake handles digit boundaries",NA,"PASS",NA,0,NA,0.000689983367919922
+"11-parse-internals","P-09",NA,"to_snake is idempotent",NA,"PASS",NA,0,NA,0.000638246536254883
+"11-parse-internals","P-10",NA,"flatten_json produces dot-notation keys",NA,"PASS",NA,0,NA,0.0023190975189209
+"11-parse-internals","P-11",NA,"flatten_json recurses past depth 2",NA,"PASS",NA,0,NA,0.00988888740539551
+"11-parse-internals","P-12",NA,"unnamed arrays are joined with the same separator as the bulk path","D-28","PASS",NA,0,NA,0.00161099433898926
+"11-parse-internals","P-13",NA,"rename_from_dict emits only observed columns, not the full dictionary",NA,"PASS",NA,0,NA,0.00172519683837891
+"11-parse-internals","P-13b",NA,"every column rename_from_dict does emit is a real dictionary or passthrough name",NA,"PASS",NA,0,NA,0.00157546997070312
+"11-parse-internals","P-14",NA,"rename_from_dict drops nothing (zero-drop policy)","D-29","PASS",NA,0,NA,0.0037529468536377
+"11-parse-internals","P-15",NA,"HAL links never reach the output",NA,"PASS",NA,0,NA,0.00537753105163574
+"11-parse-internals","P-16",NA,"coerce_types produces the declared classes for every emitted column",NA,"PASS",NA,0,NA,0.0127818584442139
+"11-parse-internals","P-17",NA,"parse_entity returns exactly one row",NA,"PASS",NA,0,NA,0.00729799270629883
+"11-parse-internals","P-18",NA,"parse_entities on heterogeneous payloads keeps a stable schema",NA,"PASS",NA,0,NA,0.0139820575714111
+"11-parse-internals","P-19",NA,"parse_entity is invariant to field order",NA,"PASS",NA,0,NA,0.0138740539550781
+"11-parse-internals","P-20",NA,"empty payload does not error",NA,"PASS",NA,0,NA,0.00553250312805176
+"11-parse-internals","P-21",NA,"clean bulk CSV parses",NA,"PASS",NA,0,NA,0.286993026733398
+"11-parse-internals","P-22",NA,"20 integer parse failures are reported as an attribute",NA,"PASS",NA,0,NA,0.0875740051269531
 "11-parse-internals","P-23",NA,"more than 20 integer parse failures do not abort the parse","D-27","ERROR","Tibble columns must have compatible sizes.
 * Size 25: Existing data.
 * Size 20: Column `actual`.
-i Only values of size one are recycled.",0,NA,0.0340948104858398
-"11-parse-internals","P-24",NA,"parse problem table rows equal the number of failures","D-27","PASS",NA,0,NA,0.0162417888641357
-"11-parse-internals","P-25",NA,"flatten_cell on NULL yields NA",NA,"PASS",NA,0,NA,0.000494003295898438
-"11-parse-internals","P-26",NA,"flatten_cell on an empty data frame yields NA",NA,"PASS",NA,0,NA,0.000519752502441406
-"11-parse-internals","P-27",NA,"flatten_cell on a data frame yields valid JSON",NA,"PASS",NA,0,NA,0.0112569332122803
-"11-parse-internals","P-28",NA,"flatten_cell on a named list yields valid JSON",NA,"PASS",NA,0,NA,0.000837802886962891
-"11-parse-internals","P-29",NA,"flatten_cell is total over all-NULL lists",NA,"PASS",NA,0,NA,0.000504732131958008
-"11-parse-internals","P-30",NA,"drop_hal_links removes only link columns",NA,"PASS",NA,0,NA,0.00134992599487305
-"11-parse-internals","P-31",NA,"rename_and_coerce is case insensitive on api paths",NA,"PASS",NA,0,NA,0.00173068046569824
-"11-parse-internals","P-32",NA,"rename_and_coerce does not materialize fields absent from the batch",NA,"PASS",NA,0,NA,0.00156116485595703
-"11-parse-internals","P-32b",NA,"rename_and_coerce emits a field once observed anywhere in the batch",NA,"PASS",NA,0,NA,0.00172591209411621
-"11-parse-internals","P-33",NA,"extract_entity_name handles the jsonlite shape",NA,"PASS",NA,0,NA,0.000604152679443359
-"11-parse-internals","P-34",NA,"extract_entity_name handles the yyjsonr shape",NA,"PASS",NA,0,NA,0.000466585159301758
-"11-parse-internals","P-35",NA,"extract_entity_name handles unnamed lists",NA,"PASS",NA,0,NA,0.000500679016113281
-"11-parse-internals","P-36",NA,"extract_entity_name handles NULL",NA,"PASS",NA,0,NA,0.000528335571289062
-"11-parse-internals","P-37",NA,"flatten_roles produces the documented columns",NA,"PASS",NA,0,NA,0.010761022567749
-"11-parse-internals","P-38",NA,"flatten_roles schema is invariant to fratraadt presence","D-09","FAIL"," logi FALSE",0,NA,0.00396609306335449
-"11-parse-internals","P-39",NA,"flatten_roles handles more than 200 roles",NA,"PASS",NA,0,NA,0.0718574523925781
-"11-parse-internals","P-40",NA,"flatten_roles person_id is stable across calls",NA,"PASS",NA,0,NA,0.0036003589630127
-"11-parse-internals","P-41",NA,"flatten_roles empty group yields a typed empty tibble","D-05","FAIL"," logi FALSE",0,NA,0.00108051300048828
-"11-parse-internals","P-42",NA,"flatten_roles_bulk_fast matches flatten_roles",NA,"PASS",NA,0,NA,0.00755047798156738
-"11-parse-internals","P-43",NA,"bulk flatten produces identical person_id to the per-org flatten",NA,"PASS",NA,0,NA,0.00488853454589844
-"11-parse-internals","P-44",NA,"bulk flatten on zero entities yields typed empty","D-05","FAIL"," logi FALSE",0,NA,0.00106382369995117
-"11-parse-internals","P-45",NA,"lookup_role passes unknown codes through",NA,"PASS",NA,0,NA,0.000571012496948242
-"11-parse-internals","P-46",NA,"lookup_role_vec is vectorised and order preserving",NA,"PASS",NA,0,NA,0.000530242919921875
-"11-parse-internals","P-47",NA,"role_types codes are unique",NA,"PASS",NA,0,NA,0.000543117523193359
-"11-parse-internals","P-48",NA,"role_groups codes are unique",NA,"PASS",NA,0,NA,0.000546455383300781
-"11-parse-internals","P-49",NA,"legal_forms codes are unique",NA,"PASS",NA,0,NA,0.000770807266235352
-"11-parse-internals","P-50",NA,"annotation_infotypes codes are unique",NA,"PASS",NA,0,NA,0.00056767463684082
-"11-parse-internals","P-51",NA,"signature-mode role codes are present in role_types",NA,"PASS",NA,0,NA,0.000511407852172852
-"11-parse-internals","P-52",NA,"reference tables carry no NA labels",NA,"PASS",NA,0,NA,0.000557184219360352
-"11-parse-internals","P-53",NA,"flatten_konsern flattens a deep tree",NA,"PASS",NA,0,NA,0.028719425201416
-"11-parse-internals","P-54",NA,"flatten_konsern synthesises the root link form",NA,"PASS",NA,0,NA,0.0130705833435059
-"11-parse-internals","P-55",NA,"flatten_konsern tolerates dotted date formats","D-17","ERROR","character string is not in a standard unambiguous format",0,NA,0.0126729011535645
-"11-parse-internals","P-56",NA,"flatten_signatur handles ISO birth dates","D-18","FAIL"," logi FALSE",0,NA,0.00189304351806641
-"11-parse-internals","P-57",NA,"flatten_signatur handles dotted birth dates",NA,"PASS",NA,0,NA,0.00501918792724609
-"11-parse-internals","P-58",NA,"flatten_signatur keeps rules with no persons",NA,"PASS",NA,0,NA,0.000995159149169922
-"11-parse-internals","P-59",NA,"flatten_signatur returns the documented columns",NA,"PASS",NA,0,NA,0.0010218620300293
-"11-parse-internals","P-60",NA,"compact drops NULLs only",NA,"PASS",NA,0,NA,0.000519752502441406
+i Only values of size one are recycled.",0,NA,0.0813961029052734
+"11-parse-internals","P-24",NA,"parse problem table rows equal the number of failures","D-27","PASS",NA,0,NA,0.0388243198394775
+"11-parse-internals","P-25",NA,"flatten_cell on NULL yields NA",NA,"PASS",NA,0,NA,0.00516533851623535
+"11-parse-internals","P-26",NA,"flatten_cell on an empty data frame yields NA",NA,"PASS",NA,0,NA,0.000605583190917969
+"11-parse-internals","P-27",NA,"flatten_cell on a data frame yields valid JSON",NA,"PASS",NA,0,NA,0.0320444107055664
+"11-parse-internals","P-28",NA,"flatten_cell on a named list yields valid JSON",NA,"PASS",NA,0,NA,0.000999927520751953
+"11-parse-internals","P-29",NA,"flatten_cell is total over all-NULL lists",NA,"PASS",NA,0,NA,0.000666618347167969
+"11-parse-internals","P-30",NA,"drop_hal_links removes only link columns",NA,"PASS",NA,0,NA,0.00604534149169922
+"11-parse-internals","P-31",NA,"rename_and_coerce is case insensitive on api paths",NA,"PASS",NA,0,NA,0.00652027130126953
+"11-parse-internals","P-32",NA,"rename_and_coerce does not materialize fields absent from the batch",NA,"PASS",NA,0,NA,0.00203490257263184
+"11-parse-internals","P-32b",NA,"rename_and_coerce emits a field once observed anywhere in the batch",NA,"PASS",NA,0,NA,0.00205445289611816
+"11-parse-internals","P-33",NA,"extract_entity_name handles the jsonlite shape",NA,"PASS",NA,0,NA,0.000627756118774414
+"11-parse-internals","P-34",NA,"extract_entity_name handles the yyjsonr shape",NA,"PASS",NA,0,NA,0.000594854354858398
+"11-parse-internals","P-35",NA,"extract_entity_name handles unnamed lists",NA,"PASS",NA,0,NA,0.000611782073974609
+"11-parse-internals","P-36",NA,"extract_entity_name handles NULL",NA,"PASS",NA,0,NA,0.000545024871826172
+"11-parse-internals","P-37",NA,"flatten_roles produces the documented columns",NA,"PASS",NA,0,NA,0.0291874408721924
+"11-parse-internals","P-38",NA,"flatten_roles schema is invariant to fratraadt presence","D-09","FAIL"," logi FALSE",0,NA,0.00884699821472168
+"11-parse-internals","P-39",NA,"flatten_roles handles more than 200 roles",NA,"PASS",NA,0,NA,0.152646780014038
+"11-parse-internals","P-40",NA,"flatten_roles person_id is stable across calls",NA,"PASS",NA,0,NA,0.0115156173706055
+"11-parse-internals","P-41",NA,"flatten_roles empty group yields a typed empty tibble","D-05","FAIL"," logi FALSE",0,NA,0.00208806991577148
+"11-parse-internals","P-42",NA,"flatten_roles_bulk_fast matches flatten_roles",NA,"PASS",NA,0,NA,0.0167434215545654
+"11-parse-internals","P-43",NA,"bulk flatten produces identical person_id to the per-org flatten",NA,"PASS",NA,0,NA,0.0143637657165527
+"11-parse-internals","P-44",NA,"bulk flatten on zero entities yields typed empty","D-05","FAIL"," logi FALSE",0,NA,0.0013427734375
+"11-parse-internals","P-45",NA,"lookup_role passes unknown codes through",NA,"PASS",NA,0,NA,0.000581741333007812
+"11-parse-internals","P-46",NA,"lookup_role_vec is vectorised and order preserving",NA,"PASS",NA,0,NA,0.000553369522094727
+"11-parse-internals","P-47",NA,"role_types codes are unique",NA,"PASS",NA,0,NA,0.000672340393066406
+"11-parse-internals","P-48",NA,"role_groups codes are unique",NA,"PASS",NA,0,NA,0.000597953796386719
+"11-parse-internals","P-49",NA,"legal_forms codes are unique",NA,"PASS",NA,0,NA,0.000660896301269531
+"11-parse-internals","P-50",NA,"annotation_infotypes codes are unique",NA,"PASS",NA,0,NA,0.000591754913330078
+"11-parse-internals","P-51",NA,"signature-mode role codes are present in role_types",NA,"PASS",NA,0,NA,0.000658035278320312
+"11-parse-internals","P-52",NA,"reference tables carry no NA labels",NA,"PASS",NA,0,NA,0.0047309398651123
+"11-parse-internals","P-53",NA,"flatten_konsern flattens a deep tree",NA,"PASS",NA,0,NA,0.0609712600708008
+"11-parse-internals","P-54",NA,"flatten_konsern synthesises the root link form",NA,"PASS",NA,0,NA,0.0272789001464844
+"11-parse-internals","P-55",NA,"flatten_konsern tolerates dotted date formats","D-17","ERROR","character string is not in a standard unambiguous format",0,NA,0.0292243957519531
+"11-parse-internals","P-56",NA,"flatten_signatur handles ISO birth dates","D-18","FAIL"," logi FALSE",0,NA,0.0021662712097168
+"11-parse-internals","P-57",NA,"flatten_signatur handles dotted birth dates",NA,"PASS",NA,0,NA,0.00994229316711426
+"11-parse-internals","P-58",NA,"flatten_signatur keeps rules with no persons",NA,"PASS",NA,0,NA,0.00297260284423828
+"11-parse-internals","P-59",NA,"flatten_signatur returns the documented columns",NA,"PASS",NA,0,NA,0.00531482696533203
+"11-parse-internals","P-60",NA,"compact drops NULLs only",NA,"PASS",NA,0,NA,0.00464034080505371

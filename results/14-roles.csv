@@ -1,35 +1,35 @@
 "file","id","group","description","defect","status","message","n_warnings","warnings","elapsed"
-"14-roles","R-01",NA,"roles returns rows for a large ASA",NA,"PASS",NA,0,NA,0.000715494155883789
-"14-roles","R-02",NA,"documented columns are present",NA,"PASS",NA,0,NA,0.0240850448608398
-"14-roles","R-03",NA,"birth_date is a Date",NA,"PASS",NA,0,NA,0.000596046447753906
-"14-roles","R-04",NA,"group_modified is a Date",NA,"PASS",NA,0,NA,0.00087428092956543
-"14-roles","R-05",NA,"org_nr is constant and correct",NA,"PASS",NA,0,NA,0.000592947006225586
-"14-roles","R-06",NA,"role labels are translated, not raw codes",NA,"PASS",NA,0,NA,0.000530719757080078
-"14-roles","R-07",NA,"every role_code is known to role_types",NA,"PASS",NA,0,NA,0.000593662261962891
-"14-roles","R-08",NA,"every role_group_code is known to role_groups",NA,"PASS",NA,0,NA,0.00056767463684082
-"14-roles","R-09",NA,"person rows carry a person_id",NA,"PASS",NA,0,NA,0.000637292861938477
-"14-roles","R-10",NA,"entity-held roles carry an org number",NA,"PASS",NA,0,NA,0.00062870979309082
-"14-roles","R-11",NA,"entity role names are resolved, not JSON",NA,"PASS",NA,0,NA,0.000492095947265625
-"14-roles","R-12",NA,"person_id is unique per person within one entity",NA,"PASS",NA,0,NA,0.00128173828125
-"14-roles","R-13",NA,"schema is identical across 8 different entities","D-09","PASS",NA,0,NA,1.35597491264343
-"14-roles","R-14",NA,"roles bind_rows cleanly across entities",NA,"PASS",NA,0,NA,1.02080774307251
-"14-roles","R-15",NA,"an entity with no roles yields a typed empty tibble","D-05","SKIP","precondition unavailable",0,NA,0.823657989501953
-"14-roles","R-16",NA,"a deleted entity is distinguishable from one with no roles","D-10","FAIL"," logi FALSE",0,NA,0.204482316970825
-"14-roles","R-17",NA,"an invalid org number is rejected before the call","D-10","FAIL"," logi FALSE",0,NA,0.188162803649902
-"14-roles","R-18",NA,"repeated calls are deterministic",NA,"PASS",NA,0,NA,0.344424962997437
-"14-roles","R-19",NA,"roles_legal returns a data frame",NA,"PASS",NA,0,NA,0.281877756118774
-"14-roles","R-20",NA,"roles_legal columns match the documentation",NA,"PASS",NA,0,NA,0.299945116043091
-"14-roles","R-21",NA,"roles_legal target org numbers are valid",NA,"PASS",NA,0,NA,0.28881573677063
-"14-roles","R-22",NA,"roles_legal on an entity with none returns a typed empty tibble","D-05","FAIL"," logi FALSE",0,NA,0.161920785903931
-"14-roles","R-23",NA,"roles_legal warns on an HTTP failure like brreg_roles does","D-06","FAIL","no warning raised",0,NA,0.161797523498535
-"14-roles","R-24",NA,"roles and roles_legal are inverse on at least one pair",NA,"PASS",NA,0,NA,0.445811748504639
-"14-roles","R-25",NA,"board_summary returns exactly one row",NA,"PASS",NA,0,NA,0.0030055046081543
-"14-roles","R-26",NA,"board_summary reports the queried org",NA,"PASS",NA,0,NA,0.00280499458312988
-"14-roles","R-27",NA,"board_summary counts sum to board size",NA,"PASS",NA,0,NA,0.00851774215698242
-"14-roles","R-28",NA,"board_summary board_size matches an independent count",NA,"PASS",NA,0,NA,0.00280880928039551
-"14-roles","R-29",NA,"board_summary detects the auditor",NA,"PASS",NA,0,NA,0.00400090217590332
-"14-roles","R-30",NA,"board_summary auditor org number is valid",NA,"PASS",NA,0,NA,0.00279998779296875
-"14-roles","R-31",NA,"board_summary on multi-org input aborts or returns one row per org","D-12","FAIL"," logi FALSE",0,NA,0.339052677154541
-"14-roles","R-32",NA,"board_summary on an empty roles tibble does not error",NA,"PASS",NA,14,"Unknown or uninitialised column: `deregistered`. / Unknown or uninitialised column: `role_group_code`. / Unknown or uninitialised column: `person_id`. / Unknown or uninitialised column: `org_nr`. / Unknown or uninitialised column: `role_code`. / Unknown or uninitialised column: `role_code`. / Unknown or uninitialised column: `role_code`. / Unknown or uninitialised column: `role_code`. / Unknown or",0.00852584838867188
-"14-roles","R-33",NA,"n_employee_elected counts only employee-elected members","D-13","FAIL"," logi FALSE",0,NA,0.00310254096984863
-"14-roles","R-34",NA,"board_summary is stable under row permutation",NA,"PASS",NA,0,NA,0.00491094589233398
+"14-roles","R-01",NA,"roles returns rows for a large ASA",NA,"PASS",NA,0,NA,0.000703573226928711
+"14-roles","R-02",NA,"documented columns are present",NA,"PASS",NA,0,NA,0.0209894180297852
+"14-roles","R-03",NA,"birth_date is a Date",NA,"PASS",NA,0,NA,0.000661373138427734
+"14-roles","R-04",NA,"group_modified is a Date",NA,"PASS",NA,0,NA,0.000541448593139648
+"14-roles","R-05",NA,"org_nr is constant and correct",NA,"PASS",NA,0,NA,0.000535488128662109
+"14-roles","R-06",NA,"role labels are translated, not raw codes",NA,"PASS",NA,0,NA,0.000489950180053711
+"14-roles","R-07",NA,"every role_code is known to role_types",NA,"PASS",NA,0,NA,0.000611066818237305
+"14-roles","R-08",NA,"every role_group_code is known to role_groups",NA,"PASS",NA,0,NA,0.000582695007324219
+"14-roles","R-09",NA,"person rows carry a person_id",NA,"PASS",NA,0,NA,0.000465154647827148
+"14-roles","R-10",NA,"entity-held roles carry an org number",NA,"PASS",NA,0,NA,0.000541210174560547
+"14-roles","R-11",NA,"entity role names are resolved, not JSON",NA,"PASS",NA,0,NA,0.000609397888183594
+"14-roles","R-12",NA,"person_id is unique per person within one entity",NA,"PASS",NA,0,NA,0.00112152099609375
+"14-roles","R-13",NA,"schema is identical across 8 different entities","D-09","PASS",NA,0,NA,1.34601211547852
+"14-roles","R-14",NA,"roles bind_rows cleanly across entities",NA,"PASS",NA,0,NA,1.02266669273376
+"14-roles","R-15",NA,"an entity with no roles yields a typed empty tibble","D-05","SKIP","precondition unavailable",0,NA,0.831708431243896
+"14-roles","R-16",NA,"a deleted entity is distinguishable from one with no roles","D-10","FAIL"," logi FALSE",0,NA,0.199256896972656
+"14-roles","R-17",NA,"an invalid org number is rejected before the call","D-10","FAIL"," logi FALSE",0,NA,0.191716909408569
+"14-roles","R-18",NA,"repeated calls are deterministic",NA,"PASS",NA,0,NA,0.346911191940308
+"14-roles","R-19",NA,"roles_legal returns a data frame",NA,"PASS",NA,0,NA,0.291321277618408
+"14-roles","R-20",NA,"roles_legal columns match the documentation",NA,"PASS",NA,0,NA,0.310920000076294
+"14-roles","R-21",NA,"roles_legal target org numbers are valid",NA,"PASS",NA,0,NA,0.285171270370483
+"14-roles","R-22",NA,"roles_legal on an entity with none returns a typed empty tibble","D-05","FAIL"," logi FALSE",0,NA,0.169137716293335
+"14-roles","R-23",NA,"roles_legal warns on an HTTP failure like brreg_roles does","D-06","FAIL","no warning raised",0,NA,0.162295818328857
+"14-roles","R-24",NA,"roles and roles_legal are inverse on at least one pair",NA,"PASS",NA,0,NA,0.464682102203369
+"14-roles","R-25",NA,"board_summary returns exactly one row",NA,"PASS",NA,0,NA,0.00341510772705078
+"14-roles","R-26",NA,"board_summary reports the queried org",NA,"PASS",NA,0,NA,0.00249242782592773
+"14-roles","R-27",NA,"board_summary counts sum to board size",NA,"PASS",NA,0,NA,0.0085151195526123
+"14-roles","R-28",NA,"board_summary board_size matches an independent count",NA,"PASS",NA,0,NA,0.00253534317016602
+"14-roles","R-29",NA,"board_summary detects the auditor",NA,"PASS",NA,0,NA,0.00264358520507812
+"14-roles","R-30",NA,"board_summary auditor org number is valid",NA,"PASS",NA,0,NA,0.0027315616607666
+"14-roles","R-31",NA,"board_summary on multi-org input aborts or returns one row per org","D-12","FAIL"," logi FALSE",0,NA,0.339993476867676
+"14-roles","R-32",NA,"board_summary on an empty roles tibble does not error",NA,"PASS",NA,14,"Unknown or uninitialised column: `deregistered`. / Unknown or uninitialised column: `role_group_code`. / Unknown or uninitialised column: `person_id`. / Unknown or uninitialised column: `org_nr`. / Unknown or uninitialised column: `role_code`. / Unknown or uninitialised column: `role_code`. / Unknown or uninitialised column: `role_code`. / Unknown or uninitialised column: `role_code`. / Unknown or",0.00986719131469727
+"14-roles","R-33",NA,"n_employee_elected counts only employee-elected members","D-13","FAIL"," logi FALSE",0,NA,0.00313615798950195
+"14-roles","R-34",NA,"board_summary is stable under row permutation",NA,"PASS",NA,0,NA,0.00490498542785645
