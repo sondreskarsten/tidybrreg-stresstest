@@ -675,3 +675,69 @@ headers with a wrong reason (registry-specific) -> reason corrected (format x re
 closed on endpoint evidence (one CSV export only, co-occurrence impossible).
 
 ---
+## 16. Content agreement across query paths (values, not columns)
+
+Same entities, four retrieval routes, comparing every shared column by value.
+
+### Live single lookup vs live search — exact agreement
+`brreg_entity()` vs `brreg_search()` for EQUINOR ASA, DNB BANK ASA and STORTINGET:
+**64 comparable columns, 0 mismatches** on all three. The two live paths are
+value-identical, which is the result you want and is not guaranteed by the code (they use
+different parse entry points).
+
+### Live vs CSV bulk — four classes of divergence
+
+| entity | mismatched columns |
+|---|---|
+| EQUINOR ASA | 5 |
+| DNB BANK ASA | 5 |
+| STORTINGET | 3 |
+
+**(a) New finding — D-109: the `numeric` type is never applied on the bulk path.**
+
+```
+capital_amount   live: numeric   5976872600
+                 bulk: character "5976872600.00"
+capital_shares   live: numeric   2390749040
+                 bulk: character "2390749040"
+```
+
+`field_dict` declares both as `numeric`. `coerce_types()` handles numeric correctly — but
+the bulk path does not use it. `parse_bulk_csv()` calls `rename_and_coerce()`, whose type
+`switch` has branches for `Date`, `logical`, `character` and a special case for `integer`,
+and **no `numeric` branch**, so numeric-declared columns fall through to the `switch`
+default and stay character. Confirmed by isolation: `coerce_types()` applied afterwards to
+the same frame turns `capital_amount` into numeric.
+
+Four columns are affected across every bulk-derived artefact:
+`capital_amount`, `capital_shares`, `capital_paid_in`, `capital_restricted`.
+
+The live path is numeric only *by accident* — jsonlite returns JSON numbers as numeric
+before any coercion runs. So the declared contract is honoured on one path and silently
+violated on the other, and share capital arrives as a string from every snapshot, every
+sync state, and every panel built on them. `sum(capital_amount)` over a bulk-derived table
+errors; over a live-derived one it works.
+
+**(b) The same free text is a different string depending on the route.**
+`purpose` and `activity` come back from the single-entity API with embedded newlines
+(the JSON array of lines joined on `\n`), and from the CSV bulk with those newlines
+collapsed to spaces — BRREG's CSV export pre-flattens them. tidybrreg reproduces each
+source faithfully, so neither is wrong, but the same field for the same entity is not
+string-equal across paths. Any dedupe, hash, or equality join on free-text fields will
+disagree depending on which route populated the table.
+
+**(c) `annotations` carries different semantics per route.**
+```
+live: NA        (the paategninger array, empty -> NA)
+bulk: "false"   (a boolean flag)
+```
+The CSV export ships a *has-annotations* boolean under the same name the JSON path uses for
+the *annotation content*. One column, two meanings, no indication in the docs. This is the
+mechanism behind D-35: the CSV bootstrap sees a flag and must then fetch each flagged
+entity individually, precisely because the flag is not the content.
+
+**(d) STORTINGET shows the divergence is not entity-specific** — it mismatches on
+`capital_amount`, `capital_shares` (both NA on both sides, but `NA_real_` vs `NA_character_`
+so `identical()` separates them) and `annotations`. Even all-NA columns disagree by type.
+
+---
