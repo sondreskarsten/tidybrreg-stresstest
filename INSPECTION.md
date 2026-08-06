@@ -741,3 +741,79 @@ entity individually, precisely because the flag is not the content.
 so `identical()` separates them) and `annotations`. Even all-NA columns disagree by type.
 
 ---
+## 17. Critical self-assessment — can "not noted" be read as "correct"?
+
+**No. Silence from this suite is weak evidence of correctness, and in several specific ways
+it is no evidence at all.** The grounds, with numbers:
+
+### 1. 17 checks did not execute
+Of 632 checks in the clean run, 17 skipped because their preconditions never materialised.
+They cluster: **9 of them are the entire changelog query surface** (`SY-17`..`SY-26`), which
+never ran because no changelog was written (D-105). So `brreg_changes()`'s `track` filter,
+`org_nr` filter, registry filter, time ordering, and `brreg_change_summary()`'s agreement
+with the raw log are **completely untested**, not passing. Same for `FO-21`/`FO-22`
+(changelog file layout) and `SY-47` (annotation retention on deletion).
+
+### 2. 19 predicted defects were never exercised at all
+D-11, D-26, D-36, D-37, D-39, D-40, D-41, D-44, D-51, D-52, D-63, D-64, D-66, D-68, D-72,
+D-74, D-75, D-76, D-77. These are coverage holes, not clearances. Several are S1 in the
+original grading (D-40 fabricated roller timestamps, D-41 O(n·m) state rebuild, D-51
+attribute anachronism in flows, D-66 positional snapshot alignment).
+
+### 3. 31 "did not reproduce" results are unadjudicated
+Each is a check that passed while predicting failure. That has three possible causes and I
+have distinguished them for only a handful: the defect was fixed upstream (D-28, D-29 —
+confirmed via `c9bd992`), my static reading was wrong (D-90 — now confirmed), **or my check
+is too weak to detect the defect it targets**. I have direct evidence the third case is
+real: `SY-46` asserts only `is.data.frame()`, and `SY-12` asserts monotonic cursor advance
+which passes trivially on a zero-event advance. Both "pass" while testing essentially
+nothing. I have not audited the other 29 for the same flaw.
+
+### 4. Argument space is sampled, not covered
+The evaluation enumerated 341 materially-distinct calls against a full cartesian space
+that is far larger: `brreg_search()` alone is ~1,024 combinations (21 tested),
+`brreg_download()` 108 (24 tested), `brreg_sync()` 56 (a handful tested). Coverage of the
+*documented surface* is good; coverage of the *reachable state space* is a few percent.
+
+### 5. One temporal sample, one population sample
+Everything here is a single day's register (2026-08-05) from one machine. No seasonal
+behaviour, no year boundary, no leap day, no BRREG maintenance window, no rate-limit or 5xx
+response observed in anger. Cross-path *content* agreement (section 16) was verified on
+**3 entities out of 1,170,637** — chosen because they are large and well-known, i.e. the
+least likely to be malformed. Encoding was never systematically verified: Norwegian
+characters render as `<U+00C5>` escapes throughout my console output and I never confirmed
+UTF-8 round-trips correctly into and out of parquet.
+
+### 6. Whole categories were never attempted
+No concurrency testing (two syncs against one store), no fuzzing or property-based testing,
+no mutation testing of the suite itself, essentially no failure injection beyond two cases
+(a mocked HTTP 410 and a truncated cache). No adversarial payloads. No memory/time
+regression baselines.
+
+### 7. My own instrumentation has a demonstrated, non-trivial defect rate
+**12 rig faults are logged in `ISSUES.md`**, including five checks that asserted the
+*defective* behaviour as correct (`P-32`, `E-15`, `E-17`, `E-19c/d/e`), two invalid test
+fixtures (`V-13` used a valid org number as an invalid one; `E-19` used a real entity as a
+nonexistent one), two mechanically broken checks (`R-11`, `Q-09`), and a CI cache-locality
+bug that produced **9 phantom regressions** I initially read as package defects. D-90 alone
+went through four wrong states before closing as a non-defect.
+
+If roughly a dozen faults surfaced in the checks that happened to *fire*, the base rate in
+the 489 quiet ones is not zero. A passing check here means "this assertion, as I wrote it,
+evaluated TRUE once" — not "this behaviour is correct".
+
+### What can be said positively
+- The **87 confirmed defects** are well-evidenced; most are now corroborated by written
+  artefacts rather than code reading alone.
+- The **8 regressions** are triaged and attributed.
+- **2 of 31 artefacts remain uninspected** (`shared-store/underenheter` x2, both format
+  siblings of files already covered) and 2 more are verified only by checksum identity.
+- Cross-path value agreement holds exactly where tested (64/64 columns, live single vs
+  search).
+
+### Honest summary
+This suite is a *defect detector that has found a lot*, not a *correctness proof*. The right
+reading of a silent area is "no evidence either way", and for the changelog surface
+specifically it is "known untested". I would not sign off on any part of tidybrreg as
+correct on the strength of this run — only on the specific, artefact-backed statements
+recorded above.
