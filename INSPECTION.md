@@ -817,3 +817,64 @@ reading of a silent area is "no evidence either way", and for the changelog surf
 specifically it is "known untested". I would not sign off on any part of tidybrreg as
 correct on the strength of this run — only on the specific, artefact-backed statements
 recorded above.
+## 18. Testing the untested — changelog surface unlocked
+
+Run `tidybrreg-stresstest-xh99x`, image v6, `run_date=2026-08-06T163711Z`. 633 checks;
+never-exercised predicted defects fell from **19 to 9**; regressions fell from 8 to **1**.
+
+### D-105 is REFUTED — the changelog is written after all
+`37-changelog.R` forced a sync that applied real CDC events. Results:
+
+- `CL-03` **pass** — changelog partitions written
+- `CL-22` **pass** — hive-encoded `sync_date=2026-08-06`
+- `CL-23` **pass** — on-disk parquet carries the documented 8-column schema
+
+The published artefact is `changelog-store/state/changelog/sync_date=2026-08-06/batch-192301.parquet`,
+**2,604 rows x 8 columns**, with `change_type` values `entry`, `change`, `exit`,
+`name_history_added`, `annotation_added`. Read back through `brreg_changes()` offline it
+returns all 2,604 rows.
+
+So the earlier "no changelog exists" observation was exactly the ambiguity I refused to
+promote to a defect: **a bootstrap applies no events, so it writes no changelog**. Once
+events are applied, the changelog appears and is well-formed. D-105 withdrawn.
+
+### D-49 CONFIRMED with real data — date filters use the partition, not the event time
+The single partition `sync_date=2026-08-06` contains events whose own timestamps span two
+days:
+
+```
+events dated 2026-08-05 : 138
+events dated 2026-08-06 : 2,466
+
+brreg_changes(from = as.Date("2026-08-06")) returns : 2,604
+   of which actually dated 2026-08-05                : 138
+```
+
+Filtering from 6 August returns 138 events that occurred on 5 August. The filter is applied
+to the directory name, not to `timestamp`. This is a silent correctness defect for anyone
+slicing the changelog by date — the boundary is defined by when the sync ran, not when the
+event happened, and late-arriving events are attributed to the wrong day. Previously graded
+S1 from code reading; now demonstrated on the register's own data.
+
+### D-50 CONFIRMED — flows exits carry no industry attributes
+`CL-27` fails: exits in `brreg_flows()` output have all-NA `nace_1`, because exited orgs
+have already been removed from the state the join reads from.
+
+### Unexplained anomaly, recorded rather than resolved
+`CL-04` (`brreg_changes()` returns the applied events) **failed in-container with 0 rows**,
+in the same session where `CL-22`/`CL-23` confirmed the files on disk and `CL-26`
+(`brreg_flows()`) succeeded — flows read the changelog while `brreg_changes()` did not.
+Offline, against the identical published artefact, `brreg_changes()` returns all 2,604 rows.
+Not reproducible outside the container; most plausibly a read during a concurrent write
+(tier 3 ran 7 files on 4 cores). Recorded as an open anomaly, **not** attributed to
+tidybrreg, and it is why 20 downstream `CL-*` checks skipped.
+
+### Rig faults in the new code, as predicted
+- `CL-01` failed: my `rewind_cursor()` compared a zero-length value (`logi(0)`), so the
+  rewind never happened. The changelog materialised anyway from ~2,600 events that arrived
+  naturally during the 52-minute run — the test worked by luck, not by design.
+- `34-sync` collapsed from 26 passes to 1, almost certainly resource contention from
+  `37-changelog.R` running a second full bootstrap concurrently on the same 4 cores.
+
+Both are mine, both were predicted by the self-assessment's point about the rig's defect
+rate, and both need fixing before these results are quoted as coverage.
