@@ -69,6 +69,13 @@ test_sync <- function(store = file.path(stress_root(), "tmp", "sync-store"),
     after >= before
   })
 
+  check("SY-12b", "a zero-event advance is distinguishable from a real one", {
+    before <- jsonlite::fromJSON(file.path(store, "state", "sync_cursor.json"))$enheter_id
+    r <- brreg_sync(types = "enheter", verbose = FALSE)
+    after <- jsonlite::fromJSON(file.path(store, "state", "sync_cursor.json"))$enheter_id
+    !is.null(r$summary$enheter$n_events) || after > before
+  })
+
   check("SY-13", "a second sync is idempotent on state row count", {
     a <- nrow(tb$read_parquet_safe(file.path(store, "state", "enheter.parquet")))
     brreg_sync(types = "enheter", verbose = FALSE)
@@ -252,8 +259,8 @@ test_sync <- function(store = file.path(stress_root(), "tmp", "sync-store"),
 
   check("SY-46", "roller cdc sync produces roller changelog rows", {
     cl <- brreg_changes(registry = "roller")
-    is.data.frame(cl)
-  })
+    is.data.frame(cl) && nrow(cl) > 0 && all(cl$registry == "roller")
+  }, defect = "D-105")
 
   check("SY-47", "deleted entities retain their annotation history", {
     cl <- brreg_changes(change_type = "exit")

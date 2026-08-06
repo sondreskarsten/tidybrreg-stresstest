@@ -141,6 +141,8 @@ jobs:
           - 34-sync.R
           - 35-replay.R
           - 36-file-outputs.R
+          - 37-changelog.R
+          - 38-uncovered.R
     steps:
       - uses: actions/checkout@v4
 
