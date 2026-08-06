@@ -373,3 +373,60 @@ lowercase at field 38, `registreringsdatoAntallAnsatteEnhetsregisteret` camelCas
 case-insensitive matching is the right design choice against a source like that.
 
 ---
+## 10. `cache/R/tidybrreg/roller_bulk.json.gz` — 124 MB
+
+**Structure:** a pretty-printed JSON *array*, not NDJSON:
+
+```
+[
+  {
+  "_links" : { "self" : { "href" : ".../enheter/810034882/roller" }, ... },
+  "organisasjonsnummer" : "810034882",
+  "rollegrupper" : [ { "roller" : [ { "avregistrert" : false,
+      "person" : { "erDoed" : false, "fodselsdato" : "1981-09-27",
+                   "navn" : { "etternavn" : "Aarrestad", "fornavn" : "Morten" } },
+      "rekkefolge" : 0,
+      "type" : { "_links" : {...}, "beskrivelse" : "Daglig leder", ...
+```
+
+This single fact explains two separate defects mechanically:
+
+- **D-57** — line 1 of the file is `[`, which `parse_bulk_csv()` reads as a one-field
+  header. That is exactly why the imported parquet in section 3 has a column named `[`.
+- **D-25 / arrow JSON path** — `arrow::read_json_arrow()` expects newline-delimited JSON.
+  A pretty-printed array cannot be read by it at all, so the documented
+  `type_output = "arrow"` route is unusable for every JSON bulk, not merely inconsistent.
+
+### D-09 root cause confirmed: `fratraadt` no longer exists
+**Zero occurrences** of `fratraadt` in the first 2,000,000 lines. The field BRREG removed in
+June 2026 is genuinely gone from the payload. tidybrreg 0.5.0's "stop fabricating resigned"
+change is therefore *correct* — it should not invent a column the source no longer provides.
+What remains a defect is the consequence: `brreg_roles()`'s column set now depends on
+payload content, so two calls against different entities (or the same entity before and
+after the API change) return unstackable frames. The fix addressed the fabrication; the
+schema-stability problem it created is untouched.
+
+### D-13 conclusively confirmed against real data
+`valgtAv` is populated 1,247 times per 2 M lines. Its distinct values:
+
+| code | meaning | count |
+|---|---|---|
+| `A-AK` | Representative of the A shareholders | 3,761 |
+| `AREP` | **Representative of the employees** | 581 |
+| `B-AK` | Representative of the B shareholders | 30 |
+| `C-AK` | Representative of the C shareholders | 7 |
+
+`brreg_board_summary()` computes `n_employee_elected = sum(!is.na(elected_by))`, which
+counts all four. Only `AREP` is employee election — **581 of 4,379 populated values, 13 %**.
+The other 87 % are share-class representatives, the opposite constituency. Anyone using
+`n_employee_elected` as an employee-representation measure gets a number that is roughly
+7.5x too large and dominated by shareholder representatives. Previously graded S1 from code
+reading; now quantified from the register itself.
+
+### D-92 is pervasive, not incidental
+13,640 `"_links"` occurrences in the first 200,000 lines — nested inside `type`, `person`,
+and group objects, not only at the document root. The HAL-stripping logic only handles the
+top level, so every one of these nested blocks is a candidate to leak into output as it does
+for `organisasjonsform__links_self_href` in section 2 of the evaluation.
+
+---
