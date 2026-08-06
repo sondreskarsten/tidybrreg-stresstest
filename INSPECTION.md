@@ -518,3 +518,52 @@ timestamps), D-107 (snapshot and sync write non-unionable schemas for the same r
 **Corrected against myself:** D-90 downgraded S1 → cosmetic. The collision is a deliberate
 alias for a registry-specific spelling difference and is unreachable with real data. My
 inference that a live payload could carry both keys is disproven by the headers.
+## 13. Correction to section 9, and the root cause of D-107
+
+Inspecting the two JSON bulks forces a correction to the reasoning I gave for downgrading
+D-90, and simultaneously root-causes D-107.
+
+### The registration-date spelling matrix
+
+| bulk file | spelling used |
+|---|---|
+| `enheter_bulk.json.gz` | `registreringsdatoEnhetsregisteret` |
+| `underenheter_bulk.json.gz` | `registreringsdatoEnhetsregisteret` |
+| `enheter_bulk.csv.gz` | `registreringsdatoenhetsregisteret` (all lowercase) |
+| `underenheter_bulk.csv.gz` | **`registreringsdatoIEnhetsregisteret`** |
+
+In section 9 I concluded the two `field_dict` rows existed because the spellings were
+*registry*-specific. That is wrong. The `I` variant is used by exactly **one of the four
+bulk files** — the underenheter CSV. Its own JSON sibling, covering the identical registry,
+uses the non-`I` spelling. So the divergence is **format x registry**, not registry.
+
+The downgrade itself still stands: only one spelling appears per file, so the last-row-wins
+overwrite still never fires against real data, and the duplicate dictionary rows are still a
+necessary alias. But the reason I gave was incorrect and is corrected here.
+
+### D-107 root-caused: `closure_date` is CSV-only, in both registries
+
+`nedleggelsesdato` occurrences in the first 400,000 lines:
+
+- `enheter_bulk.json.gz` — **0**
+- `underenheter_bulk.json.gz` — **0**
+- both CSV bulks — present (field 44 of the underenheter header)
+
+So the JSON bulk carries no closure date at all. That is why
+`sync-store/state/underenheter.parquet` (JSON bootstrap) lacks `closure_date` while
+`snapshot-store/underenheter/...` (CSV) has it. tidybrreg is faithfully reproducing what
+each format provides; the defect is that nothing warns the user, and the consequence lands
+on a function that matters:
+
+`brreg_survival_data()` derives `exit_date` from `pmin(bankruptcy, liquidation, forced,
+deletion/closure)`. Run against a **sync-derived** state it silently loses one of those exit
+channels; run against a **snapshot-derived** table it keeps it. The same analysis over the
+same register returns different survival curves depending on which store fed it, with no
+error and no missing-column warning — `intersect()`-style column handling means the field
+just is not there.
+
+This is the class of non-obvious interaction worth hunting: neither `brreg_sync()` nor
+`brreg_snapshot()` is individually wrong, and neither help page is individually incorrect.
+The defect exists only in the composition.
+
+---
