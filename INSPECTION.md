@@ -567,3 +567,50 @@ This is the class of non-obvious interaction worth hunting: neither `brreg_sync(
 The defect exists only in the composition.
 
 ---
+## 14. Cross-table referential integrity — three interactions only visible across files
+
+### D-38 is disproven at the artefact level
+The evaluation predicted a lost-update bug: syncing `enheter` and `underenheter` in one call
+would have the second type's `historiske_navn` state overwrite the first's. The published
+artefact settles it. `historiske_navn.parquet` holds 424,679 distinct orgs, and they
+partition exactly:
+
+```
+orgs in historiske_navn NOT in underenheter state : 219,397   (= the enheter side)
+                                        remainder : 205,282   (= the underenheter side)
+                                            total : 424,679
+```
+
+219,397 is precisely the count of enheter rows carrying a `historiske_navn` JSON blob in
+`enheter.parquet` (section 6). Both registries' contributions coexist; neither overwrote the
+other. **D-38 did not reproduce, and the artefact explains why rather than merely recording
+a passing check.**
+
+### Other integrity checks pass cleanly
+- **Påtegninger are enheter-only:** 0 of 2,747 påtegning orgs appear in the underenheter
+  state. Correct — påtegninger attach to hovedenheter.
+- **Parent hierarchy is acyclic and well-typed:** 783,160 distinct `parent_org_nr` values
+  referenced by underenheter, and **none** of them is itself an underenhet. No cycles, no
+  registry confusion.
+
+### New finding — D-108: the shared name-history table has no registry discriminator
+
+`historiske_navn.parquet` columns are `org_nr, position, name, from_date, to_date`. There is
+**no `registry` column**, yet the table demonstrably interleaves rows from two registries
+(219,397 enheter orgs + 205,282 underenheter orgs). A consumer holding only this file cannot
+tell which registry a name-history row belongs to without joining against both state tables
+— and if only one state table is present (a single-type sync), the attribution is
+unrecoverable.
+
+`?brreg_historical_names` documents the field's origin ("BRREG added `historiskeNavn` to
+enheter **and** underenheter on 2026-06-16") and the Value section lists exactly those five
+columns, so the docs are internally consistent — they simply never say the two registries
+share one table. For a platform whose stated design keeps each source's grain as-observed,
+a table whose rows come from two different populations with no discriminator is a genuine
+modelling gap: the lowest unit of analysis is ambiguous on its face.
+
+Severity is moderate rather than high because `org_nr` is globally unique across the two
+registries in practice, so the join *is* recoverable when both states exist — but it
+requires an external lookup to answer a question the row should answer itself.
+
+---
