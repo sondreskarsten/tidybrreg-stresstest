@@ -614,3 +614,64 @@ registries in practice, so the join *is* recoverable when both states exist — 
 requires an external lookup to answer a question the row should answer itself.
 
 ---
+## 15. Single-lookup and search endpoints — completing the spelling matrix, closing D-90
+
+Sections 9 and 13 only sampled the four bulk files. The single-entity and search endpoints
+were untested, which left the matrix incomplete and my conclusion under-evidenced. Tested
+directly against the live API:
+
+| endpoint | `registreringsdato…` spelling observed |
+|---|---|
+| `GET enheter/{orgnr}` (x2 entities) | `registreringsdatoEnhetsregisteret` |
+| `GET underenheter/{orgnr}` | `registreringsdatoEnhetsregisteret` |
+| `GET enheter?size=2` (search) | `registreringsdatoEnhetsregisteret` |
+| `GET underenheter?size=2` (search) | `registreringsdatoEnhetsregisteret` |
+| `enheter_bulk.json.gz` | `registreringsdatoEnhetsregisteret` |
+| `underenheter_bulk.json.gz` | `registreringsdatoEnhetsregisteret` |
+| `enheter_bulk.csv.gz` | `registreringsdatoenhetsregisteret` (lowercase) |
+| **`underenheter_bulk.csv.gz`** | **`registreringsdatoIEnhetsregisteret`** |
+| deleted entity (`SlettetEnhet`) | *field absent entirely* |
+| `oppdateringer/enheter` CDC patches | *field absent in sampled window* |
+
+**Every JSON surface BRREG exposes — single lookup, search, and both bulk downloads, across
+both registries — uses `registreringsdatoEnhetsregisteret`.** The `I` variant is used by
+exactly one artefact in the entire API: the underenheter CSV bulk export. The lowercase
+enheter CSV spelling resolves to the same dictionary row case-insensitively.
+
+### Co-occurrence test
+Directly tested whether any single payload can carry both spellings, which is the only
+condition under which the last-row-wins overwrite could destroy data:
+
+```
+single enheter payload : FALSE
+search payload (size=50): FALSE
+```
+
+### The NAV pair, tested end-to-end on a live lookup
+The second collision pair (`…NavAaregisteret` / `…NAVAaregisteret`) **does** co-occur in
+spirit — both `registreringsdatoAntallAnsatteEnhetsregisteret` and
+`registreringsdatoAntallAnsatteNAVAaregisteret` are present in single-lookup and search
+payloads. But they are two *different* fields mapping to two *different* `col_name`s
+(`employee_reg_date_er` and `employee_reg_date_nav`), so there is no collision between them
+at all — the duplicate dictionary rows are the `Nav`/`NAV` casing variants of the NAV field
+only. Verified no value is lost:
+
+```
+source  ER  value : 2026-07-15   ->  employee_reg_date_er  : 2026-07-15
+source  NAV value : 2026-07-10   ->  employee_reg_date_nav : 2026-07-10
+```
+
+### D-90 closed
+The mechanism demonstrated in `P-03b` on a synthetic payload is unreachable: no BRREG
+endpoint emits both registration-date spellings, and the NAV pair are casing variants of a
+single field that round-trips correctly. **D-90 is not a defect** — the duplicate rows are a
+necessary alias for one CSV export's spelling quirk plus a casing variant. Final grade:
+cosmetic, worth only a comment in `field_dict`.
+
+This is the third time inspection has corrected my own static reading, and the correction
+only became available by testing the endpoints I had not sampled. Recording the sequence
+honestly: predicted S1 (static) -> demonstrated mechanism (synthetic) -> downgraded on bulk
+headers with a wrong reason (registry-specific) -> reason corrected (format x registry) ->
+closed on endpoint evidence (one CSV export only, co-occurrence impossible).
+
+---
