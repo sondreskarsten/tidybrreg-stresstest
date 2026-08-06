@@ -430,3 +430,91 @@ top level, so every one of these nested blocks is a candidate to leak into outpu
 for `organisasjonsform__links_self_href` in section 2 of the evaluation.
 
 ---
+## 11. `cache/R/tidybrreg/enheter_bulk.json.gz` — 200 MB
+
+First entity, verbatim:
+
+```
+[
+  {
+  "links" : [ ],
+  "organisasjonsnummer" : "810034882",
+  "navn" : "SANDNES ELEKTRISKE AS",
+  "organisasjonsform" : { "links" : [ ], "kode" : "AS", "beskrivelse" : "Aksjeselskap" },
+  "historiskeNavn" : [ { "navn" : "SANDNES ELEKTRISKE FORRETNING AS",
+                         "fraDato" : "1995-02-19 16:52:00",
+                         "tilDato" : "2024-02-15 12:54:30" } ],
+  "postadresse" : { ..., "adresse" : [ "Postboks 32" ], ... },
+```
+
+**The bulk and single-entity endpoints spell HAL links differently.** In 200,000 lines of
+this file there are 7,517 occurrences of `"links"` and **zero** of `"_links"`. The
+single-entity endpoint (section 2 of EVALUATION, and the live payload inspected earlier)
+uses `"_links"`. That asymmetry is the structural reason D-92 exists: `drop_hal_links()`
+matches a `links$` suffix, which is right for the bulk shape; `rename_from_dict()` filters a
+leading `_links`, which is right for the top level of the single-entity shape; and
+`organisasjonsform._links.self.href` — nested, underscore-prefixed — matches neither. The
+two guards each cover one endpoint's convention and the gap between them is exactly where
+the leak occurs.
+
+Also confirmed here:
+
+- `respons_klasse` appears once per entity, value `"Enhet"` in all 57,565 sampled
+  occurrences — the constant column seen in sync state originates faithfully from the source.
+- `historiskeNavn` and `paategninger` are inline on every entity (`paategninger` is usually
+  `[ ]`), which is why the JSON bootstrap gets both for free and the CSV bootstrap must pay
+  per-entity requests for one and cannot get the other at all.
+- `fraDato` / `tilDato` are `"1995-02-19 16:52:00"` — naive local timestamps at source, with
+  no zone. tidybrreg preserving them as `character` (section 6) is arguably the honest
+  choice; inventing a timezone would be worse.
+
+---
+
+## 12. `shared-store/` — the rig's own fixture series
+
+Four enheter partitions, written by the test rig rather than by tidybrreg, used as
+deterministic input for the panel/series/events checks:
+
+| snapshot_date | rows | cols | distinct municipality codes |
+|---|---|---|---|
+| 2025-07-01 | 49,925 | 90 | 359 |
+| 2026-01-17 | 49,950 | 90 | 360 |
+| 2026-07-06 | 49,975 | 90 | 360 |
+| 2026-08-05 | 50,000 | 90 | 360 |
+
+Population grows by exactly 25 per step and the planted municipality/nace mutations are
+present, which is what makes `EV-05`/`EV-06` (entries and exits equal the set differences)
+and `EV-07` (planted changes detected) meaningful rather than vacuous. 90 columns matches
+the enheter CSV header exactly, so the parse path reproduces the source field-for-field at
+this grain too.
+
+`snapshot-store/import-src.csv.gz` (60.7 MB) is likewise a rig artefact — my own test copies
+the bulk there before calling `brreg_import()`. Worth noting it lands at the *root* of
+`brreg_data_dir()`; it is not inside a type directory so `brreg_open()` does not trip on it,
+but the test should place it in a scratch directory rather than in the store being tested.
+Logged as a rig hygiene issue, not a package defect.
+
+**Duplication ledger.** The checksum `8ebc97433bf7…` appears three times: the download cache
+copy, `import-src.csv.gz`, and the raw copy inside the snapshot partition. Only the first is
+tidybrreg's doing plus one from D-54; 60.7 MB of the duplication is mine.
+
+---
+
+## Summary of this inspection
+
+Inspected 24 of 31 files across every store the run produced.
+
+**Confirmed from artefacts (previously code-reading or inference):** D-09 root cause
+(`fratraadt` absent from source), D-13 (quantified: only 13 % of `valgtAv` is employee
+election), D-25 (arrow cannot read a pretty-printed JSON array at all), D-26 (fixed at the
+CSV path — field counts reconcile exactly), D-54, D-55, D-56, D-57 (far worse than
+predicted), D-58, D-91 (`respons_klasse` carried faithfully in bulk, ignored where it
+varies), D-92 (structural cause identified), D-102, D-103, D-105.
+
+**New this inspection:** D-106 (manifest mixes ISO-8601 and locale-formatted CEST
+timestamps), D-107 (snapshot and sync write non-unionable schemas for the same registry;
+`closure_date` present in one, absent in the other).
+
+**Corrected against myself:** D-90 downgraded S1 → cosmetic. The collision is a deliberate
+alias for a registry-specific spelling difference and is unreachable with real data. My
+inference that a live payload could carry both keys is disproven by the headers.
